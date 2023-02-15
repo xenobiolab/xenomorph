@@ -15,10 +15,19 @@
 ## About 
 Xenomorph is a suite of tools used for nanopore sequencing of alternative basepairs (XNAs). This toolkit incorporates ONT-workflows to preprocess fast5 files and extract signal levels for kmers in a sequence. Models parameterized on XNA basepairs can then be used to test if signal levels match XNA pairs. Xenomorph relies on kmer models that were parameterized using libraries of XNA-containing DNA. The general pipeline consists of two steps: 1) preprocessing fast5 reads and extracting level information and 2) basecalling using a selected kmer model. This version of Xenomorph was built and tested on Oxford Nanopore Technologies r.9.4.1 flow cells (Flongle or MinION). Xenomorph will continue development and updating models to track the latest releases of Nanopore chemistry. 
 
-This public repository is maintained by the Xenobiology Research Group at the University of Washington, Department of Chemical Engineering. 
+This public repository is maintained by the XenoBiology Research Group at the University of Washington, Department of Chemical Engineering. 
 
 ## Sample nanopore sequences with XNA basepairs 
-This toolkit was created to work with a series of non-standard nucleotides that can form the basis of an expanded genetic alphabet (up to 12 letters). In addition to the standard base pairs (A:T, G:C), the XNA models described in this work allow for single xenonucleotide detection of specific forms of B:S, P:Z, X:K, and J:V. Sample nanopore XNA sequences with each of these base pairs encoded can be downloaded from the Sequence Reads Archive (NCBI). More information can be found with the associate publication.
+This toolkit was created to work with a series of non-standard nucleotides that can form the basis of an expanded genetic alphabet (up to 12 letters). In addition to the standard base pairs (A:T, G:C), the XNA models described in this work allow for single xenonucleotide detection of specific forms of B:S, P:Z, X:K, and J:V. Sample nanopore XNA sequences with each of these base pairs encoded can be downloaded from the Sequence Reads Archive (SRA Bioproject: PRJNA932328). More information can be found with the associate publication.
+
+## Dependencies
+Xenomorph requires ONT tools (ont-fast5-api, tombo, guppy), minimap2 (mappy), and various python packages. A full list of dependencies can be found in the xenomorph-env.yml document. To use conda for installing dependencies, simply load xenomorph-env.yml into a new environment. Xenomorph was built and tested on Ubuntu 18.04 and 20.04. 
+
+        conda env create -f xenomorph-env.yml
+
+To enter xenomorph conda environment, then use: 
+
+        conda activate xenomorph-env
 
 
 ## Xenomorph command groups 
@@ -51,7 +60,7 @@ Stats command takes the per read output basecall file (.csv) generated from morp
         python xenomorph.py stats -i [output_basecalled_summary_file.csv]
 
 ### Models
-Linked kmer models can be accessed using the 'xenomorph.py models' command. As a general paradigm for modular design, xenomorph models are considered to be fully orthogonal and completely modular. Xenomorph comes built with empirically determined models for standard bases (ATGC) and a expanded junimoji alphabet (BSPZKXJV). Models used for the morph command can be specified by using the '-m' flag and inputing the desired alphabet (e.g. ATGCBSJV). Note, ATGC should always be specified as part of this alphabet since xenomorph is designed for group-up alphabet expansion (ATGC+) as opposed to top-down (BSPZ-only). Unlike the standard bases, there are various variants of xenobases that are not mutually orthogonal (e.g. N-glycoside S and C-glycoside S). To select different chemical variants of expanded bases, the '-a' [abbreviation] flag can be used. This command will set the abbreviated base as the active XNA variant and disable alterntative variants. For example, 'xenomorph.py models -s Sn' will set the N-glycoside S model as the active basecalling model. To view which models are available, single letter codes, abbreviations, and active/inactive state use the '-s all' flag. Models can be linked, edited, added, or deleted by modifying the models/config_model.csv parameter file. 
+Linked kmer models can be accessed using the 'xenomorph.py models' command. As a general paradigm for modular design, xenomorph models are considered to be fully orthogonal and completely modular. Xenomorph comes built with empirically determined models for standard bases (ATGC) and a expanded junimoji alphabet (BSPZKXJV). Models used for the morph command can be specified by using the '-m' flag and inputing the desired alphabet (e.g. ATGCBSJV). Note, ATGC should always be specified as part of this alphabet since xenomorph is designed for ground-up alphabet expansion (ATGC+) as opposed to top-down (BSPZ-only). Unlike the standard bases, there are various variants of xenobases that are not mutually orthogonal (e.g. N-glycoside S and C-glycoside S). To select different chemical variants of expanded bases, the '-a' [abbreviation] flag can be used. This command will set the abbreviated base as the active XNA variant and disable alterntative variants. For example, 'xenomorph.py models -s Sn' will set the N-glycoside S model as the active basecalling model. To view which models are available, single letter codes, abbreviations, and active/inactive state use the '-s all' flag. Models can be linked, edited, added, or deleted by modifying the models/config_model.csv parameter file. 
 
 
         python xenomorph.py models 
@@ -140,8 +149,8 @@ Preprocess, morph, and stats use various parameters that can be tuned or modifie
 
 
 ## Cite us or read more about this work
-    Title: Synthesis and Sequencing of 12-letter supernumerary DNA (unpublished) 
+    Title: Synthesis and Sequencing of a 12-letter supernumerary DNA
 
     By: H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, J. M. Craig, 
-    J. Gundlach, A. Laszlo, S. A. Benner, J. A. Marchand
+    J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand
 
