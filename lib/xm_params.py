@@ -6,7 +6,7 @@ xm_params.py
 Description: Here you can modify parameters used for processing, extraction,
 alignment, and basecalling. Default values 
 
-Title: XNA tailing enables nanopore sequencing of a 12-letter genetic code
+Title: Synthesis and Sequencing of 12-Letter Supernumerary DNA
 
 By: H. Kawabe, C. Thomas, A. Laszlo, S. Hoshika, L. Miessner, J. M. Craig, 
 J. Gundlach, Myong-Jung Kim, Myong-Sang Kim, S. A. Benner, J. A. Marchand
@@ -125,13 +125,16 @@ kmer_weights = [1, 1, 1 ,1]
 kmer_sizes = [len(kmer_mask)] 
 
 #Set mu as either: 'KDE Mean level', 'Median level',or 'Mean level'. Basecalling performance can vary depending on accuracy of measurement. 
-mu = 'KDE Mean level'
+mu = 'Mean level'
 
 #Set sigma as 'Global-Median', 'Global-Mean' for global mean (recommended),  'Kmer' for kmer-specific, or set as float for fixed
 sigma = 0.4
 
 #Likelihood ratio (Normal; Outlier-Robust; Outlier-Robust)
 likelihood_ratio = 'Outlier-Robust'
+
+#Threshold for rejecting or accepting LLR call in global_morph (default = 0)
+likelihood_threshold = 0
 
 #Max reads for morph
 max_reads = 0

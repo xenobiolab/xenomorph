@@ -9,12 +9,12 @@ to r.9.4.1 DNA HAC. Path to guppy needs to be specified in xm_params.py.
 Basecalling is required for initial fast5-sequence assignment prior to 
 signal-to-sequence alignment according to the Tombo pipeline. 
 
-Title: XNA tailing enables nanopore sequencing of a 12-letter genetic code
+Title: Synthesis and Sequencing of 12-Letter Supernumerary DNA
 
-By: H. Kawabe, C. Thomas, A. Laszlo, S. Hoshika, L. Miessner, J. M. Craig, 
-J. Gundlach, Myong-Jung Kim, Myong-Sang Kim, S. A. Benner, J. A. Marchand
+By: H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, J. M. Craig, 
+J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand
 
-Updated: 1/15/23
+Updated: 2/14/23
 """
 ########################################################################
 ########################################################################

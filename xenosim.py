@@ -10,12 +10,12 @@ specification of signal noise (kmer-specific or global), sampled data or
 simulate data, etc. Script should be modified below and ran using: 
 python xenosim.py. 
 
-Title: XNA tailing enables nanopore sequencing of a 12-letter genetic code
+Title: Synthesis and Sequencing of a 12-letter supernumerary DNA
 
-By: H. Kawabe, C. Thomas, A. Laszlo, S. Hoshika, L. Miessner, J. M. Craig, 
-J. Gundlach, Myong-Jung Kim, Myong-Sang Kim, S. A. Benner, J. A. Marchand
+By: H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, J. M. Craig, 
+J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand
 
-Updated: 1/15/23
+Updated: 2/14/23
 """
 ########################################################################
 ########################################################################

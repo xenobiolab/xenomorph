@@ -9,12 +9,12 @@ available for what to plot and how to plot it. Plotting options modified
 internally in script below. Randomly picks a read from a dataset to plot. 
 Requires basecalled level file as input (python xenomorph.py morph).
 
-Title: XNA tailing enables nanopore sequencing of a 12-letter genetic code
+Title: Synthesis and Sequencing of a 12-letter supernumerary DNA
 
-By: H. Kawabe, C. Thomas, A. Laszlo, S. Hoshika, L. Miessner, J. M. Craig, 
-J. Gundlach, Myong-Jung Kim, Myong-Sang Kim, S. A. Benner, J. A. Marchand
+By: H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, J. M. Craig, 
+J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand
 
-Updated: 1/15/23
+Updated: 2/14/23
 """
 ########################################################################
 ########################################################################

@@ -9,12 +9,12 @@ level output file generated from xenomorph.py preprocess. The kmer model
 summary generated can be used directly for basecalling purposes. The location
 of the model needs to be specified in models/config_model.csv
 
-Title: XNA tailing enables nanopore sequencing of a 12-letter genetic code
+Title: Synthesis and Sequencing of 12-Letter Supernumerary DNA
 
-By: H. Kawabe, C. Thomas, A. Laszlo, S. Hoshika, L. Miessner, J. M. Craig, 
-J. Gundlach, Myong-Jung Kim, Myong-Sang Kim, S. A. Benner, J. A. Marchand
+By: H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, J. M. Craig, 
+J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand
 
-Updated: 1/15/23
+Updated: 2/14/23
 """
 ########################################################################
 ########################################################################

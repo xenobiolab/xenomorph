@@ -8,12 +8,12 @@ to split multi-fast5 into single-fast5 directory. Required for tombo handling.
 For more information: python xombo.py split -h
 
 
-Title: XNA tailing enables nanopore sequencing of a 12-letter genetic code
+Title: Synthesis and Sequencing of 12-Letter Supernumerary DNA
 
-By: H. Kawabe, C. Thomas, A. Laszlo, S. Hoshika, L. Miessner, J. M. Craig, 
-J. Gundlach, Myong-Jung Kim, Myong-Sang Kim, S. A. Benner, J. A. Marchand
+By: H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, J. M. Craig, 
+J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand
 
-Updated: 1/15/23
+Updated: 2/14/23
 """
 ########################################################################
 ########################################################################

@@ -9,12 +9,12 @@ XNA are placed in fasta header generating xfasta files. This script seperately
 generates fasta sequences for reverse complement as well. Input fasta files should 
 contain XNAs with sequences that contain XNA bases in xm_params.py. 
 
-Title: XNA tailing enables nanopore sequencing of a 12-letter genetic code
+Title: Synthesis and Sequencing of 12-Letter Supernumerary DNA
 
-By: H. Kawabe, C. Thomas, A. Laszlo, S. Hoshika, L. Miessner, J. M. Craig, 
-J. Gundlach, Myong-Jung Kim, Myong-Sang Kim, S. A. Benner, J. A. Marchand
+By: H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, J. M. Craig, 
+J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand
 
-Updated: 1/15/23
+Updated: 2/14/23
 """
 ########################################################################
 ########################################################################
@@ -127,7 +127,8 @@ if require_rc_fasta == True:
     fr = open(output_fasta.replace('.fa','_rc')+'.fa', "w")
     with open(output_fasta, "r") as fo:
         for line in fo: 
-            if line[0]=='>' and 'GAP' not in line:
+            #Skip sequences where GAP is in the header - Used as a null reference sequence. 
+            if line[0]=='>' and 'GAP' not in line.upper() and XPOS in line:
                 header = line
                 x_pos_base = fetch_xna_pos(header)
                 x_pos_to_rc =[]
@@ -165,6 +166,7 @@ if require_rc_fasta == True:
                 header_rc=header_rc[:-1]+']'
                 fr.write(header_rc)
                 fr.write(seq_rc+'\n')
+                x_pos_to_rc = [] 
     fr.close()
 else: 
     try: 

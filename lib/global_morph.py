@@ -11,12 +11,12 @@ Unlike morph, global_morph does not calculate per-read statistics.
 To use global instead of per-read, add the -g flag to morph: 
 xenomorph.py morph -g 
 
-Title: XNA tailing enables nanopore sequencing of a 12-letter genetic code
+Title: Synthesis and Sequencing of 12-Letter Supernumerary DNA
 
-By: H. Kawabe, C. Thomas, A. Laszlo, S. Hoshika, L. Miessner, J. M. Craig, 
-J. Gundlach, Myong-Jung Kim, Myong-Sang Kim, S. A. Benner, J. A. Marchand
+By: H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, J. M. Craig, 
+J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand
 
-Updated: 1/15/23
+Updated: 2/14/23
 """
 ########################################################################
 ########################################################################
@@ -285,7 +285,9 @@ def gen_alt_all(sequence, kmer_levels, kmer_model, all_bases, xbase_pos, kmer_le
     
     if likelihood_ratio == 'Outlier-Robust': 
         #If all values of LLR are >0 new basecall is decided
-        if all(x >0 for x in lrr): 
+        if all(x >0 for x in lrr):
+            lrr_bc = all_bases[lrr.index(100)]
+        elif np.min(lrr)>= likelihood_threshold: 
             lrr_bc = all_bases[lrr.index(100)]
         else:
             lrr_bc = all_bases[lrr.index(np.min(lrr))]
