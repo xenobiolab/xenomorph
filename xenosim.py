@@ -10,7 +10,7 @@ specification of signal noise (kmer-specific or global), sampled data or
 simulate data, etc. Script should be modified below and ran using: 
 python xenosim.py. 
 
-Title: Synthesis and Sequencing of a 12-letter supernumerary DNA
+Title: Synthesis and Sequencing of a 12-Letter Supernumerary DNA
 
 By: H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, J. M. Craig, 
 J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand
