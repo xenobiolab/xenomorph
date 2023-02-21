@@ -13,7 +13,7 @@
 # Xenomorph : An XNA sequencing toolkit 
 
 ## About 
-Xenomorph is a suite of tools used for nanopore sequencing of alternative basepairs (XNAs). This toolkit incorporates ONT-workflows to preprocess fast5 files and extract signal levels for kmers in a sequence. Models parameterized on XNA basepairs can then be used to test if signal levels match XNA pairs. Xenomorph relies on kmer models that were parameterized using libraries of XNA-containing DNA. The general pipeline consists of two steps: 1) preprocessing fast5 reads and extracting level information and 2) basecalling using a selected kmer model. This version of Xenomorph was built and tested on Oxford Nanopore Technologies r.9.4.1 flow cells (Flongle or MinION). Xenomorph will continue development and updating models to track the latest releases of Nanopore chemistry. 
+Xenomorph is a suite of tools used for nanopore sequencing of alternative basepairs (XNAs). This toolkit incorporates ONT-workflows to preprocess fast5 files and extract signal levels for kmers in a sequence. Models parameterized on XNA basepairs can then be used to test if signal levels match XNA pairs. Xenomorph relies on kmer models that were parameterized using libraries of XNA-containing DNA. The general pipeline consists of two steps: 1) preprocessing FAST5 reads and extracting level information and 2) basecalling using a selected kmer model. This version of Xenomorph was built and tested on Oxford Nanopore Technologies r9.4.1 flow cells (Flongle or MinION). Xenomorph will continue development and updating models to track the latest releases of Nanopore chemistry. 
 
 This public repository is maintained by the XenoBiology Research Group at the University of Washington, Department of Chemical Engineering. 
 
