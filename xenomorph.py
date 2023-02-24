@@ -1,22 +1,6 @@
-########################################################################
-########################################################################
-"""
-xenomorph.py 
-
-Description: Xenomorph - XNA sequencing pipeline. Manages scripts for 
-integrating nanopore preprocessing with nanopore xenonucleotide basecalling. 
-
-Usage: python xenomorph.py -h for help 
-
-Title: Synthesis and Sequencing of a 12-Letter Supernumerary DNA
-
-By: H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, J. M. Craig, 
-J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand
-
-Updated: 2/14/23
-"""
-########################################################################
-########################################################################
+##############################
+##Xombo - An XNA toolkit  ###
+##############################
 
 import argparse, textwrap
 import os 
@@ -26,7 +10,7 @@ from lib.xm_params import *
 
 
 parser = argparse.ArgumentParser(
-        usage='"python xenomorph.py  [-h] {preprocess, discover, morph, de-novo, fasta2x}',
+        usage='"python xenomorph.py  [-h] {preprocess, morph, extract, models, fasta2x}',
         formatter_class=argparse.RawTextHelpFormatter,
 	description= textwrap.dedent('''
 
@@ -50,6 +34,7 @@ Xenomorph is a suite of tools used for nanopore sequencing of alternative basepa
 Xenomorph command groups (additional help available within each command group):
 	preprocess	[Preprocess] fast5 reads with reference fasta containing XNAs for 'morph' or 'de-novo'
 	morph		[Basecall] Use kmer levels identified with preprocess to basecall XNA position based on alternative hypothesis testing (per read)
+	extract		[Utility] Extracts raw signal in region associated with XNA bases. 
 	stats		[Utility] Calculate global concensus basecalls from per-read output file and generate summary output
 	fasta2x		[Utility] Converts fasta file with XNAs in sequence (e.g. BSPZKXJV) to fasta file with XNA positional information in header
 	models		[Utility] View summary of active and inactive kmer models that can be used for basecalling or activate models
@@ -79,6 +64,15 @@ parser_morph.add_argument('-m',metavar = '[model_file]', type=str, required = Tr
 parser_morph.add_argument('-o',metavar = '[output_file]', type=str, help='Output file name (optional; default output_summary_basecalls.csv)')
 parser_morph.add_argument('-g',action = 'store_true', help='Perform global basecalling (across all reads) instead of per-read base calling.')
 parser_morph.add_argument('-n',action = 'store_true', help='Perform global null basecalling using reads without XNAs.')
+
+#Extract
+parser_extract = subparsers.add_parser('extract', help='[-w working_dir] [-f fast5_dir] [-r reference_fasta] [-l level_summary_file] [-o output_raw_file]')
+parser_extract.add_argument('-w',metavar = '[working_dir]', type=str,required = True, help='Working directory for storing analysis pipeline temp files and outputs.')
+parser_extract.add_argument('-f',metavar ='[fast5_dir]', type=str,required = True, help='Input directory containing multi-fast5 folders.')
+parser_extract.add_argument('-r',metavar = '[reference_fasta]', type=str, required = True, help='Fasta (.fa, .fasta) file of sequence or sequences with XNAs (e.g. BSPZKXJV) in sequence.')
+parser_extract.add_argument('-l',metavar = '[level_summary_file]', type=str,required = True, help='Output file (.csv) from preprocess that contains normalized levels of each read.')
+parser_extract.add_argument('-o',metavar = '[output_file]', type=str, required = True, help='Output file name for raw reads (optional; default output_levels_raw.csv)')
+
 
 
 #Stats
@@ -113,7 +107,6 @@ if args.subparsers==None:
 #Parse arguments 
 if args.subparsers == 'fasta2x' :
 	os.system('python lib/xm_fasta2x_rc.py '+args.fasta_input+' '+args.xfasta_output)
-
 
 if args.subparsers == 'morph': 
 
@@ -171,10 +164,48 @@ if args.subparsers == 'morph':
 		os.system(cmd)
 
 
+
+
+
+
+elif args.subparsers == 'extract': 
+	print("Xenomorph Status - [Extract] Extracting raw signal in region associated with XNA level measurements.")
+	working_dir = os.path.normpath(args.w)
+	CHECK_FOLDER = os.path.isdir(args.w)
+	if not CHECK_FOLDER:
+		print("Xenomorph Status - [Error] Working directory "+args.w+" not found.")
+		print("Xenomorph Status - [Error] Run xenomorph.py preprocess first to generate directories.")
+
+
+	if os.path.exists(args.l)==False:
+		print("Xenomorph Status - [Error] Could not locate file: "+args.l)
+		print("Xenomorph Status - [Error] Level-extracted input file not found. Check path or run 'xenomorph preprocess' to generate.")
+		sys.exit()
+
+	level_summary_file = args.l
+
+
+	if not check_xfasta_format(args.r, standard_bases): 
+		xfasta=os.path.normpath(args.w)+'/xfasta_'+os.path.basename(args.r)
+
+	if args.o:
+		output_fn=args.o
+
+
+	fast5_sing_dir=os.path.normpath(working_dir)+'/'+os.path.basename(args.f)+'_single'
+
+	xfasta=os.path.normpath(args.w)+'/xfasta_'+os.path.basename(args.r)
+
+
+	cmd = 'python lib/xm_get_raw_signal.py '+fast5_sing_dir+' '+xfasta+' '+level_summary_file+' '+output_fn
+	os.system(cmd)
+
+
+
 elif args.subparsers == 'preprocess': 
 
+	level_summary_file = args.l
 	working_dir = os.path.normpath(args.w)
-
 	#Create a working directory if it does not existW
 	CHECK_FOLDER = os.path.isdir(args.w)
 	if not CHECK_FOLDER:
@@ -192,7 +223,9 @@ elif args.subparsers == 'preprocess':
 	    xfasta=os.path.normpath(args.w)+'/xfasta_'+os.path.basename(args.r)
 	    if not os.path.exists(xfasta) or args.x:
 		    print("Xenomorph Status - [Preprocess] Performing fasta to xfasta conversion on input reference fasta. Saving output "+xfasta+'.')
-		    cmd =  'python lib/xm_fasta2x_rc.py '+os.path.normpath(args.r)+' '+xfasta
+		    print("Xenomorph Status - [Preprocess] Using fasta2x_rcf.")
+		    cmd =  'python lib/xm_fasta2x_rcf.py '+os.path.normpath(args.r)+' '+xfasta
+		    #cmd =  'python lib/xm_fasta2x_rc.py '+os.path.normpath(args.r)+' '+xfasta
 		    os.system(cmd) 
 	    else: 
 		    print("Xenomorph Status - [Preprocess] xfasta file found in working directory. Skipping xfasta conversion.")
