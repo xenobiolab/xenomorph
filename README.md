@@ -71,8 +71,8 @@ Linked kmer models can be accessed using the 'xenomorph.py models' command. As a
 
         python xenomorph.py models 
                 Optional flags: 
-                --s [active/inactive/all]
-                --a [base_abbreviation_to_activate]
+                -s [active/inactive/all]
+                -a [base_abbreviation_to_activate]
 
 ### xFasta format 
 Many tools used to read and manipulate nucleic acid sequences are not built to handle non ATGC bases. In an effort to streamline how we handle XNAs, xenomorph was built to handle non-standard bases in fasta sequences (e.g. BSPZJVKX). The xFasta file format (.fa) stores XNA positional information in the header of each sequence. xFasta files can be generated from standard Fasta files that contain non-ATGC bases (e.g. BSPZJVKX) in the sequence. xFasta files are automatically generated in the standard xenomorph preprocessing workflow. The fasta2x command is provided for utility, but generally not required. Note that XNA bases in the input sequence will be replaced for a standard ATGC. Signal matching to sequence is highly sensitive what base is chosen as the replacement base. As default, XNA bases are replaced as followed: B>G, S>C, P>G, Z>G. Base substitution settings can be modified in lib/xm_params.py by changing the paired base in the confounding_base variable. 
