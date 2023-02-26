@@ -7,13 +7,13 @@
         /_/\_\ \___||_| |_| \___/ |_| |_| |_| \___/ |_|   | .__/ |_| |_|
                                                           | |           
         v1.0                                              |_|           
-
+                                                                        
 
 
 # Xenomorph : An XNA sequencing toolkit 
 
 ## About 
-Xenomorph is a suite of tools used for nanopore sequencing of alternative basepairs (XNAs). This toolkit incorporates ONT-workflows to preprocess fast5 files and extract signal levels for kmers in a sequence. Models parameterized on XNA basepairs can then be used to test if signal levels match XNA pairs. Xenomorph relies on kmer models that were parameterized using libraries of XNA-containing DNA. The general pipeline consists of two steps: 1) preprocessing fast5 reads and extracting level information and 2) basecalling using a selected kmer model. This version of Xenomorph was built and tested on Oxford Nanopore Technologies r.9.4.1 flow cells (Flongle or MinION). Xenomorph will continue development and updating models to track the latest releases of Nanopore chemistry. 
+Xenomorph is a suite of tools used for nanopore sequencing of alternative 'xeno'-basepairs (XNAs). This toolkit incorporates ONT-workflows to preprocess FAST5 files and extract signal levels for kmers in a sequence. Models parameterized on XNA basepairs can then be used to test if signal levels match XNA pairs. Xenomorph relies on kmer models that were parameterized using libraries of XNA-containing DNA. The general pipeline consists of two steps: 1) preprocessing FAST5 reads and extracting level information and 2) basecalling using a selected kmer model. This version of Xenomorph was built and tested on Oxford Nanopore Technologies r.9.4.1 flow cells (Flongle or MinION). Xenomorph will continue development and updating models to track the latest releases of Nanopore chemistry. 
 
 This public repository is maintained by the XenoBiology Research Group at the University of Washington, Department of Chemical Engineering. 
 
@@ -31,16 +31,16 @@ To enter xenomorph conda environment, then use:
 
 
 ## Xenomorph command groups 
-	preprocess	[Preprocess] fast5 reads with reference fasta containing XNAs for 'morph' or 'de-novo'
+	preprocess	[Preprocess] FAST5 reads with reference FASTA containing XNAs for 'morph' or 'de-novo'
 	morph		[Basecall] Use kmer levels identified with preprocess to basecall XNA position based on alternative hypothesis testing (per read)
 	extract		[Utility] Extracts raw signal in region associated with XNA bases. 
 	stats		[Utility] Calculate global concensus basecalls from per-read output file and generate summary output
-	fasta2x		[Utility] Converts fasta file with XNAs in sequence (e.g. BSPZKXJV) to fasta file with XNA positional information in header
+	fasta2x		[Utility] Converts FASTA file with XNAs in sequence (e.g. BSPZKXJV) to FASTA file with XNA positional information in header
 	models		[Utility] View summary of active and inactive kmer models that can be used for basecalling or activate models
 
 
 ### Preprocess 
-Preprocess takes raw nanopore multi-fast5 files alongside a reference fasta with XNAs and outputs extracted normalized signal levels for the region surrounding the XNA. Reference fasta file input should have XNA bases at locations where you want to perform hypothesis testing, which is automatically converted to xfasta format in this pipeline. In this pipeline, raw multi-fast5 files are first converted to single-fast5 format then basecalled de novo using guppy. Guppy basecalls are then assigned to the single-fast5 reads. Tombo is then used to match raw signal to bases using the resquiggle command. Using positional header stored in the xfasta format, normalized signals surrounding XNA positions are then extracted and stored for each read. Any non-ATGC base can be used at this stage for level extraction. However, alternative hypothesis testing basecalling will require using base abbreviations found in kmer model files (accessible with xenomorph models). Intermediate files are output in working directory. Following preprocess command, the output summary file can be used as an input for alternative hypothesis testing with the xenomorph.py morph command. 
+Preprocess takes raw nanopore multi-FAST5 files alongside a reference FASTA with XNAs and outputs extracted normalized signal levels for the region surrounding the XNA. Reference FASTA file input should have XNA bases at locations where you want to perform hypothesis testing, which is automatically converted to xfasta format in this pipeline. In this pipeline, raw multi-FAST5 files are first converted to single-FAST5 format then basecalled de novo using guppy. Guppy basecalls are then assigned to the single-fast5 reads. Tombo is then used to match raw signal to bases using the resquiggle command. Using positional header stored in the xFASTA format, normalized signals surrounding XNA positions are then extracted and stored for each read. Any non-ATGC base can be used at this stage for level extraction. However, alternative hypothesis testing basecalling will require using base abbreviations found in kmer model files (accessible with xenomorph models). Intermediate files are output in working directory. Following preprocess command, the output summary file can be used as an input for alternative hypothesis testing with the xenomorph.py morph command. 
 
         python xenomorph.py preprocess -w [working directory] -f [fast5 diretory] -r [reference_fasta] 
                 Optional flags: 
@@ -74,15 +74,15 @@ Linked kmer models can be accessed using the 'xenomorph.py models' command. As a
                 -s [active/inactive/all]
                 -a [base_abbreviation_to_activate]
 
-### xFasta format 
-Many tools used to read and manipulate nucleic acid sequences are not built to handle non ATGC bases. In an effort to streamline how we handle XNAs, xenomorph was built to handle non-standard bases in fasta sequences (e.g. BSPZJVKX). The xFasta file format (.fa) stores XNA positional information in the header of each sequence. xFasta files can be generated from standard Fasta files that contain non-ATGC bases (e.g. BSPZJVKX) in the sequence. xFasta files are automatically generated in the standard xenomorph preprocessing workflow. The fasta2x command is provided for utility, but generally not required. Note that XNA bases in the input sequence will be replaced for a standard ATGC. Signal matching to sequence is highly sensitive what base is chosen as the replacement base. As default, XNA bases are replaced as followed: B>G, S>C, P>G, Z>G. Base substitution settings can be modified in lib/xm_params.py by changing the paired base in the confounding_base variable. 
+### xFASTA format 
+Many tools used to read and manipulate nucleic acid sequences are not built to handle non ATGC bases. In an effort to streamline how we handle XNAs, xenomorph was built to handle non-standard bases in FASTA sequences (e.g. BSPZJVKX). The xFASTA file format (.fa) stores XNA positional information in the header of each sequence. xFASTA files can be generated from standard Fasta files that contain non-ATGC bases (e.g. BSPZJVKX) in the sequence. xFASTA files are automatically generated in the standard xenomorph preprocessing workflow. The fasta2x command is provided for utility, but generally not required. Note that XNA bases in the input sequence will be replaced for a standard ATGC. Signal matching to sequence is highly sensitive what base is chosen as the replacement base. As default, XNA bases are replaced as followed: B>G, S>C, P>G, Z>G. Base substitution settings can be modified in lib/xm_params.py by changing the paired base in the confounding_base variable. 
 
 
-        Standard fasta format with XNA in sequence
+        Standard FASTA format with XNA in sequence
                 >header_for_a_read
                 ATGGCAACAGGATGABAAGGACGTA
 
-        xfasta format with XNA information stored in header. (B replaced with G in sequence)
+        xFASTA format with XNA information stored in header. (B replaced with G in sequence)
                 >header_for_a_read+X_POS[B:18]
                 ATGGCAACAGGATGAGAAGGACGTA
 
@@ -151,7 +151,7 @@ Preprocess, morph, and stats use various parameters that can be tuned or modifie
         4) Activate the N-glycoside S model and inactivate the C-glycoside S model
             python xenomorph.py models -a Sn 
 
-#### Generate XNA model from raw reads and a reference fasta
+#### Generate XNA model from raw reads and a reference FASTA
 
 
         1) Preprocess a raw nanopore run (convert, basecall, resquiggle, and level extract) 
@@ -165,7 +165,7 @@ Preprocess, morph, and stats use various parameters that can be tuned or modifie
 
 
 
-## Cite us or read more about this work
+## Cite us or read more about this work 
     Title: Synthesis and Sequencing of a 12-Letter Supernumerary DNA
 
     By: H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, J. M. Craig, 
