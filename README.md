@@ -18,7 +18,7 @@ Xenomorph is a suite of tools used for nanopore sequencing of alternative 'xeno'
 This public repository is maintained by the XenoBiology Research Group at the University of Washington, Department of Chemical Engineering. 
 
 ## Sample nanopore sequences with XNA basepairs 
-This toolkit was created to work with a series of non-standard nucleotides that can form the basis of an expanded genetic alphabet (up to 12 letters). In addition to the standard base pairs (A:T, G:C), the XNA models described in this work allow for single xenonucleotide detection of specific forms of B:S, P:Z, X:K, and J:V. Sample nanopore XNA sequences with each of these base pairs encoded can be downloaded from the Sequence Reads Archive (SRA Bioproject: PRJNA932328). More information can be found with the associate publication.
+This toolkit was created to work with a series of non-standard nucleotides that can form the basis of an expanded genetic alphabet (up to 12 letters). In addition to the standard base pairs (A:T, G:C), the XNA models described in this work allow for single xenonucleotide detection of specific forms of B:S, P:Z, X:K, and J:V. A sample multi-FAST5 file of raw nanopore read data containing PZ insertion can be found in /example_reads/PZ_sample_reads.fast5. Reference file containing all possible sequences in this file, including no-PZ insertion ("Gap") is found in example_reads/PZ_esample_reference.fa. Nanopore XNA sequences used in generation of this work containing BSPZXKJV insertions can be downloaded from the Sequence Reads Archive (SRA Bioproject: PRJNA932328). More information can be found with the associate publication.
 
 ## Dependencies
 Xenomorph requires ONT tools (ont-fast5-api, tombo, guppy), minimap2 (mappy), and various python packages. A full list of dependencies can be found in the xenomorph-env.yml document. To use conda for installing dependencies, simply load xenomorph-env.yml into a new environment. Xenomorph was built and tested on Ubuntu 18.04 and 20.04. 
@@ -75,7 +75,7 @@ Linked kmer models can be accessed using the 'xenomorph.py models' command. As a
                 -a [base_abbreviation_to_activate]
 
 ### xFASTA format 
-Many tools used to read and manipulate nucleic acid sequences are not built to handle non ATGC bases. In an effort to streamline how we handle XNAs, xenomorph was built to handle non-standard bases in FASTA sequences (e.g. BSPZJVKX). The xFASTA file format (.fa) stores XNA positional information in the header of each sequence. xFASTA files can be generated from standard Fasta files that contain non-ATGC bases (e.g. BSPZJVKX) in the sequence. xFASTA files are automatically generated in the standard xenomorph preprocessing workflow. The fasta2x command is provided for utility, but generally not required. Note that XNA bases in the input sequence will be replaced for a standard ATGC. Signal matching to sequence is highly sensitive what base is chosen as the replacement base. As default, XNA bases are replaced as followed: B>G, S>C, P>G, Z>G. Base substitution settings can be modified in lib/xm_params.py by changing the paired base in the confounding_base variable. 
+Many tools used to read and manipulate nucleic acid sequences are not built to handle non ATGC bases. In an effort to streamline how we handle XNAs in a 'FASTA-like format', xenomorph was built to handle non-standard bases in FASTA sequences (e.g. BSPZJVKX). The xFASTA file format (.fa) stores XNA positional information in the header of each sequence. xFASTA files can be generated from standard Fasta files that contain non-ATGC bases (e.g. BSPZJVKX) in the sequence. xFASTA files are automatically generated in the standard xenomorph preprocessing workflow. The fasta2x command is provided for utility, but generally not required. Note that XNA bases in the input sequence will be replaced for a standard ATGC. Signal matching to sequence is highly sensitive what base is chosen as the replacement base. As default, XNA bases are replaced as followed: B>G, S>C, P>G, Z>G. Base substitution settings can be modified in lib/xm_params.py by changing the paired base in the confounding_base variable. 
 
 
         Standard FASTA format with XNA in sequence
@@ -170,4 +170,5 @@ Preprocess, morph, and stats use various parameters that can be tuned or modifie
 
     By: H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, J. M. Craig, 
     J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand
+
 
