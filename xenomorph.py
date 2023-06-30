@@ -6,8 +6,14 @@ import argparse, textwrap
 import os 
 import sys 
 from lib.xm_tools import *
+<<<<<<< HEAD
 from lib.xm_params import *
 
+=======
+from lib.xr_tools import *
+from lib.xm_params import *
+from lib.xr_params import *
+>>>>>>> 1e30d19 (Add existing file)
 
 parser = argparse.ArgumentParser(
         usage='"python xenomorph.py  [-h] {preprocess, morph, extract, models, fasta2x}',
@@ -50,7 +56,11 @@ parser_preprocess = subparsers.add_parser('preprocess', help='[-w working_dir] [
 parser_preprocess.add_argument('-f',metavar ='[fast5_dir]', type=str,required = True, help='Input directory containing multi-fast5 folders.')
 parser_preprocess.add_argument('-w',metavar = '[working_dir]', type=str,required = True, help='Working directory for storing analysis pipeline temp files and outputs.')
 parser_preprocess.add_argument('-r',metavar = '[reference_fasta]', type=str, required = True, help='Fasta (.fa, .fasta) file of sequence or sequences with XNAs (e.g. BSPZKXJV) in sequence.')
+<<<<<<< HEAD
 parser_preprocess.add_argument('-t',metavar = '[tombo_index_id]', type=str, required = True, help='Store resquiggle results with the following ID (default 000)')
+=======
+#parser_preprocess.add_argument('-t',metavar = '[tombo_index_id]', type=str, required = True, help='Store resquiggle results with the following ID (default 000)')
+>>>>>>> 1e30d19 (Add existing file)
 parser_preprocess.add_argument('-o',metavar = '[output_file]', type=str, required = False, help='Specify path of output file (.csv) for level extraction (optional; default = working_dir/level_output_summary.csv)')
 parser_preprocess.add_argument('-b',action = 'store_true', help='Use guppy to add basecall reads to file (optional).')
 parser_preprocess.add_argument('-x',action = 'store_true', help='Overwrite all temp analysis files and force re-analysis (optional).')
@@ -204,7 +214,11 @@ elif args.subparsers == 'extract':
 
 elif args.subparsers == 'preprocess': 
 
+<<<<<<< HEAD
 	level_summary_file = args.l
+=======
+	#level_summary_file = args.l
+>>>>>>> 1e30d19 (Add existing file)
 	working_dir = os.path.normpath(args.w)
 	#Create a working directory if it does not existW
 	CHECK_FOLDER = os.path.isdir(args.w)
@@ -223,8 +237,13 @@ elif args.subparsers == 'preprocess':
 	    xfasta=os.path.normpath(args.w)+'/xfasta_'+os.path.basename(args.r)
 	    if not os.path.exists(xfasta) or args.x:
 		    print("Xenomorph Status - [Preprocess] Performing fasta to xfasta conversion on input reference fasta. Saving output "+xfasta+'.')
+<<<<<<< HEAD
 		    print("Xenomorph Status - [Preprocess] Using fasta2x_rcf.")
 		    cmd =  'python lib/xm_fasta2x_rcf.py '+os.path.normpath(args.r)+' '+xfasta
+=======
+		    print("Xenomorph Status - [Preprocess] Using fasta2x_rc.")
+		    cmd =  'python lib/xm_fasta2x_rc.py '+os.path.normpath(args.r)+' '+xfasta
+>>>>>>> 1e30d19 (Add existing file)
 		    #cmd =  'python lib/xm_fasta2x_rc.py '+os.path.normpath(args.r)+' '+xfasta
 		    os.system(cmd) 
 	    else: 
@@ -237,6 +256,7 @@ elif args.subparsers == 'preprocess':
 	if os.path.exists(xfasta[0:xfasta.find('.fa')]+'_rc.fa')==True:
 		print("Xenomorph Status - [Preprocess] xfasta reverse complement created for handling special bases.")
 		xfasta_rc = xfasta[0:xfasta.find('.fa')]+'_rc.fa'
+<<<<<<< HEAD
 
 		###Multi to single and merge single folders
 	fast5_sing_dir=os.path.normpath(working_dir)+'/'+os.path.basename(args.f)+'_single'
@@ -297,6 +317,51 @@ elif args.subparsers == 'preprocess':
 	else: 
 		print("Xenomorph Status - [Preprocess] Resquiggle file found. Skipping and proceeding to level extraction. Use (-x) flag to force resquiggle with new xfasta file.")
 
+=======
+		xfasta_rc_dir = os.path.join(args.w+'/'+os.path.basename(xfasta_rc))
+
+
+
+		###convert fast5 to pod5
+	pod5_dir = os.path.normpath(args.w)+'/'+os.path.basename(args.f)+'_pod5'
+	pod5_dir = check_make_dir(pod5_dir)
+	check_pod5_dir = os.path.join(pod5_dir+'/'+os.path.basename(args.f)+'.pod5')
+	if os.path.isfile(check_pod5_dir)==False: 
+		cod5_to_fast5(get_fast5_subdir(args.f), os.path.join(pod5_dir + '/'+os.path.basename(args.f))+'.pod5')
+	else: 
+		print('Xemora  [STATUS] - POD5 file for modified base found. Skipping POD5 coversion')
+
+#Step 2: #Basecall pod5 files 
+	fastq_dir = os.path.normpath(args.w)+'/'+os.path.basename(args.f)+'_fastq'
+	if os.path.isdir(fastq_dir)==False or basecall_pod == True: 
+		fastq_dir = check_make_dir(fastq_dir)
+		cmd=os.path.expanduser(basecaller_path)+' -i '+pod5_dir+' -s '+fastq_dir+' -c '+guppy_config_file+' -x auto --bam_out --index --moves_out -a '+os.path.join(args.w+'/'+os.path.basename(xfasta))
+		os.system(cmd)
+	else:
+		print('Xemora  [STATUS] - Skipping POD5 basecalling for modified bases.')
+
+
+		###Merge Bam files 
+	bam_dir = os.path.normpath(args.w)+'/'+os.path.basename(args.f)+'_bam'
+	check_bam_dir=bam_dir+'.bam'
+	if os.path.isfile(bam_dir+'.bam') == False or regenerate_bam == True: 
+		cmd = 'samtools merge '+os.path.join(bam_dir+'.bam'+' '+os.path.join(fastq_dir,'pass/*.bam -f'))
+		print('Xemora  [STATUS] - Merging modified BAM files.')
+		os.system(cmd)
+	else:
+		print('Xemora  [STATUS] - Skipping merging modified BAM files.')
+
+
+		###Bed file generation 
+	xfasta_dir = os.path.join(args.w+'/'+os.path.basename(xfasta))
+	if os.stat(xfasta_dir).st_size == 0: 
+		print('Xemora  [ERROR] - Empty xfasta file generated. Check that XNA bases were present in sequence of input fasta file.')
+		sys.exit()
+	print('Xemora  [STATUS] - Generating bed file for modified base.')
+	cmd = 'python lib/xr_xfasta2bed.py '+os.path.join(xfasta_dir)+' '+os.path.join(args.w,mod_base+'.bed ' +mod_base+' '+mod_base)
+	bed_dir = os.path.join(args.w,mod_base+'.bed')
+	os.system(cmd)
+>>>>>>> 1e30d19 (Add existing file)
 
 
 	if args.o:
@@ -307,12 +372,20 @@ elif args.subparsers == 'preprocess':
 
 
 	print("Xenomorph Status - [Preprocess] Performing level extraction surrounding XNA locations.")
+<<<<<<< HEAD
 	cmd = 'python lib/xm_get_levels.py '+fast5_sing_dir+' '+os.path.normpath(xfasta)+' '+level_output_fn+' '+index_group
+=======
+	cmd = 'python lib/xr_get_levels.py '+check_pod5_dir+' '+ check_bam_dir + ' '+ bed_dir + ' '  +xfasta_dir+' '+level_output_fn
+>>>>>>> 1e30d19 (Add existing file)
 	os.system(cmd) 
 
 	if os.path.exists(xfasta[0:xfasta.find('.fa')]+'_rc.fa')==True:
 		print("Xenomorph Status - [Preprocess] Performing level extraction on surrounding XNA locations with reverse set.")
+<<<<<<< HEAD
 		cmd = 'python lib/xm_get_levels.py '+fast5_sing_dir+' '+os.path.normpath(xfasta_rc)+' '+level_output_fn+' '+rc_index_group
+=======
+		cmd = 'python lib/xr_get_levels.py '+check_pod5_dir+' '+ check_bam_dir +' '+ bed_dir + ' ' +xfasta_rc_dir+' '+level_output_fn
+>>>>>>> 1e30d19 (Add existing file)
 		os.system(cmd) 
 	print("Xenomorph Status - [Preprocess] Saving output level file to "+level_output_fn)
 	print("Xenomorph Status - [Preprocess Complete] Use 'xenomorph.py morph' for alternative hypothesis testing on XNA positions.")
