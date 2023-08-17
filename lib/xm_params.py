@@ -65,6 +65,11 @@ xmer_boundary = 3
 #Number of bases before and after XNA that are required in a matching read (default = 30 alt) 
 xmer_padding = 15
 
+#Number of levels before and after to extract surrounding an XNA (default = 3) 
+rescale_xmer_boundary = 20
+
+#Number of bases before and after XNA that are required in a matching read (default = 30 alt) 
+rescale_xmer_padding = 30
 
 ######################RESQUIGGLE PARAMS#######################
 

@@ -171,33 +171,45 @@ sig_map_refiner = refine_signal_map.SigMapRefiner(
     #do_rough_rescale = True
 )
 print(sig_map_refiner)
-#Rescale parameters for level - 
 
 
-enable_rescale = True
-if enable_rescale == True: 
-    print('--------------------------------')
-    print('Warning - Rescale parameters is enabled. This estimate is data set specific')
-
-    #Rescale for PZ
-    rescale = 1.5172133669195214
-    reshift = 0.028835658921770185
-
-
- #   rescale  = 1.528332899283027
- #   reshift  = 0.04036830401530363
-
-    print('Rescale = '+str(rescale)+'      reshift = '+str(reshift))
-    print('--------------------------------')
-else:
-    rescale = 1
-    reshift = 0 
 
 ############################
-
 #Num read overwrite
 if max_num_reads >0: 
     num_reads = max_num_reads
+
+###############################################
+#Perform global rescaling estimate on ATGC portions of read
+enable_rescale = True
+if enable_rescale == True: 
+    print('Xenomorph Status [Preprocess] - Calculating global scaling using Thiel-Sen estimator')
+
+    rescale = 1
+    reshift = 0
+
+    #Number of levels before and after to extract surrounding an XNA (default = 3) 
+    xmer_boundary = rescale_xmer_boundary
+
+    #Number of bases before and after XNA that are required in a matching read (default = 30 alt) 
+    xmer_padding = rescale_xmer_padding
+    
+    #Maximum number of reads to process
+    num_reads = rescale_max_num_reads
+elif override_rescale == True:
+    print('--------------------------------')
+    print('Xenomorph Status [Preprocess] Warning - Manual rescale parameters override is enabled. This estimate is data set specific.')
+    rescale = manual_rescale
+    reshift = manual_reshift
+    print('Rescale = '+str(rescale)+'      reshift = '+str(reshift))
+    print('--------------------------------')
+else: 
+    print('Xenomorph Status [Preprocess] - Skipping global rescaling')
+    rescale = 1
+    reshift = 0
+###############################################
+
+
 
 if 1>0: 
     #Set up progress bar
@@ -328,8 +340,13 @@ if 1>0:
                     #Use signals extracted from read region to check if segmentation passed around region of interest
                     if np.isnan(sum(read_region))==False: 
 
+
                         #Store output dataframe for level file generation
-                        read_out = {'Read_ID':read_ID, "reference_sequence": reference_sequence_header, "read_xna_strand": strand, "read_reference_locus": read_ref_locus, "read_start": read_map_start, "read_end":read_map_end, "read_levels": xna_region_mean, "read_sd": xna_region_sd, "read_dwell": xna_region_dwell, "read_q-score": read_qs, "read_signal_match_score": match_quality,"read_xna_position": xna_pos, "read_xna": xna_base, "read_xna_sequence": read_xna_seq}
+                        read_out = {'Read_ID':read_ID, "reference_sequence": reference_sequence_header, 
+                        "read_xna_strand": strand, "read_reference_locus": read_ref_locus, "read_start": read_map_start, 
+                        "read_end":read_map_end, "read_levels": xna_region_mean, "read_sd": xna_region_sd, "read_dwell": 
+                        xna_region_dwell, "read_q-score": read_qs, "read_signal_match_score": match_quality,"read_xna_position": 
+                        xna_pos, "read_xna": xna_base, "read_xna_sequence": read_xna_seq}
                         output_summary.loc[len(output_summary)] = read_out
 
                     #If there are missing values around segmentation region, skip processing read
@@ -344,7 +361,7 @@ if 1>0:
     #Generate reporting summary 
     passed_reads = len(output_summary)
     failed_reads = int(num_reads)-passed_reads
-    print("[Xemora Status] Analyzed " + str(num_reads) + " reads.\n"+ str(passed_reads) + " passed alignment and segmentation.\n" + str(segmentation_failed) + " reads failed due to segmentation. \n" +str(failed_reads-segmentation_failed)+" reads failed for unknown reasons")
+    print("Xenomorph Status [Preprocess] Analyzed " + str(num_reads) + " reads.\n"+ str(passed_reads) + " passed alignment and segmentation.\n" + str(segmentation_failed) + " reads failed due to segmentation. \n" +str(failed_reads-segmentation_failed)+" reads failed for unknown reasons")
 
 
     #Save output to csv file

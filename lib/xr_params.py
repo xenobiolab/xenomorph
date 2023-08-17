@@ -33,14 +33,12 @@ xna_segmentation_model_sets = ['BS','PZ','JV','XK', 'QW','ER']
 #Possible XNA bases
 xna_bases = np.concatenate(list(list(i) for i in xna_base_pairs))
 
-#############################XEMORA PARAMETERS####################
+#############################REMORA PARAMETERS####################
 
-#Level table location
-#level_table = '/home/marchandlab/xenomorph/xenomorph-xemora/kmers/9.4_6mers_450bps_trimmed.txt'
-#level_table = '/home/marchandlab/xenomorph/xenomorph-xemora/kmers/9mer_levels_v1.txt'
+#Kmer level table file path 
 level_table = '/home/marchandlab/Dev/xenomorph-xemora/kmers/4mer_9.4.1.csv'
 
-#Signal extraction type (norm, dac, pa)
+#Signal extraction type (norm, dac, pa; default = 'norm')
 signal_type = 'norm'
 
 #Set min match score. Sequences should have a match quality greather than match_score to pass filter. (default = 0)
@@ -56,7 +54,7 @@ basecall_pod = False
 regenerate_bam = False
 
 #Re-generate training or basecalling chunks.
-regenerate_chunks = True
+#regenerate_chunks = True
 
 #generate a .bai file for your bam file -- you need to do this the first time you run analysis
 gen_bai = True
@@ -73,11 +71,26 @@ extract_pos = 67
 #Preprocess a maximum number of reads (default = 0 == all reads) 
 max_num_reads = 1000
 
-#Perform global rescale 
-perform_global_rescale = False 
 
+######################LEVEL RESCALING######################
+#Perform global rescale. 
+perform_global_rescale = True 
 
+#Rescale metric (mean or median. Default = median)
+rescale_metric = 'median'
 
+#Rescale max number of reads to use
+rescale_max_num_reads = 100
+
+#Override rescale parameters 
+override_rescale = False 
+
+#If override is true, use the following rescale and reshift 
+manual_rescale = 1.5172133669195214
+manual_reshift = 0.028835658921770185
+
+#rescale  = 1.528332899283027
+#reshift  = 0.04036830401530363
 ######################XFASTA GENERATION######################
 
 #Fasta2x - write sequences to xfasta even if they do no contain XNAs. Default = False 
