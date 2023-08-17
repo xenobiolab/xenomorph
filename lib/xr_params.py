@@ -14,7 +14,6 @@ Updated: 8/16/23
 
 import numpy as np
 
-
 #Standard basepairs written in 'purine pyrimidine' order
 standard_base_pairs = ['AT','GC']
 
@@ -69,12 +68,27 @@ force_extract_position = False
 extract_pos = 67
 
 #Preprocess a maximum number of reads (default = 0 == all reads) 
-max_num_reads = 0
+max_num_reads = 1000
 
 
 ######################LEVEL RESCALING######################
+
+
+#If global rescale is false, default to manual rescale 
+manual_rescale = 1.4525020871963723 #1.4525020871963723  #1.5172133669195214
+manual_reshift = 0.01611804923176846 #0.01611804923176846 # 0.028835658921770185
+
+
 #Perform global rescale. 
-perform_global_rescale = False
+perform_global_rescale = True
+
+global_rescale = 1.4782289631862366
+
+global_reshift = 0.0707042989373598
+
+
+#Path to model used as ground truth for rescaling 
+rescale_reference_model_path = 'models/libv2/ATGC_libv2_FLG001.csv'
 
 #Rescale metric (mean or median. Default = median)
 rescale_metric = 'median'
@@ -83,10 +97,10 @@ rescale_metric = 'median'
 rescale_method ='Thiel-Sen'
 
 #Rescale max number of reads to use
-rescale_max_num_reads = 1000
+rescale_max_num_reads = 100
 
 #Number of levels before and after to extract surrounding an XNA (default = 3) 
-rescale_xmer_boundary = 40
+rescale_xmer_boundary = 50
 
 #Number of bases before and after XNA that are required in a matching read (default = 30 alt) 
 rescale_xmer_padding = 50
@@ -94,15 +108,6 @@ rescale_xmer_padding = 50
 #Show rescale plot 
 rescale_show_plot = True
 
-#Override rescale parameters 
-override_rescale = True
-
-#If override is true, use the following rescale and reshift 
-manual_rescale = 1.4525020871963723 #1.4525020871963723  #1.5172133669195214
-manual_reshift = 0.01611804923176846 #0.01611804923176846 # 0.028835658921770185
-
-#rescale  = 1.528332899283027
-#reshift  = 0.04036830401530363
 ######################XFASTA GENERATION######################
 
 #Fasta2x - write sequences to xfasta even if they do no contain XNAs. Default = False 

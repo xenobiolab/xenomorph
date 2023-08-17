@@ -146,6 +146,7 @@ if args.subparsers == 'morph':
 		output_fn=os.path.normpath(args.l).replace(os.path.basename(args.l),'')+'/output_summary_basecalled.csv'
 
 
+
 	if args.g: 
 		if args.n:
 			print("Xenomorph Status - [Morph Global Null] Testing null hypothesis of XNA basecalls by grouping reads that map to the same region (global).")
@@ -311,9 +312,9 @@ elif args.subparsers == 'preprocess':
 		os.system(cmd) 
 
 	else: 
-		print("Xenomorph Status - [Preprocess] Performing level extraction surrounding XNA locations.")
-		cmd = 'python lib/xr_get_levels.py '+check_pod5_dir+' '+ check_bam_dir + ' '+ bed_dir + ' '  +xfasta_dir+' '+level_output_fn
-		os.system(cmd) 
+	    print("Xenomorph Status - [Preprocess] Performing level extraction surrounding XNA locations.")
+	    cmd = 'python lib/xr_get_levels.py '+check_pod5_dir+' '+ check_bam_dir + ' '+ bed_dir + ' '  +xfasta_dir+' '+level_output_fn
+	    os.system(cmd) 
 
 	if os.path.exists(xfasta[0:xfasta.find('.fa')]+'_rc.fa')==True:
 		print("Xenomorph Status - [Preprocess] Performing level extraction on surrounding XNA locations with reverse set.")

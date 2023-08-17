@@ -29,6 +29,7 @@ from xr_params import *
 ##############################################################
 
 
+
 #Rescaling metric is set in xr_params. Median suggested since it is more robust. 
 if rescale_metric =='mean': 
     rescale_level = 'Mean level'
@@ -40,7 +41,7 @@ raw_model_path = sys.argv[1]
 kmer_raw_model = pd.read_csv(raw_model_path, sep = ',')
 
 #Get reference model - Should match flow cell chemistry and use same scaling as XNA models. 
-reference_model_path = 'models/libv2/ATGC_libv2_FLG001.csv'
+reference_model_path = rescale_reference_model_path
 kmer_reference_model = pd.read_csv(reference_model_path, sep = ',')
 
 #Filter raw and refernece model to only contain kmers with ATGC 
@@ -72,20 +73,33 @@ if rescale_show_plot == True:
 #Calculate test statistics 
 if rescale_method =='Poly':
     theta = np.polyfit(x, y, 1)
-    print(f'Xenomorph Status - [Rescale] Polyfit used to calculate new scaling parameters') 
-    print('     m = '+str(theta[0]))
-    print('     b = '+str(theta[1]))
+    print(f'Xenomorph Status - [Rescale] Polyfit used to calculate new scaling parameters: m = '+str(theta[0])+'   b = '+str(theta[1])) 
 
 elif rescale_method =='Thiel-Sen':
     thiel = stats.theilslopes(y, x)
-    print(f'Xenomorph Status - [Rescale] Thiel-sen estimatate used to calculate new scaling parameters') 
-    print('     m = '+str(thiel[0]))
-    print('     b = '+str(thiel[1]))
+    print(f'Xenomorph Status - [Rescale] Thiel-sen estimatate used to calculate new scaling parameters: m = '+str(thiel[0])+'   b = '+str(thiel[1])) 
 
 
+new_rescale = thiel[0]
+new_reshift = thiel[1]
 
 
+print(f'Xenomorph Status - [Rescale] Upading global scaling and global shift in lib/xr_params.py.') 
+# Read the content of params.txt
+with open('lib/xr_params.py', 'r') as file:
+    lines = file.readlines()
+
+# Update the 'rescale' parameter in the content
+for i, line in enumerate(lines):
+    if line.startswith('global_rescale'):
+        lines[i] = f'global_rescale = {new_rescale}\n'
+        
+    if line.startswith('global_reshift'):
+        lines[i] = f'global_reshift = {new_reshift}\n'
 
 
+# Write the updated content back to params.txt
+with open('lib/xr_params.py', 'w') as file:
+    file.writelines(lines)
 
 

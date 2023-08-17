@@ -104,6 +104,15 @@ fasta_path = sys.argv[4]
 ##Output folder location 
 output_folder = sys.argv[5]
 
+##Set global scaling shift and scale
+if perform_global_rescale == False:
+    rescale = manual_rescale
+    reshift = manual_reshift
+else: 
+    rescale = 1
+    reshift = 0 
+print('Xenomorph Status - [Preprocess] Rescaling using the following parameters: m = '+str(rescale)+'   b = '+str(reshift))
+
 #Import fasta file and bed file 
 ##Fasta file contains the reference sequences 
 fasta_file = pysam.FastaFile(fasta_path)
@@ -123,7 +132,6 @@ pod5_fh = pod5.Reader(pod5_path)
 
 ####BAM file operations 
 #Index bam file using setting in gen_bai from lib/xr_params.py. Required if input bam file is unindexed. 
-
 
 
 if gen_bai==True:
@@ -173,21 +181,14 @@ sig_map_refiner = refine_signal_map.SigMapRefiner(
 print(sig_map_refiner)
 
 
-
-############################
 #Num read overwrite
 if max_num_reads >0: 
     num_reads = max_num_reads
 
-###############################################
+
 #Perform global rescaling estimate on ATGC portions of read
-enable_rescale = True
-if enable_rescale == True and override_rescale == False: 
-    print('Xenomorph Status [Preprocess] - Calculating global scaling using Thiel-Sen estimator')
-
-    rescale = 1
-    reshift = 0
-
+if perform_global_rescale == True:
+    print('Xenomorph Status [Preprocess] - Extracting kmers for calculating global scaling using Thiel-Sen estimator')
     #Number of levels before and after to extract surrounding an XNA (default = 3) 
     xmer_boundary = rescale_xmer_boundary
 
@@ -196,25 +197,9 @@ if enable_rescale == True and override_rescale == False:
     
     #Maximum number of reads to process
     num_reads = rescale_max_num_reads
-elif override_rescale == True:
-    print('--------------------------------')
-    print('Xenomorph Status [Preprocess] Warning - Manual rescale parameters override is enabled. This estimate is data set specific.')
-    rescale = manual_rescale
-    reshift = manual_reshift
-    print('Rescale = '+str(rescale)+'      reshift = '+str(reshift))
-    print('--------------------------------')
-else: 
-    print('Xenomorph Status [Preprocess] - Skipping global rescaling')
-    rescale = 1
-    reshift = 0
-###############################################
 
-
-
-
-
-
-
+    
+    
 if 1>0: 
     #Set up progress bar
     with alive_bar(int(num_reads), force_tty=True) as bar: 

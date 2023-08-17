@@ -53,14 +53,14 @@ run_null_gen = False
 #Basecalling
 run_null_level = False
 run_morph = False
-run_stats = True
+run_stats = False
 run_global_morph = False
 
 #Generate model from a level file
 run_model_gen = False
 
 #Calculate rescale paramters 
-run_rescale = False
+run_rescale = True
 
 #Morph model
 model = 'ATGCPZ'
@@ -72,6 +72,25 @@ model = 'ATGCPZ'
 out_pre = out_file_prefix+'_FLG001'+'_levels.csv'
 out_bcpr = out_file_prefix+'_FLG001_bc.csv'
 out_bcglobal = out_file_prefix+'_FLG001_bc_global.csv'
+
+
+
+
+#6 Calculate rescaling parameters 
+if run_rescale== True:
+    cmd = 'python xenomorph.py preprocess -w '+wdir+' -f '+fast5+' -r '+ref+' -o '+out_pre
+    os.system(cmd)
+
+    cmd = 'python lib/xm_extract_levels.py '+wdir+out_pre
+    os.system(cmd) 
+
+    cmd = 'python lib/parse_kmer.py '+wdir+out_pre.replace('_levels.csv','_kmers.csv')+' '+wdir+out_pre.replace('_levels.csv','raw_summary.csv')+' ATGC'
+    os.system(cmd) 
+    
+    cmd = 'python lib/xr_kmer_rescale.py '+wdir+out_pre.replace('_levels.csv','raw_summary.csv')
+    os.system(cmd) 
+
+
 
 #1. Preprocess file using xemora preprocessto get a level file 
 if run_preprocess == True:
@@ -114,14 +133,14 @@ if run_model_gen== True:
     os.system(cmd) 
 
     #Take statistics on each kmer set to generate a model file
-    #cmd = 'python lib/parse_kmer.py '+wdir+out_pre.replace('_levels.csv','_kmers.csv')+' '+wdir+out_pre.replace('_levels.csv','_summary.csv')+' ATGC'
-    cmd = 'python lib/parse_kmer.py '+wdir+out_pre.replace('_levels.csv','_kmers.csv')+' '+wdir+out_pre.replace('_levels.csv','_summary.csv')
+    if run_rescale == False: 
+        cmd = 'python lib/parse_kmer.py '+wdir+out_pre.replace('_levels.csv','_kmers.csv')+' '+wdir+out_pre.replace('_levels.csv','_summary.csv')
+    else: 
+        cmd = 'python lib/parse_kmer.py '+wdir+out_pre.replace('_levels.csv','_kmers.csv')+' '+wdir+out_pre.replace('_levels.csv','_summary.csv')+' ATGC'
     os.system(cmd) 
 
 
-#6 Calculate rescaling parameters 
-if run_rescale== True:
-    cmd = 'python lib/xr_kmer_rescale.py '+wdir+out_pre.replace('_levels.csv','_summary.csv')
-    os.system(cmd) 
+
+
 
 
