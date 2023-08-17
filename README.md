@@ -21,11 +21,7 @@ This public repository is maintained by the XenoBiology Research Group at the Un
 This toolkit was created to work with a series of non-standard nucleotides that can form the basis of an expanded genetic alphabet (up to 12 letters). In addition to the standard base pairs (A:T, G:C), the XNA models described in this work allow for single xenonucleotide detection of specific forms of B:S, P:Z, X:K, and J:V. A sample multi-FAST5 file of raw nanopore read data containing PZ insertion can be found in /example_reads/PZ_sample_reads.fast5. Reference file containing all possible sequences in this file, including no-PZ insertion ("Gap") is found in example_reads/PZ_esample_reference.fa. Nanopore XNA sequences used in generation of this work containing BSPZXKJV insertions can be downloaded from the Sequence Reads Archive (SRA Bioproject: PRJNA932328). More information can be found with the associate publication.
 
 ## Dependencies
-<<<<<<< HEAD
-Xenomorph requires ONT tools (ont-fast5-api, tombo, guppy), minimap2 (mappy), and various python packages. A full list of dependencies can be found in the xenomorph-env.yml document. To use conda for installing dependencies, simply load xenomorph-env.yml into a new environment. Xenomorph was built and tested on Ubuntu 18.04 and 20.04. 
-=======
 Xenomorph requires ONT tools (ont-fast5-api, tombo, guppy), minimap2 (mappy), and various python packages. A full list of dependencies can be found in the xenomorph-env.yml document. To use conda for installing dependencies, simply load xenomorph-env.yml into a new environment. Xenomorph was built and tested on Ubuntu 18.04 and 20.04 with an Nvidia GTX 3060 GPU. 
->>>>>>> e78bc6c (first commit)
 
         conda env create -f xenomorph-env.yml
 
@@ -176,7 +172,3 @@ Preprocess, morph, and stats use various parameters that can be tuned or modifie
     J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand
 
 
-<<<<<<< HEAD
-=======
-# xenomorph-xemora
->>>>>>> e78bc6c (first commit)
