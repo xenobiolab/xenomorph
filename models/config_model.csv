@@ -1,9 +1,5 @@
 full_name,abbreviation,letter_code,description,active,group,path
-<<<<<<< HEAD
-ATGC_minion,ATGC,ATGC,Canonical bases ATGC,True,1,models/libv2/ATGC_blunt_libv2_FLG001GC_summ_kde.csv
-=======
 ATGC_minion,ATGC,ATGC,Canonical bases ATGC,True,1,models/libv2/ATGC_libv2_FLG001.csv
->>>>>>> d9c75ab (pathway to remora integration)
 B_libv2,B_A,B,Hachimoji base B,True,2,models/libv2/B_libv2_FLG001.csv
 Sn_libv2,Sn_A,S,Hachimoji base Sn,False,2,models/libv2/Sn_libv2_FLG001.csv
 Sc_libv2,Sc_A,S,Hachimoji base Sc,True,2,models/libv2/Sc_libv2_FLG001.csv

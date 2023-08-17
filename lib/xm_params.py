@@ -86,7 +86,7 @@ qscore_filter = 9#(default 15)
 signal_filter = 100 #1.5#(default 1.1)
 
 #Minimum number of reads required for calculating a concensus value
-concensus_stat_filter = 20
+concensus_stat_filter = 10
 
 
 ############################################################
@@ -126,7 +126,7 @@ kmer_weights = [1, 1, 1 ,1]
 kmer_sizes = [len(kmer_mask)] 
 
 #Set mu as either: 'KDE Mean level', 'Median level',or 'Mean level'. Basecalling performance can vary depending on accuracy of measurement. 
-mu = 'KDE Mean level'
+mu = 'Mean level'
 
 #Set mu as either: 'mean or median"
 mu_global = 'Mean'
@@ -141,20 +141,20 @@ likelihood_ratio = 'Outlier-Robust'
 likelihood_threshold = 0
 
 #Max reads for morph
-max_reads = 1000
+max_reads = 10000
 
 #Max reads for null morph
 max_reads_null = 0
 
 #####Outlier robust parameters#####
-#Changes position and magnitude of max/min of outlier-robust function
-Sf =  4#4
+#Changes position and magnitude of max/min of outlier-robust function (default = 4) 
+Sf =  4
 
-#Changes magnitude of max/min of outlier-robust function but not position 
-Sf2 = 3#3 
+#Changes magnitude of max/min of outlier-robust function but not position (default = 3)
+Sf2 = 3
 
-#Changes magnitude of max/min of outlier-robust function but not position 
-Sp = 0.3#0.3 
+#Changes magnitude of max/min of outlier-robust function but not position (default = 0.3)
+Sp = 0.3 
 
 #Bases for performing alternative hypothesis: Options: all [ATGCXY], standard [ATGCX], pyrpur [AGX/TCY], confounding[GX/CY]
 alt_base_type = 'confounding'

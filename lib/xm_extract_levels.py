@@ -79,7 +79,7 @@ bskmer_level = pd.DataFrame({'kmer_xy' : kmers})
 bskmer_level['mean_level']=''
 bskmer_level['mean_level']=bskmer_level['mean_level'].astype(object)
 
-print('Xenomorph Status - [Level Extraction] Note: read filtering options are enabled')
+print('Xenomorph Status - [Model building] Note: read filtering options are enabled')
 #Loop through all files 
 with alive_bar(len(level_file), force_tty=True) as bar: 
     for i in range(0,len(level_file)): 

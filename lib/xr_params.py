@@ -54,7 +54,7 @@ basecall_pod = False
 regenerate_bam = False
 
 #Re-generate training or basecalling chunks.
-#regenerate_chunks = True
+regenerate_chunks = True
 
 #generate a .bai file for your bam file -- you need to do this the first time you run analysis
 gen_bai = True
@@ -69,12 +69,12 @@ force_extract_position = False
 extract_pos = 67
 
 #Preprocess a maximum number of reads (default = 0 == all reads) 
-max_num_reads = 1000
+max_num_reads = 0
 
 
 ######################LEVEL RESCALING######################
 #Perform global rescale. 
-perform_global_rescale = True 
+perform_global_rescale = False
 
 #Rescale metric (mean or median. Default = median)
 rescale_metric = 'median'
@@ -92,16 +92,14 @@ rescale_xmer_boundary = 40
 rescale_xmer_padding = 50
 
 #Show rescale plot 
-rescale_show_plot = False
+rescale_show_plot = True
 
 #Override rescale parameters 
-override_rescale = False 
+override_rescale = True
 
 #If override is true, use the following rescale and reshift 
-manual_rescale = 1.5172133669195214
-manual_reshift = 0.028835658921770185
-
-
+manual_rescale = 1.4525020871963723 #1.4525020871963723  #1.5172133669195214
+manual_reshift = 0.01611804923176846 #0.01611804923176846 # 0.028835658921770185
 
 #rescale  = 1.528332899283027
 #reshift  = 0.04036830401530363
@@ -125,13 +123,13 @@ mod_rev_base = 'Z'
 can_base = 'G'
 can_rev_base = 'C'
 #Extent of Kmer content (-,+) to store for model training
-#kmer_context ='4 4' 
+kmer_context ='4 4' 
 
 #Extent of chunk context (centered around modified base) 
-#chunk_context = '50 50' 
+chunk_context = '50 50' 
 
 #Proportion of reads to use for validation 
-#val_proportion = 0.01
+val_proportion = 0.01
 
 ############################################################
 #Guppy Base caller configuration

@@ -36,8 +36,8 @@ from sklearn.neighbors import KernelDensity
 #from tombo import tombo_helper, tombo_stats, resquiggle
 
 
-
-#Read kmer level output file
+print('Xenomorph Status - [Model building] Calculating kmer model statistics')
+#Read kmer level output file as an input
 input_file = sys.argv[1]
 output_file = sys.argv[2]
 bandwidth = 0.2
@@ -80,6 +80,9 @@ kmer_level = pd.read_csv(input_file, sep=',', dtype={'kmer_xy': str, 'mean_level
 kmer_level = kmer_level.drop(kmer_level.columns[0], axis=1) 
 kmer_level = kmer_level.dropna(subset = ['mean_level'])
 
+
+if len(sys.argv)==4: 
+    kmer_level = kmer_level[kmer_level['kmer_xy'].str.contains('^[ATGC]+$')]
 
 
 

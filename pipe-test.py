@@ -53,14 +53,14 @@ run_null_gen = False
 #Basecalling
 run_null_level = False
 run_morph = False
-run_stats = False
-run_global_morph = False 
+run_stats = True
+run_global_morph = False
 
 #Generate model from a level file
 run_model_gen = False
 
 #Calculate rescale paramters 
-run_rescale = True
+run_rescale = False
 
 #Morph model
 model = 'ATGCPZ'
@@ -91,8 +91,8 @@ if run_null_level ==True:
 #2. Testing whether we can run morph command following level extraction
 if run_morph == True:
     cmd = 'python xenomorph.py morph -l '+wdir+out_pre+' -m '+model+' -o '+wdir+out_bcpr
-   # print(cmd)
     os.system(cmd) 
+
 
 #3. Stats on a morph run 
 if run_stats == True:
@@ -106,6 +106,7 @@ if run_global_morph == True:
     os.system(cmd) 
 
 
+
 #5 Model generation commands - Two steps
 if run_model_gen== True:
     #First, extract all kmer signals
@@ -113,6 +114,7 @@ if run_model_gen== True:
     os.system(cmd) 
 
     #Take statistics on each kmer set to generate a model file
+    #cmd = 'python lib/parse_kmer.py '+wdir+out_pre.replace('_levels.csv','_kmers.csv')+' '+wdir+out_pre.replace('_levels.csv','_summary.csv')+' ATGC'
     cmd = 'python lib/parse_kmer.py '+wdir+out_pre.replace('_levels.csv','_kmers.csv')+' '+wdir+out_pre.replace('_levels.csv','_summary.csv')
     os.system(cmd) 
 

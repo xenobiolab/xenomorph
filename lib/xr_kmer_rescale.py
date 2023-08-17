@@ -44,8 +44,8 @@ reference_model_path = 'models/libv2/ATGC_libv2_FLG001.csv'
 kmer_reference_model = pd.read_csv(reference_model_path, sep = ',')
 
 #Filter raw and refernece model to only contain kmers with ATGC 
-kmer_reference_model = kmer_reference_model[kmer_reference_model['KXmer'].str.contains('^[AGC]+$')]
-kmer_raw_model = kmer_raw_model[kmer_raw_model['KXmer'].str.contains('^[AGC]+$')]
+kmer_reference_model = kmer_reference_model[kmer_reference_model['KXmer'].str.contains('^[ATGC]+$')]
+kmer_raw_model = kmer_raw_model[kmer_raw_model['KXmer'].str.contains('^[ATGC]+$')]
 
 print('Xenomorph Status - [Rescale] ' +str(len(kmer_raw_model))+' kmers available for calculating global rescale parameters')
 
@@ -56,7 +56,7 @@ y=merged_kmers[rescale_level+'_y']
 
 ####Show rescale plot (optional setting for troubleshooting)
 if rescale_show_plot == True: 
-    fig=plt.figure()
+    fig, ax=plt.subplots()
     plt.errorbar(x,y, fmt ='o', solid_capstyle='projecting', capsize=5, color ='indigo')
     plt.xlabel('Raw kmer estimates')
     plt.ylabel('Model kmer estimates')
@@ -65,23 +65,23 @@ if rescale_show_plot == True:
     plt.axline((1.4, 1), slope=1, color="red", linestyle="--")
     plt.xlim([-5, 5])
     plt.ylim([-5, 5])
-    plt.axis('square')
+    #plt.axis('square')
+    ax.set_box_aspect(1)
     plt.show()
 
 #Calculate test statistics 
 if rescale_method =='Poly':
     theta = np.polyfit(x, y, 1)
-    print('###############################')
     print(f'Xenomorph Status - [Rescale] Polyfit used to calculate new scaling parameters') 
-    print('            m = '+str(theta[0]))
-    print('            b = '+str(theta[1]))
+    print('     m = '+str(theta[0]))
+    print('     b = '+str(theta[1]))
 
 elif rescale_method =='Thiel-Sen':
     thiel = stats.theilslopes(y, x)
     print(f'Xenomorph Status - [Rescale] Thiel-sen estimatate used to calculate new scaling parameters') 
-    print('            m = '+str(thiel[0]))
-    print('            b = '+str(thiel[1]))
-    print('###############################')
+    print('     m = '+str(thiel[0]))
+    print('     b = '+str(thiel[1]))
+
 
 
 

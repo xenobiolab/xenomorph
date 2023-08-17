@@ -182,7 +182,7 @@ if max_num_reads >0:
 ###############################################
 #Perform global rescaling estimate on ATGC portions of read
 enable_rescale = True
-if enable_rescale == True: 
+if enable_rescale == True and override_rescale == False: 
     print('Xenomorph Status [Preprocess] - Calculating global scaling using Thiel-Sen estimator')
 
     rescale = 1
@@ -208,6 +208,10 @@ else:
     rescale = 1
     reshift = 0
 ###############################################
+
+
+
+
 
 
 
@@ -319,8 +323,6 @@ if 1>0:
 
                             #Get signal means for whole read
                             read_means = read_dms["trimmean"]*rescale+reshift
-
-
 
                             #Extract sub-region defined by xmer_padding for filtering (set in xm_params ; xmer_padding). This is used for segmentation check.
                             read_region = read_means[len_sequence-xna_pos-xmer_padding-1:len_sequence-xna_pos+xmer_padding]
