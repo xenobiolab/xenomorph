@@ -317,7 +317,7 @@ read_level_summary= pd.read_csv(read_level_summary, sep=',')
 ##Filter out reads that do not pass quality settings in xm_params
 print('Xenomorph Status - [Stats] Filtering reads with q score > '+str(qscore_filter))
 print('Xenomorph Status - [Stats] Filtering reads with signal score < '+str(signal_filter))
-read_level_summary=read_level_summary[read_level_summary['read_q-score']>qscore_filter]
+#read_level_summary=read_level_summary[read_level_summary['read_q-score']>qscore_filter]
 read_level_summary=read_level_summary[read_level_summary['read_signal_match_score']<signal_filter]
 
 

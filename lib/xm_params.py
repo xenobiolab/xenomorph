@@ -31,13 +31,13 @@ standard_base_pairs = ['AT','GC']
 standard_bases = np.concatenate(list(list(i) for i in standard_base_pairs))
 
 #Alternative basepairs written in 'purine pyrimidine' order
-xna_base_pairs = ['BS','PZ','JV','XK','QW', 'ER']
+xna_base_pairs = ['BS','PZ','JV','XK','QW', 'ER', 'NN']
 
 #Seperate to segment data as non-complementary pairs 
-xna_segmentation_model_sets = ['B','S','PZ','JV','X','K']
+xna_segmentation_model_sets = ['B','S','PZ','JV','X','K','N']
 
 #Most similar canonical pair for each XNA
-confounding_pairs =  ['BA','SA','PG','ZC','JC','VG','XA','KG'] # Verified optimal pairs
+confounding_pairs =  ['BA','SA','PG','ZC','JC','VG','XA','KG','NN'] # Verified optimal pairs
 
 #Alternative basepairs written in 'purine pyrimidine' order
 xna_bases = np.concatenate(list(list(i) for i in xna_base_pairs))
@@ -63,7 +63,6 @@ kmer_minus = 1
 xmer_boundary = 3
 
 #Number of bases before and after XNA that are required in a matching read (default = 30 alt) 
-#xmer_padding = 15
 xmer_padding = 15
 
 
@@ -82,13 +81,13 @@ skip_sequence_rescaling = False
 
 ######################Quick stat/stats params#######################
 #Quick stat params 
-qscore_filter = 15#(default 15) 
+qscore_filter = 9#(default 15) 
 
 #Signal filter
-signal_filter = 1.5#(default 1.1)
+signal_filter = 100 #1.5#(default 1.1)
 
 #Minimum number of reads required for calculating a concensus value
-concensus_stat_filter = 10
+concensus_stat_filter = 20
 
 
 ############################################################
@@ -103,10 +102,13 @@ basecaller_path ='~/ont-guppy/bin/guppy_basecaller'
 flowcell_type = 'FLO-FLG001' #FLO-FLG001 #FLO-MIN106
 kit_type = 'SQK-LSK110' 
 device_type = 'cuda:all' 
-config_file = 'dna_r9.4.1_450bps_hac.cfg' 
+guppy_config_file = 'dna_r9.4.1_450bps_hac.cfg' 
 
 #Use reference file in basecalling alignment
 use_reference_to_basecall=False
+rebasecall= False
+regenerate_bam = False
+
 
 #Assign Fastq from 'pass', 'fail', or 'both' basecall files 
 read_assign = 'both'
@@ -125,7 +127,10 @@ kmer_weights = [1, 1, 1 ,1]
 kmer_sizes = [len(kmer_mask)] 
 
 #Set mu as either: 'KDE Mean level', 'Median level',or 'Mean level'. Basecalling performance can vary depending on accuracy of measurement. 
-mu = 'Mean level'
+mu = 'KDE Mean level'
+
+#Set mu as either: 'mean or median"
+mu_global = 'Mean'
 
 #Set sigma as 'Global-Median', 'Global-Mean' for global mean (recommended),  'Kmer' for kmer-specific, or set as float for fixed
 sigma = 0.4
@@ -137,7 +142,7 @@ likelihood_ratio = 'Outlier-Robust'
 likelihood_threshold = 0
 
 #Max reads for morph
-max_reads = 0
+max_reads = 1000
 
 #Max reads for null morph
 max_reads_null = 0
@@ -153,7 +158,7 @@ Sf2 = 3#3
 Sp = 0.3#0.3 
 
 #Bases for performing alternative hypothesis: Options: all [ATGCXY], standard [ATGCX], pyrpur [AGX/TCY], confounding[GX/CY]
-alt_base_type = 'all'
+alt_base_type = 'confounding'
 
 
 

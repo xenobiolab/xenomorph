@@ -42,12 +42,12 @@ try:
 	if use_reference_to_basecall==True: 
 		reference_file = sys.argv[3].replace('//','/')
 		print("Xenomorph Status - [Preprocess] Basecalling with reference xfasta file "+sys.argv[3]+".")
-		exec = basecaller_path+' -i '+input_folder+' -s '+ output_folder + '  --device '+device_type+' -a '+sys.argv[3]+' -c dna_r9.4.1_450bps_hac.cfg'
+		exec = basecaller_path+' -i '+input_folder+' -s '+ output_folder + '  --device '+device_type+' -a '+sys.argv[3]+' -c '+guppy_config_file
 		os.system(exec) 
 	else: 
 
 		print("Xenomorph Status - [Preprocess] De novo basecalling samples.")
-		exec = basecaller_path+' -i '+input_folder+' -s '+ output_folder + '  --device '+device_type +' -c dna_r9.4.1_450bps_hac.cfg'
+		exec = basecaller_path+' -i '+input_folder+' -s '+ output_folder + '  --device '+device_type +' -c '+guppy_config_file
 		os.system(exec) 
 
 

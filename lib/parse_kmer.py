@@ -26,13 +26,14 @@ import seaborn as sns
 import os
 import sys
 import scipy.stats
-from tombo import tombo_helper, tombo_stats, resquiggle
 from string import ascii_lowercase
 from alive_progress import alive_bar
 from sklearn.cluster import MeanShift
 from scipy.signal import argrelextrema
 from sklearn.neighbors import KernelDensity
 
+
+#from tombo import tombo_helper, tombo_stats, resquiggle
 
 
 

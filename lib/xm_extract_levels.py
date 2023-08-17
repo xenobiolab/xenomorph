@@ -14,7 +14,7 @@ Title: Synthesis and Sequencing of 12-Letter Supernumerary DNA
 By: H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, J. M. Craig, 
 J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand
 
-Updated: 2/14/23
+Updated: 8/7/23
 """
 ########################################################################
 ########################################################################
@@ -37,7 +37,7 @@ import numpy as np
 import pandas as pd
 import itertools 
 import os
-from tombo import tombo_helper, tombo_stats, resquiggle
+#from tombo import tombo_helper, tombo_stats, resquiggle
 from string import ascii_lowercase
 from alive_progress import alive_bar
 from xm_params import * 
@@ -62,9 +62,14 @@ level_input_file = sys.argv[1]
 output_file = level_input_file.replace('levels.csv','')+'kmers.csv'
 
 
+
+
+
+
 #Open level file as pandas dataframe
 level_file = pd.read_csv(level_input_file) 
 
+print(level_file)
 
 #Generate pandas dataframe with every possible kmer [kmer, data] 
 kmer_b=[] 
@@ -78,9 +83,10 @@ np.set_printoptions(threshold=sys.maxsize)
 pd.set_option('display.float_format', lambda x: '%.4f' % x)
 bskmer_level = pd.DataFrame({'kmer_xy' : kmers})
 bskmer_level['mean_level']=''
+bskmer_level['mean_level']=bskmer_level['mean_level'].astype(object)
 
-
-print(bases)
+#print(bskmer_level)
+#print(bases)
 
 print('Note: filtering enabled')
 #Loop through all files 
@@ -90,8 +96,9 @@ with alive_bar(len(level_file), force_tty=True) as bar:
         seq =level_file.iloc[i]['read_xna_sequence']
         level = level_file.iloc[i]['read_levels']
         qscore = level_file.iloc[i]['read_q-score']
-        sscore = level_file.iloc[i]['read_signal_match_score']
-
+        #sscore = level_file.iloc[i]['read_signal_match_score']
+        sscore = 0.5
+    
         if qscore > qscore_filter and sscore < signal_filter: 
 
             kmer_seq = seq2kmer(seq,4)
@@ -99,7 +106,9 @@ with alive_bar(len(level_file), force_tty=True) as bar:
 
 
             for j in range(0,len(kmer_seq)):
-                levo = bskmer_level.loc[bskmer_level['kmer_xy']==kmer_seq[j], 'mean_level'].values[0]
+                sel_kmer = kmer_seq[j]
+                levo = bskmer_level.loc[bskmer_level['kmer_xy']==sel_kmer, 'mean_level'].values[0]
+
                 lev = np.array(levels[j])
 
 
@@ -109,11 +118,9 @@ with alive_bar(len(level_file), force_tty=True) as bar:
                     lev = np.append(lev,levo)
 
                 else:
-                    lev=np.array(lev)
+                    lev=np.array(str(lev))
 
-                bskmer_level.loc[bskmer_level['kmer_xy']==kmer_seq[j], 'mean_level'] = [lev]
-
-
+                bskmer_level.at[bskmer_level[bskmer_level['kmer_xy']==sel_kmer].index[0], 'mean_level'] = lev
 
 
 
