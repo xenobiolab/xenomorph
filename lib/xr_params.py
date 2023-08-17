@@ -79,8 +79,20 @@ perform_global_rescale = True
 #Rescale metric (mean or median. Default = median)
 rescale_metric = 'median'
 
+#Rescale method calculation (Thiel-Sen, polyfit. Default = 'Thiel-Sen')
+rescale_method ='Thiel-Sen'
+
 #Rescale max number of reads to use
-rescale_max_num_reads = 100
+rescale_max_num_reads = 1000
+
+#Number of levels before and after to extract surrounding an XNA (default = 3) 
+rescale_xmer_boundary = 40
+
+#Number of bases before and after XNA that are required in a matching read (default = 30 alt) 
+rescale_xmer_padding = 50
+
+#Show rescale plot 
+rescale_show_plot = False
 
 #Override rescale parameters 
 override_rescale = False 
@@ -88,6 +100,8 @@ override_rescale = False
 #If override is true, use the following rescale and reshift 
 manual_rescale = 1.5172133669195214
 manual_reshift = 0.028835658921770185
+
+
 
 #rescale  = 1.528332899283027
 #reshift  = 0.04036830401530363

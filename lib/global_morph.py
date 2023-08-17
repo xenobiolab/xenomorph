@@ -385,8 +385,12 @@ output_summary = pd.DataFrame(columns = output_column_names)
 
 #numbers to calculate consensus count
 consensus_count=0
+<<<<<<< HEAD
+total_count=0
+=======
 total_count= {}
 global_count = {}
+>>>>>>> d9c75ab (pathway to remora integration)
 
 
 ref_seqs.sort()
@@ -433,6 +437,7 @@ with alive_bar(len(ref_seqs), force_tty=True) as bar:
                     levels = np.mean(ref_i_kmer_levels, axis = 0)
                 if 'median' in (mu_global).lower(): 
                     levels = np.median(ref_i_kmer_levels, axis = 0)
+
         
                 #Corresponding kmers 
                 kmer = seq2kmer(sequence,len(kmer_mask[0]))
@@ -479,6 +484,11 @@ with alive_bar(len(ref_seqs), force_tty=True) as bar:
 
                 #calculate consensus number 
                 if ref_i_n >=concensus_stat_filter: 
+<<<<<<< HEAD
+                    total_count +=1       
+
+                    if ref_i_x_is_concensus ==True:
+=======
 
                     if ref_i_x not in global_count:
                         global_count[ref_i_x]=0
@@ -494,6 +504,7 @@ with alive_bar(len(ref_seqs), force_tty=True) as bar:
                             global_count[ref_i_x] = global_count[ref_i_x]+1
                         except: 
                             global_count[ref_i_x] = 1
+>>>>>>> d9c75ab (pathway to remora integration)
                         consensus_count +=1
                 #print(sequence[xbase_pos]+' : '+lpp[0])
 
@@ -504,11 +515,19 @@ with alive_bar(len(ref_seqs), force_tty=True) as bar:
 
 
 output_summary.to_csv(out_fn)
+<<<<<<< HEAD
+
+print("########################################################")
+print("[Morph Global] - Summary for ["+ref_i_x+"] global morph")
+print("[Morph Global] - The number of correct consensus is (for n >"+str(concensus_stat_filter)+"): " + str(consensus_count) + "/" + str(total_count)+' ('+str((consensus_count/total_count)*100)+')')
+print("########################################################")
+=======
 for xna_key in global_count: 
     print("########################################################")
     print("Xenomorph Status - [Global Morph] - Summary for ["+xna_key+"] global morph")
     print("Xenomorph Status - [Global Morph] - The number of correct consensus is (for n >"+str(concensus_stat_filter)+"): " + str(global_count[xna_key]) + "/" + str(total_count[xna_key])+' ('+str((global_count[xna_key]/total_count[xna_key])*100)+')')
     print("########################################################")
+>>>>>>> d9c75ab (pathway to remora integration)
 
 
 

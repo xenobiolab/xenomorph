@@ -107,8 +107,6 @@ with alive_bar(len(kmer_level), force_tty=True) as bar:
 	    bar()
 	    kmx = kmer_level.iloc[i]['kmer_xy']
 
-
-	    #print(kmer_level.iloc[i])
 	    lev = kmer_level.iloc[i]['mean_level'].replace('\n',' ').replace("'",'').replace(']','').replace('[','').split(' ')
 
 
@@ -124,7 +122,6 @@ with alive_bar(len(kmer_level), force_tty=True) as bar:
 	    #Make unique - It might be worth going back to make sure we are using unique signals in the original xombo_py.py script 
 	    level = list(set(level))
 	    
-	    #print(kmx) 
 	    ma = np.max(level)
 	    mi = np.min(level)
 	    lm = np.mean(level)

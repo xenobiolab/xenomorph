@@ -16,6 +16,7 @@ Updated: 8/17/23
 import pandas as pd
 import numpy as np
 import itertools
+import sys
 import seaborn as sns
 import os
 from string import ascii_lowercase
@@ -28,64 +29,62 @@ from xr_params import *
 ##############################################################
 
 
-#This is set in xr_params. Median suggested since it is more robust. 
+#Rescaling metric is set in xr_params. Median suggested since it is more robust. 
 if rescale_metric =='mean': 
-    compare = 'Mean level'
+    rescale_level = 'Mean level'
 elif rescale_metric =='median':
-    compare = 'Median level'
+    rescale_level = 'Median level'
 
-stdlev = 'Std level'
-#stdlev = 'Std level'
-
-
-
+#Get raw data model estimate - Unscaled
+raw_model_path = sys.argv[1]
+kmer_raw_model = pd.read_csv(raw_model_path, sep = ',')
 
 #Get reference model - Should match flow cell chemistry and use same scaling as XNA models. 
 reference_model_path = 'models/libv2/ATGC_libv2_FLG001.csv'
 kmer_reference_model = pd.read_csv(reference_model_path, sep = ',')
 
-#Filter refernece model to only contain kmers with ATGC 
+#Filter raw and refernece model to only contain kmers with ATGC 
 kmer_reference_model = kmer_reference_model[kmer_reference_model['KXmer'].str.contains('^[AGC]+$')]
+kmer_raw_model = kmer_raw_model[kmer_raw_model['KXmer'].str.contains('^[AGC]+$')]
+
+print('Xenomorph Status - [Rescale] ' +str(len(kmer_raw_model))+' kmers available for calculating global rescale parameters')
+
+#Merge dataframes for estimate calculations
+merged_kmers = kmer_raw_model [['KXmer', rescale_level]].merge(kmer_reference_model[['KXmer', rescale_level]], on='KXmer', how='left')
+x=merged_kmers[rescale_level+'_x']
+y=merged_kmers[rescale_level+'_y']
+
+####Show rescale plot (optional setting for troubleshooting)
+if rescale_show_plot == True: 
+    fig=plt.figure()
+    plt.errorbar(x,y, fmt ='o', solid_capstyle='projecting', capsize=5, color ='indigo')
+    plt.xlabel('Raw kmer estimates')
+    plt.ylabel('Model kmer estimates')
+    plt.axline((1, 1), slope=1, color="black", linestyle="--")
+    plt.axline((0.6, 1), slope=1, color="red", linestyle="--")
+    plt.axline((1.4, 1), slope=1, color="red", linestyle="--")
+    plt.xlim([-5, 5])
+    plt.ylim([-5, 5])
+    plt.axis('square')
+    plt.show()
+
+#Calculate test statistics 
+if rescale_method =='Poly':
+    theta = np.polyfit(x, y, 1)
+    print('###############################')
+    print(f'Xenomorph Status - [Rescale] Polyfit used to calculate new scaling parameters') 
+    print('            m = '+str(theta[0]))
+    print('            b = '+str(theta[1]))
+
+elif rescale_method =='Thiel-Sen':
+    thiel = stats.theilslopes(y, x)
+    print(f'Xenomorph Status - [Rescale] Thiel-sen estimatate used to calculate new scaling parameters') 
+    print('            m = '+str(thiel[0]))
+    print('            b = '+str(thiel[1]))
+    print('###############################')
 
 
 
-
-
-
-
-
-x=[]
-y=[]
-xe =[]
-ye =[]
-kmer_n = []
-xyd=[]
-
-
-if 1<0: 
-    for i in range(0,len(kmer_list)):
-        #print(kmer_list)
-        try: 
-            #kmer_x = kmer_list[i][xpos-1]+'B'+kmer_list[i][xpos+1:]
-            kmer_x = kmer_list[i].replace(base_x,base_y)
-            km1= float(kmer_set_1[kmer_set_1['KXmer']==kmer_list[i]][compare])
-            km2= float(kmer_set_2[kmer_set_2['KXmer']==kmer_x][compare])
-
-            #Get standard deviations used
-            st1= float(kmer_set_1[kmer_set_1['KXmer']==kmer_list[i]][stdlev])
-            st2= float(kmer_set_2[kmer_set_2['KXmer']==kmer_x][stdlev])
-
-            #Store values
-            x.append(km1)
-            y.append(km2)
-            xe.append(st1)
-            ye.append(st2)
-            kmer_n.append(kmer_list[i])
-            xydiff = km1 - km2
-            #Cohen's d = xydiff / std
-            xyd.append(xydiff)
-        except:
-            n=0
 
 
 

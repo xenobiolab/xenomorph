@@ -62,14 +62,8 @@ level_input_file = sys.argv[1]
 output_file = level_input_file.replace('levels.csv','')+'kmers.csv'
 
 
-
-
-
-
 #Open level file as pandas dataframe
 level_file = pd.read_csv(level_input_file) 
-
-print(level_file)
 
 #Generate pandas dataframe with every possible kmer [kmer, data] 
 kmer_b=[] 
@@ -85,10 +79,7 @@ bskmer_level = pd.DataFrame({'kmer_xy' : kmers})
 bskmer_level['mean_level']=''
 bskmer_level['mean_level']=bskmer_level['mean_level'].astype(object)
 
-#print(bskmer_level)
-#print(bases)
-
-print('Note: filtering enabled')
+print('Xenomorph Status - [Level Extraction] Note: read filtering options are enabled')
 #Loop through all files 
 with alive_bar(len(level_file), force_tty=True) as bar: 
     for i in range(0,len(level_file)): 
