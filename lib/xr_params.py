@@ -68,7 +68,7 @@ force_extract_position = False
 extract_pos = 67
 
 #Preprocess a maximum number of reads (default = 0 == all reads) 
-max_num_reads = 1000
+max_num_reads = 100
 
 
 ######################LEVEL RESCALING######################
@@ -83,10 +83,10 @@ manual_rescale = 1.4525020871963723 #1.4525020871963723  #1.5172133669195214
 manual_reshift = 0.01611804923176846 #0.01611804923176846 # 0.028835658921770185
 
 #Global rescale is automatically updated after auto-scaling is performed
-global_rescale = 1.4733868436535285
+global_rescale = 1.4781345367369303
 
 #Global reshift is automatically updated after auto-scaling is performed
-global_reshift = 0.06838842123084812
+global_reshift = 0.07395931638757533
 
 #Path to model used as ground truth for rescaling 
 rescale_reference_model_path = 'models/libv2/ATGC_libv2_FLG001.csv'
@@ -101,7 +101,7 @@ rescale_method ='Thiel-Sen'
 rescale_max_num_reads = 200
 
 #Number of levels before and after to extract surrounding an XNA (default = 3) 
-rescale_xmer_boundary = 50
+rescale_xmer_boundary = 40
 
 #Number of bases before and after XNA that are required in a matching read (default = 30 alt) 
 rescale_xmer_padding = 50

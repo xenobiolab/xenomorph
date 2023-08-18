@@ -304,6 +304,7 @@ elif args.subparsers == 'preprocess':
 		level_output_fn= os.path.normpath(args.w)+'/output_levels_summary.csv'
 
 
+
 	if 	force_extract_position == True: 
 		print("Xenomorph Status - [Warning] Overriding XNA kmer extraction position. Forced positional extract is set to true (not typical).")
 		print("Xenomorph Status - [Warning] Change this setting in lib/xr_params.py")
@@ -345,7 +346,7 @@ elif args.subparsers == 'preprocess':
 		print("Xenomorph Status - [Preprocess] Performing level extraction on surrounding XNA locations with reverse set.")
 		cmd = 'python lib/xr_get_levels.py '+check_pod5_dir+' '+ check_bam_dir +' '+ bed_dir + ' ' +xfasta_rc_dir+' '+level_output_fn
 		os.system(cmd) 
-	print("Xenomorph Status - [Preprocess] Saving output level file to "+level_output_fn)
+	print("Xenomorph Status - [Preprocess] Saving output level file to "+os.path.normpath(level_output_fn))
 	print("Xenomorph Status - [Preprocess Complete] Use 'xenomorph.py morph' for alternative hypothesis testing on XNA positions.")
 
 

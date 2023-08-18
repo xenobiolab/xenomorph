@@ -44,6 +44,11 @@ fast5 = '/home/marchandlab/DataAnalysis/Marchand/221124_PZ_libv2_200k/20221124_1
 ref = '/home/marchandlab/Dev/xombo/reference_sequences/ref_libv2_PZ_CxDx.fa'
 out_file_prefix = '/PZ_Model_Testing'#Output file parameters
 
+#PZ Dataset 1 - Model Building
+wdir = '/home/marchandlab/Dev/xenomorph-xemora/xx-test/230702_PZ_libv2_GC'
+fast5 = '/home/marchandlab/DataAnalysis/Marchand/230125_PZ_libv2_AB/20230125_1810_MN41475_ANL798_9c8050d8/fast5'
+ref = '/home/marchandlab/Dev/xombo/reference_sequences/ref_libv2_PZ_AxBx.fa'
+out_file_prefix = '/FB_PZ_GC'#Output file parameters
 
 ################################################
 #Level generation
@@ -52,15 +57,15 @@ run_null_gen = False
 
 #Basecalling
 run_null_level = False
-run_morph = False
-run_stats = False
-run_global_morph = False
+run_morph = True
+run_stats = True
+run_global_morph = True
 
 #Generate model from a level file
 run_model_gen = False
 
 #Calculate rescale paramters 
-run_rescale = True
+run_rescale = False
 
 #Morph model
 model = 'ATGCPZ'
@@ -77,7 +82,7 @@ out_bcglobal = out_file_prefix+'_FLG001_bc_global.csv'
 
 
 #6 Calculate rescaling parameters 
-if run_rescale== False:
+if run_rescale== 10000:
     cmd = 'python xenomorph.py preprocess -w '+wdir+' -f '+fast5+' -r '+ref+' -o '+out_pre
     os.system(cmd)
 

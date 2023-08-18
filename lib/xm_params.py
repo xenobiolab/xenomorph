@@ -86,7 +86,7 @@ qscore_filter = 9#(default 15)
 signal_filter = 100 #1.5#(default 1.1)
 
 #Minimum number of reads required for calculating a concensus value
-concensus_stat_filter = 20
+concensus_stat_filter = 30
 
 
 ############################################################

@@ -354,10 +354,10 @@ if 1>0:
     #Generate reporting summary 
     passed_reads = len(output_summary)
     failed_reads = int(num_reads)-passed_reads
-    print("Xenomorph Status [Preprocess] Analyzed " + str(num_reads) + " reads")
-    print("Xenomorph Status [Preprocess] Number of reads passed alignmnet: "+str(passed_reads))
-    print("Xenomorph Status [Preprocess] Number of reads failed to segment: "+str(segmentation_failed))
-    print("Xenomorph Status [Preprocess] Number of reads failed for unknown reason: "+str(failed_reads-segmentation_failed))
+    print("Xenomorph Status - [Preprocess] Analyzed " + str(num_reads) + " reads")
+    print("Xenomorph Status - [Preprocess] Number of reads passed alignmnet: "+str(passed_reads))
+    print("Xenomorph Status - [Preprocess] Number of reads failed to segment: "+str(segmentation_failed))
+    print("Xenomorph Status - [Preprocess] Number of reads failed for unknown reason: "+str(failed_reads-segmentation_failed))
 
 
     #Save output to csv file
