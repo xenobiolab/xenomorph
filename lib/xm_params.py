@@ -141,7 +141,7 @@ likelihood_ratio = 'Outlier-Robust'
 likelihood_threshold = 0
 
 #Max reads for morph
-max_reads = 10000
+max_reads = 50000
 
 #Max reads for null morph
 max_reads_null = 0

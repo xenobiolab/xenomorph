@@ -120,6 +120,9 @@ fasta_ref_dict = SeqIO.index(fasta_path, "fasta")
 #Import pod5 data into python using pod5.Reader 
 pod5_fh = pod5.Reader(pod5_path)
 
+#Segmentation failed count
+segmentation_failed = 0
+
 
 ####BAM file operations 
 #Index bam file using setting in gen_bai from lib/xr_params.py. Required if input bam file is unindexed. 
@@ -188,7 +191,7 @@ print('Xenomorph Status - [Preprocess] Rescaling using the following parameters:
 #Perform global rescaling estimate on ATGC portions of read
 if len(sys.argv)==7: 
     if sys.argv[6]=='rescale':
-        print('Xenomorph Status [Preprocess] - Extracting kmers for calculating global scaling using Thiel-Sen estimator')
+        print('Xenomorph Status - [Preprocess] Extracting kmers for calculating global scaling paramters')
         #Reinitialize slope at 1 (no scaling) for rescale calculation
         rescale = 1
 

@@ -68,7 +68,7 @@ from xr_params import *
 
 #Handle input arguments 
 ##Pod5 file input is handled by coverting raw fast5 to pod5 using pod5 tools
-pod5_path = sys.argv[1]+'/'.replace('//','/')
+pod5_path = os.path.normpath(sys.argv[1])+'/'
 
 ##Bam file is generated from basecalling raw data with a reference alignment and --move_out 
 bam_path = sys.argv[2]
@@ -97,6 +97,8 @@ fasta_ref_dict = SeqIO.index(fasta_path, "fasta")
 #Import pod5 data into python using pod5.Reader 
 pod5_fh = pod5.Reader(pod5_path)
 
+#Segmentation failed count
+segmentation_failed = 0
 
 ####BAM file operations 
 #Index bam file using setting in gen_bai from lib/xr_params.py. Required if input bam file is unindexed. 
@@ -126,31 +128,41 @@ sig_map_refiner = refine_signal_map.SigMapRefiner(
 )
 ############################
 
-enable_rescale = True
-if len(sys.argv)==7: 
-    print('--------------------------------')
-    print('Warning - Rescale parameters is enabled. This estimate is data set specific')
-
-
-
-    #Rescale for ATGC
-    rescale  = 1.4746563490046836
-    reshift = 0.01980030555804524
-
-
-    print('Rescale = '+str(rescale)+'      reshift = '+str(reshift))
-    print('--------------------------------')
-else:
-    rescale = 1
-    reshift = 0 
-
-############################
 
 #Num read overwrite
 if max_num_reads >0: 
     num_reads = max_num_reads
 
-count =0 
+
+##Set global scaling shift and scale
+if manual_rescale_override == True:
+    rescale = manual_rescale
+    reshift = manual_reshift
+else: 
+    rescale = global_rescale
+    reshift = global_reshift
+print('Xenomorph Status - [Preprocess] Rescaling using the following parameters: m = '+str(rescale)+'   b = '+str(reshift))
+
+#Perform global rescaling estimate on ATGC portions of read
+if len(sys.argv)==7: 
+    if sys.argv[6]=='rescale':
+        print('Xenomorph Status - [Preprocess] Extracting kmers for calculating global scaling paramters')
+        #Reinitialize slope at 1 (no scaling) for rescale calculation
+        rescale = 1
+
+        #Reinitialize shift at 0 (no scaling) for rescale calculation
+        reshift = 0 
+        
+        #Number of levels before and after to extract surrounding an XNA (default = 3) 
+        xmer_boundary = rescale_xmer_boundary
+
+        #Number of bases before and after XNA that are required in a matching read (default = 30 alt) 
+        xmer_padding = rescale_xmer_padding
+        
+        #Maximum number of reads to process
+        num_reads = rescale_max_num_reads
+
+
 if 1>0: 
 
     #Set up progress bar
@@ -190,7 +202,6 @@ if 1>0:
 
                 #Get name of raw read 
                 read_ID = io_read.read_id
-
 
                 #Get identity of strand: (+) or (-) 
                 strand = io_read.ref_reg.strand
@@ -302,10 +313,13 @@ if 1>0:
     #Generate reporting summary 
     passed_reads = len(output_summary)
     failed_reads = int(num_reads)-passed_reads
-    print("[Xemora Status] Analyzed " + str(num_reads) + " reads.\n"+ str(passed_reads) + " passed alignment and segmentation.\n" + str(failed_reads) + " reads did not align. \n" +str(segmentation_failed)+" reads failed to segment properly")
+    print("Xenomorph Status - [Preprocess] Analyzed " + str(num_reads) + " reads")
+    print("Xenomorph Status - [Preprocess] Number of reads passed alignmnet: "+str(passed_reads))
+    print("Xenomorph Status - [Preprocess] Number of reads failed to segment: "+str(segmentation_failed))
+    print("Xenomorph Status - [Preprocess] Number of reads failed for unknown reason: "+str(failed_reads-segmentation_failed))
 
 
     #Save output to csv file
-   # output_summary.to_csv(output_folder, sep='\t', encoding='utf-8',index=False)
+    #output_summary.to_csv(output_folder, sep='\t', encoding='utf-8',index=False)
     output_summary.to_csv(output_folder, encoding='utf-8',index=False)
 

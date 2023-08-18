@@ -315,8 +315,8 @@ read_level_summary = sys.argv[2]
 read_level_summary= pd.read_csv(read_level_summary, sep=',')
 
 ##Filter out reads that do not pass quality settings in xm_params
-print('Xenomorph Status - [Stats] Filtering reads with q score > '+str(qscore_filter))
-print('Xenomorph Status - [Stats] Filtering reads with signal score < '+str(signal_filter))
+print('Xenomorph Status - [Morph] Filtering reads with q score > '+str(qscore_filter))
+print('Xenomorph Status - [Morph] Filtering reads with signal score < '+str(signal_filter))
 #read_level_summary=read_level_summary[read_level_summary['read_q-score']>qscore_filter]
 read_level_summary=read_level_summary[read_level_summary['read_signal_match_score']<signal_filter]
 
@@ -333,7 +333,7 @@ all_xna = list(set(read_level_summary['read_xna']))
 
 #Max reads
 if max_reads >0: 
-    print('[Morph] - Performing morph with a maximum of '+str(max_reads)+' reads.')
+    print('Xenomorph Status - [Morph] Performing morph with a maximum of '+str(max_reads)+' reads.')
 
 ##############################################
 #Configure kmer model and kmer simulation model

@@ -50,13 +50,21 @@ fast5 = '/home/marchandlab/DataAnalysis/Marchand/230125_PZ_libv2_AB/20230125_181
 ref = '/home/marchandlab/Dev/xombo/reference_sequences/ref_libv2_PZ_AxBx.fa'
 out_file_prefix = '/FB_PZ_GC'#Output file parameters
 
+
+###ATGC Blunt Dataset 2 --Model testing
+wdir = '/home/marchandlab/Dev/xenomorph-xemora/xx-test/ATGC_Model_Testing'
+fast5 = '/home/marchandlab/DataAnalysis/Marchand/221215_blunt_libv2/20221215_1717_MN41475_ANV913_5ca08b71/fast5'
+ref = '/home/marchandlab/Dev/xombo/reference_sequences/ref_full_ABxAB.fa'
+out_file_prefix = '/ATGC_Model_Testing_Rescale'#Output file parameters
+
+
 ################################################
 #Level generation
 run_preprocess = True
-run_null_gen = False
+run_null_gen = True
 
 #Basecalling
-run_null_level = False
+run_null_level = True
 run_morph = True
 run_stats = True
 run_global_morph = True
@@ -64,8 +72,6 @@ run_global_morph = True
 #Generate model from a level file
 run_model_gen = False
 
-#Calculate rescale paramters 
-run_rescale = False
 
 #Morph model
 model = 'ATGCPZ'
@@ -78,22 +84,6 @@ out_pre = out_file_prefix+'_FLG001'+'_levels.csv'
 out_bcpr = out_file_prefix+'_FLG001_bc.csv'
 out_bcglobal = out_file_prefix+'_FLG001_bc_global.csv'
 
-
-
-
-#6 Calculate rescaling parameters 
-if run_rescale== 10000:
-    cmd = 'python xenomorph.py preprocess -w '+wdir+' -f '+fast5+' -r '+ref+' -o '+out_pre
-    os.system(cmd)
-
-    cmd = 'python lib/xm_extract_levels.py '+wdir+out_pre
-    os.system(cmd) 
-
-    cmd = 'python lib/parse_kmer.py '+wdir+out_pre.replace('_levels.csv','_kmers.csv')+' '+wdir+out_pre.replace('_levels.csv','raw_summary.csv')+' ATGC'
-    os.system(cmd) 
-    
-    cmd = 'python lib/xr_kmer_rescale.py '+wdir+out_pre.replace('_levels.csv','raw_summary.csv')
-    os.system(cmd) 
 
 
 

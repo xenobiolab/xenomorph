@@ -53,22 +53,19 @@ basecall_pod = False
 regenerate_bam = False
 
 #Re-generate training or basecalling chunks.
-regenerate_chunks = True
+regenerate_chunks = False
 
 #generate a .bai file for your bam file -- you need to do this the first time you run analysis
-gen_bai = True
-
-#default value for read counts that failed at the segmentation stage (aligned but poor segmentation around XNA)
-segmentation_failed = 0
+gen_bai = False
 
 #Override XNA position detection and specify position. Required for ATGC-only signal extraction or if reference file does not specify XNA position. 
-force_extract_position = False
+force_extract_position = True
 
 #If force_extract_position is true, specify position in reference. 
 extract_pos = 67
 
 #Preprocess a maximum number of reads (default = 0 == all reads) 
-max_num_reads = 100
+max_num_reads = 1000
 
 
 ######################LEVEL RESCALING######################
