@@ -127,7 +127,7 @@ sig_map_refiner = refine_signal_map.SigMapRefiner(
 ############################
 
 enable_rescale = True
-if enable_rescale == True: 
+if len(sys.argv)==7: 
     print('--------------------------------')
     print('Warning - Rescale parameters is enabled. This estimate is data set specific')
 

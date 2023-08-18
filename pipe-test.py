@@ -47,7 +47,7 @@ out_file_prefix = '/PZ_Model_Testing'#Output file parameters
 
 ################################################
 #Level generation
-run_preprocess = False
+run_preprocess = True
 run_null_gen = False
 
 #Basecalling
@@ -77,7 +77,7 @@ out_bcglobal = out_file_prefix+'_FLG001_bc_global.csv'
 
 
 #6 Calculate rescaling parameters 
-if run_rescale== True:
+if run_rescale== False:
     cmd = 'python xenomorph.py preprocess -w '+wdir+' -f '+fast5+' -r '+ref+' -o '+out_pre
     os.system(cmd)
 

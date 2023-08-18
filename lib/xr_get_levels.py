@@ -104,15 +104,6 @@ fasta_path = sys.argv[4]
 ##Output folder location 
 output_folder = sys.argv[5]
 
-##Set global scaling shift and scale
-if perform_global_rescale == False:
-    rescale = manual_rescale
-    reshift = manual_reshift
-else: 
-    rescale = 1
-    reshift = 0 
-print('Xenomorph Status - [Preprocess] Rescaling using the following parameters: m = '+str(rescale)+'   b = '+str(reshift))
-
 #Import fasta file and bed file 
 ##Fasta file contains the reference sequences 
 fasta_file = pysam.FastaFile(fasta_path)
@@ -178,27 +169,42 @@ sig_map_refiner = refine_signal_map.SigMapRefiner(
     do_fix_guage=True
     #do_rough_rescale = True
 )
-print(sig_map_refiner)
-
 
 #Num read overwrite
 if max_num_reads >0: 
     num_reads = max_num_reads
 
 
+
+##Set global scaling shift and scale
+if manual_rescale_override == True:
+    rescale = manual_rescale
+    reshift = manual_reshift
+else: 
+    rescale = global_rescale
+    reshift = global_reshift
+print('Xenomorph Status - [Preprocess] Rescaling using the following parameters: m = '+str(rescale)+'   b = '+str(reshift))
+
 #Perform global rescaling estimate on ATGC portions of read
-if perform_global_rescale == True:
-    print('Xenomorph Status [Preprocess] - Extracting kmers for calculating global scaling using Thiel-Sen estimator')
-    #Number of levels before and after to extract surrounding an XNA (default = 3) 
-    xmer_boundary = rescale_xmer_boundary
+if len(sys.argv)==7: 
+    if sys.argv[6]=='rescale':
+        print('Xenomorph Status [Preprocess] - Extracting kmers for calculating global scaling using Thiel-Sen estimator')
+        #Reinitialize slope at 1 (no scaling) for rescale calculation
+        rescale = 1
 
-    #Number of bases before and after XNA that are required in a matching read (default = 30 alt) 
-    xmer_padding = rescale_xmer_padding
-    
-    #Maximum number of reads to process
-    num_reads = rescale_max_num_reads
+        #Reinitialize shift at 0 (no scaling) for rescale calculation
+        reshift = 0 
+        
+        #Number of levels before and after to extract surrounding an XNA (default = 3) 
+        xmer_boundary = rescale_xmer_boundary
 
-    
+        #Number of bases before and after XNA that are required in a matching read (default = 30 alt) 
+        xmer_padding = rescale_xmer_padding
+        
+        #Maximum number of reads to process
+        num_reads = rescale_max_num_reads
+
+
     
 if 1>0: 
     #Set up progress bar
@@ -348,10 +354,12 @@ if 1>0:
     #Generate reporting summary 
     passed_reads = len(output_summary)
     failed_reads = int(num_reads)-passed_reads
-    print("Xenomorph Status [Preprocess] Analyzed " + str(num_reads) + " reads.\n"+ str(passed_reads) + " passed alignment and segmentation.\n" + str(segmentation_failed) + " reads failed due to segmentation. \n" +str(failed_reads-segmentation_failed)+" reads failed for unknown reasons")
+    print("Xenomorph Status [Preprocess] Analyzed " + str(num_reads) + " reads")
+    print("Xenomorph Status [Preprocess] Number of reads passed alignmnet: "+str(passed_reads))
+    print("Xenomorph Status [Preprocess] Number of reads failed to segment: "+str(segmentation_failed))
+    print("Xenomorph Status [Preprocess] Number of reads failed for unknown reason: "+str(failed_reads-segmentation_failed))
 
 
     #Save output to csv file
-   # output_summary.to_csv(output_folder, sep='\t', encoding='utf-8',index=False)
     output_summary.to_csv(output_folder, encoding='utf-8',index=False)
 

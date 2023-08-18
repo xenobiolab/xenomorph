@@ -55,8 +55,9 @@ merged_kmers = kmer_raw_model [['KXmer', rescale_level]].merge(kmer_reference_mo
 x=merged_kmers[rescale_level+'_x']
 y=merged_kmers[rescale_level+'_y']
 
-####Show rescale plot (optional setting for troubleshooting)
-if rescale_show_plot == True: 
+
+
+if rescale_save_plot == True: 
     fig, ax=plt.subplots()
     plt.errorbar(x,y, fmt ='o', solid_capstyle='projecting', capsize=5, color ='indigo')
     plt.xlabel('Raw kmer estimates')
@@ -68,7 +69,7 @@ if rescale_show_plot == True:
     plt.ylim([-5, 5])
     #plt.axis('square')
     ax.set_box_aspect(1)
-    plt.show()
+    plt.savefig(sys.argv[2], format='pdf')
 
 #Calculate test statistics 
 if rescale_method =='Poly':
@@ -84,7 +85,7 @@ new_rescale = thiel[0]
 new_reshift = thiel[1]
 
 
-print(f'Xenomorph Status - [Rescale] Upading global scaling and global shift in lib/xr_params.py.') 
+print(f'Xenomorph Status - [Rescale] Updating global scaling and global shift in lib/xr_params.py.') 
 # Read the content of params.txt
 with open('lib/xr_params.py', 'r') as file:
     lines = file.readlines()

@@ -312,9 +312,34 @@ elif args.subparsers == 'preprocess':
 		os.system(cmd) 
 
 	else: 
-	    print("Xenomorph Status - [Preprocess] Performing level extraction surrounding XNA locations.")
-	    cmd = 'python lib/xr_get_levels.py '+check_pod5_dir+' '+ check_bam_dir + ' '+ bed_dir + ' '  +xfasta_dir+' '+level_output_fn
-	    os.system(cmd) 
+	
+	#Remora segmentation will require rescaling for comparison with Tombo data
+		if manual_rescale_override == False:
+		    #Make rescale directory if it does not exist.
+		    CHECK_FOLDER = os.path.isdir(working_dir+'/rescale')
+		    if not CHECK_FOLDER:
+		        os.makedirs(working_dir+'/rescale')
+
+		    #Run level extract on raw data 
+		    cmd = 'python lib/xr_get_levels.py '+check_pod5_dir+' '+ check_bam_dir + ' '+ bed_dir + ' '  +xfasta_dir+' '+working_dir+'/rescale/rescale_raw_levels.csv rescale'
+		    os.system(cmd) 
+		    
+		    #Covert raw level file to kmer extract csv
+		    cmd = 'python lib/xm_extract_levels.py '+working_dir+'/rescale/rescale_raw_levels.csv'
+		    os.system(cmd) 
+
+		    cmd = 'python lib/parse_kmer.py '+working_dir+'/rescale/rescale_raw_kmers.csv'+' '+working_dir+'/rescale/rescale_raw_kmer_model.csv ATGC'
+		    os.system(cmd) 
+
+		    cmd = 'python lib/xr_kmer_rescale.py '+working_dir+'/rescale/rescale_raw_kmer_model.csv '+working_dir+'/rescale/rescale_kmer_comparison.pdf'
+		    os.system(cmd) 
+		
+		
+		print("Xenomorph Status - [Preprocess] Performing level extraction surrounding XNA locations.")
+		cmd = 'python lib/xr_get_levels.py '+check_pod5_dir+' '+ check_bam_dir + ' '+ bed_dir + ' '  +xfasta_dir+' '+level_output_fn
+		os.system(cmd) 
+
+
 
 	if os.path.exists(xfasta[0:xfasta.find('.fa')]+'_rc.fa')==True:
 		print("Xenomorph Status - [Preprocess] Performing level extraction on surrounding XNA locations with reverse set.")

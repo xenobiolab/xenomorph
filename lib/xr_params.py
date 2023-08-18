@@ -73,19 +73,20 @@ max_num_reads = 1000
 
 ######################LEVEL RESCALING######################
 
+#If true, use manual rescale. If false, automatically calculate rescaling parameters. 
+manual_rescale_override = False
 
-#If global rescale is false, default to manual rescale 
+#Manually set kmer rescale slope
 manual_rescale = 1.4525020871963723 #1.4525020871963723  #1.5172133669195214
+
+#Manually set kmer shift
 manual_reshift = 0.01611804923176846 #0.01611804923176846 # 0.028835658921770185
 
+#Global rescale is automatically updated after auto-scaling is performed
+global_rescale = 1.4733868436535285
 
-#Perform global rescale. 
-perform_global_rescale = True
-
-global_rescale = 1.4782289631862366
-
-global_reshift = 0.0707042989373598
-
+#Global reshift is automatically updated after auto-scaling is performed
+global_reshift = 0.06838842123084812
 
 #Path to model used as ground truth for rescaling 
 rescale_reference_model_path = 'models/libv2/ATGC_libv2_FLG001.csv'
@@ -97,7 +98,7 @@ rescale_metric = 'median'
 rescale_method ='Thiel-Sen'
 
 #Rescale max number of reads to use
-rescale_max_num_reads = 100
+rescale_max_num_reads = 200
 
 #Number of levels before and after to extract surrounding an XNA (default = 3) 
 rescale_xmer_boundary = 50
@@ -106,7 +107,7 @@ rescale_xmer_boundary = 50
 rescale_xmer_padding = 50
 
 #Show rescale plot 
-rescale_show_plot = True
+rescale_save_plot = True
 
 ######################XFASTA GENERATION######################
 
