@@ -87,6 +87,8 @@ from xm_params import *
 from xr_params import *
 
 
+#Print status
+print('Xenomorph Status - [Preprocess] Initializing level extraction')
 
 #Handle input arguments 
 ##Pod5 file input is handled by coverting raw fast5 to pod5 using pod5 tools

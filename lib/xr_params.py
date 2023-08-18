@@ -13,6 +13,7 @@ Updated: 8/16/23
 #######################################################################
 
 import numpy as np
+from remora import io, refine_signal_map, util
 
 #Standard basepairs written in 'purine pyrimidine' order
 standard_base_pairs = ['AT','GC']
@@ -80,10 +81,10 @@ manual_rescale = 1.4525020871963723 #1.4525020871963723  #1.5172133669195214
 manual_reshift = 0.01611804923176846 #0.01611804923176846 # 0.028835658921770185
 
 #Global rescale is automatically updated after auto-scaling is performed
-global_rescale = 1.4781345367369303
+global_rescale = 1.5078711716604114
 
 #Global reshift is automatically updated after auto-scaling is performed
-global_reshift = 0.07395931638757533
+global_reshift = 0.03737405164356877
 
 #Path to model used as ground truth for rescaling 
 rescale_reference_model_path = 'models/libv2/ATGC_libv2_FLG001.csv'
@@ -98,13 +99,24 @@ rescale_method ='Thiel-Sen'
 rescale_max_num_reads = 200
 
 #Number of levels before and after to extract surrounding an XNA (default = 3) 
-rescale_xmer_boundary = 40
+rescale_xmer_boundary = 20
 
 #Number of bases before and after XNA that are required in a matching read (default = 30 alt) 
-rescale_xmer_padding = 50
+rescale_xmer_padding = 30
 
 #Show rescale plot 
 rescale_save_plot = True
+
+
+
+######################REMORA SIGNAL REFINER######################
+#Set up SigMapRefiner
+sig_map_refiner = refine_signal_map.SigMapRefiner(
+    kmer_model_filename=level_table,
+    scale_iters=0,
+    do_fix_guage=True
+)
+################################################################
 
 ######################XFASTA GENERATION######################
 

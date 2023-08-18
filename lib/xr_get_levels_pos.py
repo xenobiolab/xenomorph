@@ -65,6 +65,8 @@ from xm_params import *
 from xr_params import *
 
 
+#Print status
+print('Xenomorph Status - [Preprocess] Initializing level extraction for fixed position (not typical)')
 
 #Handle input arguments 
 ##Pod5 file input is handled by coverting raw fast5 to pod5 using pod5 tools
@@ -106,27 +108,23 @@ if gen_bai==True:
     cmd = 'samtools index ' + bam_path
     os.system(cmd)
 
-#Import bam data using pysam and get header information 
-bam_fh = pysam.AlignmentFile(bam_path, 'rb')
+#Generate file path for a primary alignment bam output file 
+primary_bam_path = bam_path.replace('.bam','_primary.bam')
+
+#Extract only reads with primary alignments and put them in a new bam file 
+bam_fh = filter_primary_alignments_file(bam_path, primary_bam_path)
+
+#Get headers of bam file 
 headers = bam_fh.header
+
+#Get info on reference sequences
 reference_info = headers['SQ']
+
+#Get contigs 
 contigs = headers.references 
-num_reads = pysam.AlignmentFile(bam_path, 'rb').count()
 
-
-
-####Sig Map Refiner########
-#Set up SigMapRefiner.  
-##Loaded 6-mer table with 3 central position. (#ATGC Model Building
-##Rough re-scaling will be executed. 
-##Signal mapping refinement will be executed using the dwell_penalty refinement method (band half width: 5). 
-##Short dwell penalty array set to [8.  4.5 2. ]
-sig_map_refiner = refine_signal_map.SigMapRefiner(
-    kmer_model_filename=level_table,
-    scale_iters=0,
-    do_fix_guage=True,
-)
-############################
+#Get total number of reads in primary only bam output 
+num_reads = pysam.AlignmentFile(primary_bam_path, 'rb').count()
 
 
 #Num read overwrite
@@ -173,8 +171,8 @@ if 1>0:
             bar()
 
             #Begin read procress
-            #if 1>0: 
-            try:
+            if 1>0: 
+            #try:
 
                 #Iterate through bam read alignments
                 bam_read = next(bam_fh)
@@ -306,8 +304,8 @@ if 1>0:
                         segmentation_failed+=1 
 
 
-            except:
-                pass
+            #except:
+            #    pass
 
 
     #Generate reporting summary 
