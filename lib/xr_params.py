@@ -34,7 +34,7 @@ skip_qscore_extract  = True
 basecall_pod = False
 
 #Re-generate BAM files for reference-based basecalling.
-regenerate_bam = True
+regenerate_bam = False
 
 #Re-generate training or basecalling chunks.
 regenerate_chunks = False
@@ -49,7 +49,7 @@ force_extract_position = False
 extract_pos = 67
 
 #Preprocess a maximum number of reads (default = 0 == all reads) 
-max_num_reads = 100
+max_num_reads = 5000
 
 
 

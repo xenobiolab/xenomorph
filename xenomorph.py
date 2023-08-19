@@ -222,7 +222,7 @@ elif args.subparsers == 'preprocess':
 		sys.exit()
 	if not check_xfasta_format(args.r, standard_bases): 
 	    xfasta=os.path.normpath(args.w)+'/xfasta_'+os.path.basename(args.r)
-	    if not os.path.exists(xfasta) or args.x:
+	    if not os.path.exists(xfasta) or args.x or regenerate_xfasta == True:
 		    print("Xenomorph Status - [Preprocess] Performing fasta to xfasta conversion on input reference fasta. Saving output "+xfasta+'.')
 		    print("Xenomorph Status - [Preprocess] Using fasta2x_rc.")
 		    cmd =  'python lib/xm_fasta2x_rc.py '+os.path.normpath(args.r)+' '+xfasta
@@ -233,12 +233,17 @@ elif args.subparsers == 'preprocess':
 		xfasta=args.r
 		print("Xenomorph Status - [Preprocess] Input reference fasta already in xfasta format. Skipping xfasta conversion.")
 
+
 	#Check for creation of a reverse fasta file - required for some XNAs for segmentation 
 	if os.path.exists(xfasta[0:xfasta.find('.fa')]+'_rc.fa')==True:
-		print("Xenomorph Status - [Preprocess] xfasta reverse complement created for handling special bases.")
+		print("Xenomorph Status - [Preprocess] xfasta reverse complement created for handling special bases. Running 2 rounds of segmentation")
 		xfasta_rc = xfasta[0:xfasta.find('.fa')]+'_rc.fa'
 		xfasta_rc_dir = os.path.join(args.w+'/'+os.path.basename(xfasta_rc))
-
+		fn_rc_ext = ['','rc']
+	else:
+		fn_rc_ext = ['']
+		
+		
 	###Check xFasta file creation integrity. 
 	xfasta_dir = os.path.join(args.w+'/'+os.path.basename(xfasta))
 	if os.stat(xfasta_dir).st_size == 0: 
@@ -246,25 +251,27 @@ elif args.subparsers == 'preprocess':
 		sys.exit()
 
 
+	#Check if pod5 directory exists, if not, create it
+	pod5_dir = os.path.normpath(args.w)+'/'+os.path.basename(args.f)+'_pod5'
+	pod5_dir = check_make_dir(pod5_dir)
+	
+	#Check if pod5 file exist in directory, if not, convert fast5 to pod5 
+	check_pod5_dir = os.path.join(pod5_dir+'/'+os.path.basename(args.f)+'.pod5')
+	if os.path.isfile(check_pod5_dir)==False: 
+		cod5_to_fast5(get_fast5_subdir(args.f), os.path.join(pod5_dir + '/'+os.path.basename(args.f))+'.pod5')
+	else: 
+		print('Xenomorph Status - [Preprocess] POD5 file for modified base found. Skipping POD5 coversion')
 
 
-
-	fn_rc_ext = ['']
 	###### Remora preprocessing integration 
 	#Check if pod5 directory exists, if not, create it
-	
 	for i in range(0,len(fn_rc_ext)): 
-		pod5_dir = os.path.normpath(args.w)+'/'+os.path.basename(args.f)+fn_rc_ext[i]+'_pod5'
-		pod5_dir = check_make_dir(pod5_dir)
-		
-		#Check if pod5 file exist in directory, if not, convert fast5 to pod5 
-		check_pod5_dir = os.path.join(pod5_dir+'/'+os.path.basename(args.f)+'.pod5')
-		if os.path.isfile(check_pod5_dir)==False: 
-			cod5_to_fast5(get_fast5_subdir(args.f), os.path.join(pod5_dir + '/'+os.path.basename(args.f))+'.pod5')
-		else: 
-			print('Xenomorph Status - [Preprocess] POD5 file for modified base found. Skipping POD5 coversion')
-
-
+	
+		#Use RC alignment file if required
+		if fn_rc_ext[i] == 'rc': 
+			xfasta = xfasta_rc
+			
+			
 		#Check if basecall fastq directory exists, and if not, basecall pod5 to generate fastq.
 		fastq_dir = os.path.normpath(args.w)+'/'+os.path.basename(args.f)+fn_rc_ext[i]+'_fastq'
 		if os.path.isdir(fastq_dir)==False or basecall_pod == True: 
@@ -275,7 +282,7 @@ elif args.subparsers == 'preprocess':
 			print('Xenomorph Status - [Preprocess] Skipping POD5 basecalling for modified bases.')
 
 		###Merge bam files from pass, fail, or both 
-		bam_dir = os.path.normpath(args.w)+'/'+os.path.basename(args.f)+fn_rc_ext[i]+'_bam'
+		bam_dir = os.path.normpath(args.w)+'/'+os.path.basename(args.f)+fn_rc_ext[i]+fn_rc_ext[i]+'_bam'
 		check_bam_dir=bam_dir+'.bam'
 		if os.path.isfile(bam_dir+'.bam') == False or regenerate_bam == True: 
 
@@ -298,7 +305,7 @@ elif args.subparsers == 'preprocess':
 
 
 		#Remora segmentation will likely require rescaling (e.g.,  SD to MAD) for comparison with Tombo models. Rescaling is automatically performed if manual not set. 
-		if manual_rescale_override == False:
+		if manual_rescale_override == False and fn_rc_ext[i]!='rc':
 			#Make rescale directory if it does not exist.
 			CHECK_FOLDER = os.path.isdir(working_dir+'/rescale')
 			if not CHECK_FOLDER:
@@ -306,11 +313,11 @@ elif args.subparsers == 'preprocess':
 			#Run level extract on raw data 
 			if force_extract_position == True: 
 				##For fixed position extract 
-				cmd = 'python lib/xr_get_levels_pos.py '+check_pod5_dir+' '+ check_bam_dir + ' '  +xfasta_dir+' '+working_dir+'/rescale/rescale_raw_levels.csv rescale'
+				cmd = 'python lib/xr_get_levels_pos.py '+check_pod5_dir+' '+ check_bam_dir + ' '  +xfasta+' '+working_dir+'/rescale/rescale_raw_levels.csv rescale'
 				os.system(cmd) 
 			else:
 				#For standard pipeline
-				cmd = 'python lib/xr_get_levels.py '+check_pod5_dir+' '+ check_bam_dir + ' '  +xfasta_dir+' '+working_dir+'/rescale/rescale_raw_levels.csv rescale'
+				cmd = 'python lib/xr_get_levels.py '+check_pod5_dir+' '+ check_bam_dir + ' '  +xfasta+' '+working_dir+'/rescale/rescale_raw_levels.csv rescale'
 				os.system(cmd) 
 			
 			#Covert raw level file to kmer extract csv
@@ -330,13 +337,13 @@ elif args.subparsers == 'preprocess':
 			print("Xenomorph Status - [Warning] Overriding XNA kmer extraction position. Forced positional extract is set to true (not typical).")
 			print("Xenomorph Status - [Warning] Change this setting in lib/xr_params.py")
 			print("Xenomorph Status - [Preprocess] Performing level extraction surrounding the specified position location.")
-			cmd = 'python lib/xr_get_levels_pos.py '+check_pod5_dir+' '+ check_bam_dir + ' '  +xfasta_dir+' '+level_output_fn
+			cmd = 'python lib/xr_get_levels_pos.py '+check_pod5_dir+' '+ check_bam_dir + ' '  +xfasta+' '+level_output_fn+' '+fn_rc_ext[i]
 			os.system(cmd) 
 
 		else: 
 			#For standard pipeline (position of XNA extracted from xfasta header)
 			print("Xenomorph Status - [Preprocess] Performing level extraction surrounding XNA locations.")
-			cmd = 'python lib/xr_get_levels.py '+check_pod5_dir+' '+ check_bam_dir + ' '  +xfasta_dir+' '+level_output_fn
+			cmd = 'python lib/xr_get_levels.py '+check_pod5_dir+' '+ check_bam_dir + ' '  +xfasta+' '+level_output_fn+' '+fn_rc_ext[i]
 			os.system(cmd) 
 
 
@@ -344,6 +351,7 @@ elif args.subparsers == 'preprocess':
 	#If reverse xfasta exists, perform level extraction on reverse set. 
 	if os.path.exists(xfasta[0:xfasta.find('.fa')]+'_rc.fa')==True:
 		print("Xenomorph Status - [Preprocess] Performing level extraction on surrounding XNA locations with reverse set.")
+		print("Xenomorph Status - [Preprocess] Meow meow meow meow meow mewo mewo")
 		cmd = 'python lib/xr_get_levels.py '+check_pod5_dir+' '+ check_bam_dir +' ' +xfasta_rc_dir+' '+level_output_fn
 		os.system(cmd) 
 		

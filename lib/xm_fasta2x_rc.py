@@ -128,7 +128,7 @@ if require_rc_fasta == True:
     with open(output_fasta, "r") as fo:
         for line in fo: 
             #Skip sequences where GAP is in the header - Used as a null reference sequence. 
-            if line[0]=='>' and 'GAP' not in line.upper() and XPOS in line:
+            if line[0]=='>' and 'GAP' not in line.upper() and 'XPOS' in line:
                 header = line
                 x_pos_base = fetch_xna_pos(header)
                 x_pos_to_rc =[]

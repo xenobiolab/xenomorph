@@ -34,7 +34,7 @@ standard_bases = np.concatenate(list(list(i) for i in standard_base_pairs))
 xna_base_pairs = ['BS','PZ','JV','XK','QW', 'ER', 'NN']
 
 #Seperate to segment data as non-complementary pairs 
-xna_segmentation_model_sets = ['B','S','PZ','JV','X','K','N']
+xna_segmentation_model_sets = ['B','S','P','Z','JV','X','K','N']
 
 #Most similar canonical pair for each XNA
 confounding_pairs =  ['BA','SA','PG','ZC','JC','VG','XA','KG','NN'] # Verified optimal pairs
@@ -43,6 +43,9 @@ confounding_pairs =  ['BA','SA','PG','ZC','JC','VG','XA','KG','NN'] # Verified o
 xna_bases = np.concatenate(list(list(i) for i in xna_base_pairs))
 
 ######################XFASTA GENERATION######################
+
+#Regenerate xfasta file(s).
+regenerate_xfasta = True
 
 #Fasta2x - write sequences to xfasta even if they do no contain XNAs. Default = False 
 write_no_xna_seq = True
@@ -73,7 +76,6 @@ segmentation_mode = 'Remora'
 #Default: 4.2 4.2 300 1500 20.0 40 750 2500 250
 signal_align_params = '4.2 4.2 300 1500 20.0 40 750 2500 250'
 
-
 #Segmentation parameters DNA default 5 3 1 5
 segmentation_params = '5 3 1 5' #5 3 1 5
 
@@ -91,6 +93,9 @@ signal_filter = 100 #1.5#(default 1.1)
 #Minimum number of reads required for calculating a concensus value
 concensus_stat_filter = 20
 
+#Signal start filter
+
+#Signal end filter
 
 ############################################################
 ######################CONFIGURATION#########################
