@@ -508,10 +508,10 @@ with alive_bar(len(ref_seqs), force_tty=True) as bar:
 output_summary.to_csv(out_fn)
 
 for xna_key in global_count: 
-    print("########################################################")
-    print("Xenomorph Status - [Global Morph] - Summary for ["+xna_key+"] global morph")
-    print("Xenomorph Status - [Global Morph] - The number of correct consensus is (for n >"+str(concensus_stat_filter)+"): " + str(global_count[xna_key]) + "/" + str(total_count[xna_key])+' ('+str((global_count[xna_key]/total_count[xna_key])*100)+')')
-    print("########################################################")
+    #print("########################################################")
+    #print("Xenomorph Status - [Global Morph] - Summary for ["+xna_key+"] global morph")
+    print("Xenomorph Status - [Global Morph - Summary] - Global consensus for "+xna_key+"is (for n >"+str(concensus_stat_filter)+"): " + str(global_count[xna_key]) + "/" + str(total_count[xna_key])+' ('+str((global_count[xna_key]/total_count[xna_key])*100)+')')
+    #print("########################################################")
 
 
 

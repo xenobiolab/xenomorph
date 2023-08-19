@@ -50,6 +50,11 @@ fasta_path = sys.argv[3]
 ##Output folder location 
 output_folder = sys.argv[4]
 
+#Check if reverse complement flag is present, if so use rc 
+if len(sys.argv)==6: 
+    if sys.argv[5] == 'rc':
+        output_summary = pd.read_csv(output_folder)
+
 #Import fasta file and bed file 
 ##Fasta file contains the reference sequences 
 fasta_file = pysam.FastaFile(fasta_path)
@@ -218,7 +223,6 @@ with alive_bar(int(num_reads), force_tty=True) as bar:
 
                     #Reference locus 
                     read_ref_locus = read_xna_seq
-
 
                 elif strand == '-' and rc_allowed != False:
                     #Reference locus (before taking reverse complement, and before taking rc of the xna base)

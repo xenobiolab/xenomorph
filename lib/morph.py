@@ -85,8 +85,6 @@ def kmer2seq(kmers):
 #Samples levels from a raw_kmer_file. Can be used to simulate data instead of kmer2level
 #Return row_wize set of level simulations
 def sample2levels(kmers, raw_kmers, n_iter):
-
-
     level_sets =[] 
     for i in range(0,len(kmers)):
         kmer_select = kmers[i]
@@ -229,7 +227,7 @@ def alt_type(bases, xna_base, alt_base_type):
     return set_alt_base
 
     
-#Strickly uses 7th base position. Given a sequence and list of levels, will calculate all alternative likelyhoods 
+
 def gen_alt_all(sequence, kmer_levels, kmer_model, all_bases, xbase_pos, kmer_len):
     
     #Store np array of log likelihoods 
@@ -244,7 +242,7 @@ def gen_alt_all(sequence, kmer_levels, kmer_model, all_bases, xbase_pos, kmer_le
 
     for j in range(0,len(all_bases)):
 
-        #Generate alternative sequence - Uses fixed 7mer index 
+        #Generate alternative sequence 
         seq_alt = sequence[0:xbase_pos]+all_bases[j]+sequence[xbase_pos+1:]
 
 
@@ -295,10 +293,6 @@ def gen_alt_all(sequence, kmer_levels, kmer_model, all_bases, xbase_pos, kmer_le
 
     return most_likely_base, llhr
     
-
-
-        
- 
 ############################
 #Load kmer measurements
 ############################
@@ -405,6 +399,7 @@ with alive_bar(len(read_level_summary), force_tty=True) as bar:
             read_level_summary['xeno_basecall'].iloc[i]=lpp[0]
             read_level_summary['log_likelihood_ratio'].iloc[i]=lpp[1]
 
+            #Morph feature to be updated
             #base_call.append(lpp[0])
             #llikelihood_ratio.append(lpp[1]) 
         #else:
@@ -421,9 +416,6 @@ read_level_summary['model_file']=kmer_model_input_file
 
 #Save output 
 read_level_summary.to_csv(out_fn)
-
-
-
 
 
 

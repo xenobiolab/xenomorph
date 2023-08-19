@@ -73,8 +73,15 @@ all_bases = xnas+['A','T','G','C']
 
 #Filter reads based on threshold setting. Modify in lib/xm_params.py. 
 print('Xenomorph Status - [Stats] Filtering reads with q score > '+str(qscore_filter))
-print('Xenomorph Status - [Stats] Filtering reads with signal score < '+str(signal_filter))
+
+#Additional filters not yet added
+#print('Xenomorph Status - [Stats] Filtering reads with signal score < '+str(signal_filter))
+#print('Xenomorph Status - [Stats] Filtering reads with signal score < '+str(signal_filter))
+#output_basecalls=output_basecalls[output_basecalls['read_start']>read_start_filter]
+#output_basecalls=output_basecalls[output_basecalls['read_end']<read_end_filter]
 #print('Xenomorph Status - [Stats] Unique reads:'+str(len(list(set(output_basecalls['read_ID'])))))
+
+
 output_basecalls=output_basecalls[output_basecalls['read_q-score']>qscore_filter]
 output_basecalls=output_basecalls[output_basecalls['read_signal_match_score']<signal_filter]
 output_basecalls=output_basecalls[output_basecalls['xeno_basecall'] != '-'] 
@@ -90,16 +97,17 @@ for x in range(0,len(xnas)):
     for xx in range(0,len(outx)): 
         if outx.iloc[xx]['read_xna'] ==  outx.iloc[xx]['xeno_basecall']:
             bc_count=bc_count+1
-    print('Xenomorph Status - [Stats] Per read recall of ['+xnas[x]+'] = '+str(round(bc_count/len(outx)*1000)/10)+'%   ('+str(bc_count)+'/'+str(len(outx))+')')
-
-
+    print('Xenomorph Status - [Stats - Summary] Per-read recall of ['+xnas[x]+'] = '+str(round(bc_count/len(outx)*1000)/10)+'%   ('+str(bc_count)+'/'+str(len(outx))+')')
 
 #Get list of reads that pass filter
 ref_seqs = list(set(output_basecalls['reference_sequence']))
 
 
 #Set up output dataframe
-output_column_names=['reference_sequence','n_reads','mean_q-score','mean_signal_match_score','reference_locus','strand','xna_sequence','xna', 'xna_freq','concensus_basecall', 'concensus_basecall_freq', 'xna_is_conensus', 'model_sigma', 'model_mean', 'read_xna_pos', 'model_file']
+output_column_names=['reference_sequence','n_reads','mean_q-score','mean_signal_match_score','reference_locus',
+'strand','xna_sequence','xna', 'xna_freq','concensus_basecall', 'concensus_basecall_freq', 'xna_is_conensus', 
+'model_sigma', 'model_mean', 'read_xna_pos', 'model_file']
+
 output_summary = pd.DataFrame(columns = output_column_names)
 
 #numbers to calculate consensus count
@@ -188,22 +196,9 @@ print('Xenomorph Status - [Stats] Saving global summary of stats to '+outfn)
 output_summary.to_csv(outfn, index=False)
 
 try: 
-    print("Xenomorph Status - [Stats] The number of correct consensus is (for n >"+str(concensus_stat_filter)+"): " + str(consensus_count) + "/" + str(total_count)+' ('+str((consensus_count/total_count)*100)+')')
+    print("Xenomorph Status - [Stats - Summary] Per-read concensus recall across all reads is (for n >"+str(concensus_stat_filter)+"): " + str(consensus_count) + "/" + str(total_count)+' ('+str((consensus_count/total_count)*100)+')')
 except: 
     print("Xenomorph Status - [Warning] No sequence reads above concensus threshold.")
 
-
-#try: 
-    #stats_log_col=['xna', 'tpr', 'tp','p','alt_base_type']
-    #stats_log_data=[xnas[x],str(round(bc_count/len(outx)*1000)/10), str(bc_count),str(len(outx)), alt_base_type]
-    #stats_log_summ = pd.DataFrame(data = stats_log_data, columns = stats_log_col)
-    #stats_log = pd.read_csv(stats_out)
-    #stats_log.loc[len(stats_log)]=stats_log_data
-    #stats_log = stats_log.append(stats_log_summ, ignore_index=True)
-#except: 
-    #print("Unable to save stats.")
-
-#Save to log? 
-#stats_log.to_csv('stats_log.csv', index = False)
 
 

@@ -1,2 +1,5 @@
 xx-test/
 test-piipe.py
+kmers/
+lib/parse_kmer.py
+lib/xr_xfasta2bed.py

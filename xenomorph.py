@@ -33,7 +33,7 @@ Xenomorph is a suite of tools used for nanopore sequencing of alternative basepa
 
 
 Xenomorph command groups (additional help available within each command group):
-	preprocess	[Preprocess] fast5 reads with reference fasta containing XNAs for 'morph' or 'de-novo'
+	preprocess	[Preprocess] fast5 reads with reference fasta containing XNAs for 'morph' XNA detection'
 	morph		[Basecall] Use kmer levels identified with preprocess to basecall XNA position based on alternative hypothesis testing (per read)
 	extract		[Utility] Extracts raw signal in region associated with XNA bases. 
 	stats		[Utility] Calculate global concensus basecalls from per-read output file and generate summary output

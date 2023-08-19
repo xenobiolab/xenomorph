@@ -2,12 +2,12 @@
 ########################################################################
 """
 xr_tools.py 
-
+Variety of tools used with remora API
 Title: Unpublished work
 
 By: H. Kawabe, N. Kaplan, J. A. Marchand
 
-Updated: 3/2/23
+Updated: 4/19/23
 """
 ########################################################################
 ########################################################################
@@ -17,8 +17,6 @@ import os
 import glob
 import pysam
 from pathlib import Path
-
-
 
 
 def filter_primary_alignments_file(input_bam_file, output_bam_file):
