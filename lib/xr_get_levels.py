@@ -98,7 +98,7 @@ pod5_path = sys.argv[1]+'/'.replace('//','/')
 bam_path = sys.argv[2]
 
 ##Bed file contains location of XNAs in the raw reference sequence
-bed_path = sys.argv[3]
+#bed_path = sys.argv[3]
 
 ##Path to the reference sequence in fasta format (XNAs converted back to standard DNA for fasta handling) 
 fasta_path = sys.argv[4]

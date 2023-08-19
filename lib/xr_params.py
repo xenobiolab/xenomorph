@@ -15,23 +15,6 @@ Updated: 8/16/23
 import numpy as np
 from remora import io, refine_signal_map, util
 
-#Standard basepairs written in 'purine pyrimidine' order
-standard_base_pairs = ['AT','GC']
-
-#Convert this to set
-standard_bases = np.concatenate(list(list(i) for i in standard_base_pairs))
-
-#Alternative basepairs written in 'purine pyrimidine' order
-xna_base_pairs = ['BS','PZ','JV','XK']
-
-#Specify canonical base substitution desired for xFASTA generation here
-confounding_pairs =  ['BA','SA','PG','ZC','JC','VG','XA','KG'] 
-
-#If XNAs are given different standard base substitutions, set them up as seperate (e.g, ['P','Z'])
-xna_segmentation_model_sets = ['BS','PZ','JV','XK', 'QW','ER']
-
-#Possible XNA bases
-xna_bases = np.concatenate(list(list(i) for i in xna_base_pairs))
 
 #############################REMORA PARAMETERS####################
 
@@ -131,8 +114,8 @@ write_gaps = False
 ##Model Training and Basecalling Parameters
 
 #Modified base in Fasta sequence you wish to train model or use model to basecall
-mod_base = 'P'
-mod_rev_base = 'Z'
+mod_base = 'J'
+mod_rev_base = 'F'
 
 #Most similar substituted canonical base you will be comparing against 
 #can_base = 'G'

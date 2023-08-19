@@ -294,6 +294,8 @@ elif args.subparsers == 'preprocess':
 	cmd = 'python lib/xr_xfasta2bed.py '+os.path.join(xfasta_dir)+' '+os.path.join(args.w,mod_base+'.bed ' +mod_base+' '+mod_base)
 	bed_dir = os.path.join(args.w,mod_base+'.bed')
 	os.system(cmd)
+	
+	bed_dir = 1
 
 
 	if args.o:
