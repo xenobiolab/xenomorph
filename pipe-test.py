@@ -37,13 +37,6 @@ ref = '/home/marchandlab/xombo/reference_sequences/ref_full_ABxAB.fa'
 out_file_prefix = '/ATGC_Model_Testing_Rescale'#Output file parameters
 
 
-
-### PZ Dataset 2 -- Model testing
-wdir = '/home/marchandlab/Dev/xenomorph-xemora/xx-test/PZ_Model_Testing'
-fast5 = '/home/marchandlab/DataAnalysis/Marchand/221124_PZ_libv2_200k/20221124_1855_MN37138_AMY698_27041bd8/fast5'
-ref = '/home/marchandlab/Dev/xombo/reference_sequences/ref_libv2_PZ_CxDx.fa'
-out_file_prefix = '/PZ_Model_Testing'#Output file parameters
-
 #PZ Dataset 1 - Model Building
 wdir = '/home/marchandlab/Dev/xenomorph-xemora/xx-test/230702_PZ_libv2_GC'
 fast5 = '/home/marchandlab/DataAnalysis/Marchand/230125_PZ_libv2_AB/20230125_1810_MN41475_ANL798_9c8050d8/fast5'
@@ -57,14 +50,20 @@ fast5 = '/home/marchandlab/DataAnalysis/Marchand/221215_blunt_libv2/20221215_171
 ref = '/home/marchandlab/Dev/xombo/reference_sequences/ref_full_ABxAB.fa'
 out_file_prefix = '/ATGC_Model_Testing_Rescale'#Output file parameters
 
+### PZ Dataset 2 -- Model testing
+wdir = '/home/marchandlab/Dev/xenomorph-xemora/xx-test/PZ_Model_Testing'
+fast5 = '/home/marchandlab/DataAnalysis/Marchand/221124_PZ_libv2_200k/20221124_1855_MN37138_AMY698_27041bd8/fast5'
+ref = '/home/marchandlab/Dev/xombo/reference_sequences/ref_libv2_PZ_CxDx.fa'
+out_file_prefix = '/PZ_Model_Testing'#Output file parameters
+
 
 ################################################
 #Level generation
 run_preprocess = True
-run_null_gen = True
+run_null_gen = False
 
 #Basecalling
-run_null_level = True
+run_null_level = False
 run_morph = True
 run_stats = True
 run_global_morph = True
@@ -72,12 +71,9 @@ run_global_morph = True
 #Generate model from a level file
 run_model_gen = False
 
-
 #Morph model
 model = 'ATGCPZ'
 ################################################
-
-
 
 #0 Set up File prefixes 
 out_pre = out_file_prefix+'_FLG001'+'_levels.csv'

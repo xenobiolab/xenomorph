@@ -139,7 +139,7 @@ if manual_rescale_override == True:
 else: 
     rescale = global_rescale
     reshift = global_reshift
-print('Xenomorph Status - [Preprocess] Rescaling using the following parameters: m = '+str(rescale)+'   b = '+str(reshift))
+
 
 #Perform global rescaling estimate on ATGC portions of read
 if len(sys.argv)==7: 
@@ -159,6 +159,8 @@ if len(sys.argv)==7:
         
         #Maximum number of reads to process
         num_reads = rescale_max_num_reads
+
+print('Xenomorph Status - [Preprocess] Rescaling using the following parameters: m = '+str(rescale)+'   b = '+str(reshift))
 
 
 if 1>0: 

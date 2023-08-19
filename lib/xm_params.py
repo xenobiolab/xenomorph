@@ -86,7 +86,7 @@ qscore_filter = 9#(default 15)
 signal_filter = 100 #1.5#(default 1.1)
 
 #Minimum number of reads required for calculating a concensus value
-concensus_stat_filter = 30
+concensus_stat_filter = 20
 
 
 ############################################################
@@ -126,7 +126,7 @@ kmer_weights = [1, 1, 1 ,1]
 kmer_sizes = [len(kmer_mask)] 
 
 #Set mu as either: 'KDE Mean level', 'Median level',or 'Mean level'. Basecalling performance can vary depending on accuracy of measurement. 
-mu = 'Mean level'
+mu = 'Median level'
 
 #Set mu as either: 'mean or median"
 mu_global = 'Mean'

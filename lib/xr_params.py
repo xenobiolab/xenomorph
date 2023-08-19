@@ -60,7 +60,7 @@ regenerate_chunks = False
 gen_bai = False
 
 #Override XNA position detection and specify position. Required for ATGC-only signal extraction or if reference file does not specify XNA position. 
-force_extract_position = True
+force_extract_position = False
 
 #If force_extract_position is true, specify position in reference. 
 extract_pos = 67
@@ -72,19 +72,19 @@ max_num_reads = 1000
 ######################LEVEL RESCALING######################
 
 #If true, use manual rescale. If false, automatically calculate rescaling parameters. 
-manual_rescale_override = False
+manual_rescale_override = True
 
 #Manually set kmer rescale slope
-manual_rescale = 1.4525020871963723 #1.4525020871963723  #1.5172133669195214
+manual_rescale = 1.4826
 
 #Manually set kmer shift
-manual_reshift = 0.01611804923176846 #0.01611804923176846 # 0.028835658921770185
+manual_reshift = 0
 
 #Global rescale is automatically updated after auto-scaling is performed
-global_rescale = 1.5078711716604114
+global_rescale = 1.4541330366934333
 
 #Global reshift is automatically updated after auto-scaling is performed
-global_reshift = 0.03737405164356877
+global_reshift = 0.028562533484942365
 
 #Path to model used as ground truth for rescaling 
 rescale_reference_model_path = 'models/libv2/ATGC_libv2_FLG001.csv'
@@ -99,24 +99,24 @@ rescale_method ='Thiel-Sen'
 rescale_max_num_reads = 200
 
 #Number of levels before and after to extract surrounding an XNA (default = 3) 
-rescale_xmer_boundary = 20
+rescale_xmer_boundary = 30
 
 #Number of bases before and after XNA that are required in a matching read (default = 30 alt) 
-rescale_xmer_padding = 30
+rescale_xmer_padding = 35
 
 #Show rescale plot 
 rescale_save_plot = True
-
-
 
 ######################REMORA SIGNAL REFINER######################
 #Set up SigMapRefiner
 sig_map_refiner = refine_signal_map.SigMapRefiner(
     kmer_model_filename=level_table,
-    scale_iters=0,
-    do_fix_guage=True
+    scale_iters= 20,
+    do_rough_rescale = True, 
+    do_fix_guage= True
 )
 ################################################################
+
 
 ######################XFASTA GENERATION######################
 
@@ -135,8 +135,10 @@ mod_base = 'P'
 mod_rev_base = 'Z'
 
 #Most similar substituted canonical base you will be comparing against 
-can_base = 'G'
-can_rev_base = 'C'
+#can_base = 'G'
+#can_rev_base = 'C'
+
+
 #Extent of Kmer content (-,+) to store for model training
 kmer_context ='4 4' 
 

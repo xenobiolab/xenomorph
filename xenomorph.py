@@ -229,13 +229,17 @@ elif args.subparsers == 'preprocess':
 		xfasta=args.r
 		print("Xenomorph Status - [Preprocess] Input reference fasta already in xfasta format. Skipping xfasta conversion.")
 
-
 	#Check for creation of a reverse fasta file - required for some XNAs for segmentation 
 	if os.path.exists(xfasta[0:xfasta.find('.fa')]+'_rc.fa')==True:
 		print("Xenomorph Status - [Preprocess] xfasta reverse complement created for handling special bases.")
 		xfasta_rc = xfasta[0:xfasta.find('.fa')]+'_rc.fa'
 		xfasta_rc_dir = os.path.join(args.w+'/'+os.path.basename(xfasta_rc))
 
+
+
+
+
+    ###### Remora preprocessing integration 
     #Convert fast5 to pod5 format 
 	pod5_dir = os.path.normpath(args.w)+'/'+os.path.basename(args.f)+'_pod5'
 	pod5_dir = check_make_dir(pod5_dir)
@@ -243,8 +247,7 @@ elif args.subparsers == 'preprocess':
 	if os.path.isfile(check_pod5_dir)==False: 
 		cod5_to_fast5(get_fast5_subdir(args.f), os.path.join(pod5_dir + '/'+os.path.basename(args.f))+'.pod5')
 	else: 
-		print('Xemora  [STATUS] - POD5 file for modified base found. Skipping POD5 coversion')
-
+		print('Xenomorph Status - [Preprocess] POD5 file for modified base found. Skipping POD5 coversion')
 
     #Basecall pod5 files 
 	fastq_dir = os.path.normpath(args.w)+'/'+os.path.basename(args.f)+'_fastq'
@@ -254,8 +257,7 @@ elif args.subparsers == 'preprocess':
 		cmd=os.path.expanduser(basecaller_path)+' -i '+pod5_dir+' -s '+fastq_dir+' -c '+guppy_config_file+' --min_qscore 9 --align_type full -x auto --bam_out --index --moves_out -a '+os.path.join(args.w+'/'+os.path.basename(xfasta))
 		os.system(cmd)
 	else:
-		print('Xemora  [STATUS] - Skipping POD5 basecalling for modified bases.')
-
+		print('Xenomorph Status - [Preprocess] Skipping POD5 basecalling for modified bases.')
 
 		###Merge Bam files 
 	bam_dir = os.path.normpath(args.w)+'/'+os.path.basename(args.f)+'_bam'
@@ -277,18 +279,18 @@ elif args.subparsers == 'preprocess':
 
 
 		cmd = 'samtools merge '+os.path.join(bam_dir+'.bam'+' '+os.path.join(fastq_dir,'pass/*.bam -f'))
-		print('Xemora  [STATUS] - Merging modified BAM files.')
+		print('Xenomorph Status - [Preprocess] Merging modified BAM files.')
 		os.system(cmd)
 	else:
-		print('Xemora  [STATUS] - Skipping merging modified BAM files.')
+		print('Xenomorph Status - [Preprocess] Skipping merging modified BAM files.')
 
 
 		###Bed file generation 
 	xfasta_dir = os.path.join(args.w+'/'+os.path.basename(xfasta))
 	if os.stat(xfasta_dir).st_size == 0: 
-		print('Xemora  [ERROR] - Empty xfasta file generated. Check that XNA bases were present in sequence of input fasta file.')
+		print('Xenomorph Status - [Preprocess] Empty xfasta file generated. Check that XNA bases were present in sequence of input fasta file.')
 		sys.exit()
-	print('Xemora  [STATUS] - Generating bed file for modified base.')
+	print('Xenomorph Status - [Preprocess] Generating bed file for modified base.')
 	cmd = 'python lib/xr_xfasta2bed.py '+os.path.join(xfasta_dir)+' '+os.path.join(args.w,mod_base+'.bed ' +mod_base+' '+mod_base)
 	bed_dir = os.path.join(args.w,mod_base+'.bed')
 	os.system(cmd)
@@ -300,8 +302,7 @@ elif args.subparsers == 'preprocess':
 	else: 
 		level_output_fn= os.path.normpath(args.w)+'/output_levels_summary.csv'
 
-
-	#Remora segmentation will require rescaling for comparison with Tombo data
+	#Remora segmentation will require rescaling (e.g., MAD to SD) for comparison with Tombo models
 	if manual_rescale_override == False:
 		#Make rescale directory if it does not exist.
 		CHECK_FOLDER = os.path.isdir(working_dir+'/rescale')
@@ -342,14 +343,15 @@ elif args.subparsers == 'preprocess':
 		cmd = 'python lib/xr_get_levels.py '+check_pod5_dir+' '+ check_bam_dir + ' '+ bed_dir + ' '  +xfasta_dir+' '+level_output_fn
 		os.system(cmd) 
 
-
-
 	if os.path.exists(xfasta[0:xfasta.find('.fa')]+'_rc.fa')==True:
 		print("Xenomorph Status - [Preprocess] Performing level extraction on surrounding XNA locations with reverse set.")
 		cmd = 'python lib/xr_get_levels.py '+check_pod5_dir+' '+ check_bam_dir +' '+ bed_dir + ' ' +xfasta_rc_dir+' '+level_output_fn
 		os.system(cmd) 
 	print("Xenomorph Status - [Preprocess] Saving output level file to "+os.path.normpath(level_output_fn))
 	print("Xenomorph Status - [Preprocess Complete] Use 'xenomorph.py morph' for alternative hypothesis testing on XNA positions.")
+    #####End Remora Section
+
+
 
 
 
@@ -365,6 +367,10 @@ elif args.subparsers == 'models':
 
 	if args.s: 
 		model_summary(args.s)
+
+
+
+
 
 
 elif args.subparsers == 'stats': 

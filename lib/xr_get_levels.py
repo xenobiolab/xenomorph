@@ -154,32 +154,9 @@ contigs = headers.references
 #Get total number of reads in primary only bam output 
 num_reads = pysam.AlignmentFile(primary_bam_path, 'rb').count()
 
-
-
-####Sig Map Refiner########
-#Set up SigMapRefiner.  
-##Loaded 6-mer table with 3 central position. (NNXNNN)
-##Rough re-scaling will be executed. 
-##Signal mapping refinement will be executed using the dwell_penalty refinement method (band half width: 5). 
-##Short dwell penalty array set to [8.  4.5 2. ]
-##If scale_iter = -1, will only do rough rescaling. Rough rescaling does not use kmer maps. With scale_iter =1, XNA assigment has no effect on output signal
-##This might be meaningless without second round refinemnet. 
-##If scale_iter >=0, will do the second round kmer refinement. Found that this is very sensitive to base identity in the fasta replacement. 
-##Maybe use kmer models to better refine? 
-##If scale iter = -1 and do_fix_guage = false, you will get dac or pa values (not normalized at all)
-##Without the second resclae, it does not fix segmentation probelms, so you have a high amount of insert/deletion related errors. Tombo DOES fix this. 
-sig_map_refiner = refine_signal_map.SigMapRefiner(
-    kmer_model_filename=level_table,
-    scale_iters=0,
-    do_fix_guage=True
-    #do_rough_rescale = True
-)
-
 #Num read overwrite
 if max_num_reads >0: 
     num_reads = max_num_reads
-
-
 
 ##Set global scaling shift and scale
 if manual_rescale_override == True:
@@ -188,7 +165,6 @@ if manual_rescale_override == True:
 else: 
     rescale = global_rescale
     reshift = global_reshift
-print('Xenomorph Status - [Preprocess] Rescaling using the following parameters: m = '+str(rescale)+'   b = '+str(reshift))
 
 #Perform global rescaling estimate on ATGC portions of read
 if len(sys.argv)==7: 
@@ -209,7 +185,7 @@ if len(sys.argv)==7:
         #Maximum number of reads to process
         num_reads = rescale_max_num_reads
 
-
+print('Xenomorph Status - [Preprocess] Rescaling using the following parameters: m = '+str(rescale)+'   b = '+str(reshift))
     
 if 1>0: 
     #Set up progress bar
