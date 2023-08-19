@@ -285,26 +285,21 @@ elif args.subparsers == 'preprocess':
 		print('Xenomorph Status - [Preprocess] Skipping merging modified BAM files.')
 
 
-		###Bed file generation 
+	###Check xFasta file creation integrity 
 	xfasta_dir = os.path.join(args.w+'/'+os.path.basename(xfasta))
 	if os.stat(xfasta_dir).st_size == 0: 
 		print('Xenomorph Status - [Preprocess] Empty xfasta file generated. Check that XNA bases were present in sequence of input fasta file.')
 		sys.exit()
-	print('Xenomorph Status - [Preprocess] Generating bed file for modified base.')
-	cmd = 'python lib/xr_xfasta2bed.py '+os.path.join(xfasta_dir)+' '+os.path.join(args.w,mod_base+'.bed ' +mod_base+' '+mod_base)
-	bed_dir = os.path.join(args.w,mod_base+'.bed')
-	os.system(cmd)
-	
-	bed_dir = 1
 
 
+	#Set output file path 
 	if args.o:
 		level_output_fn=os.path.normpath(args.w)+'/'+args.o
-
+	#IF no file path specified, default output file name
 	else: 
 		level_output_fn= os.path.normpath(args.w)+'/output_levels_summary.csv'
 
-	#Remora segmentation will require rescaling (e.g., MAD to SD) for comparison with Tombo models
+	#Remora segmentation will likely require rescaling (e.g.,  SD to MAD) for comparison with Tombo models
 	if manual_rescale_override == False:
 		#Make rescale directory if it does not exist.
 		CHECK_FOLDER = os.path.isdir(working_dir+'/rescale')
@@ -313,11 +308,11 @@ elif args.subparsers == 'preprocess':
 		#Run level extract on raw data 
 		if force_extract_position == True: 
 			##For fixed position extract 
-			cmd = 'python lib/xr_get_levels_pos.py '+check_pod5_dir+' '+ check_bam_dir + ' '+ bed_dir + ' '  +xfasta_dir+' '+working_dir+'/rescale/rescale_raw_levels.csv rescale'
+			cmd = 'python lib/xr_get_levels_pos.py '+check_pod5_dir+' '+ check_bam_dir + ' '  +xfasta_dir+' '+working_dir+'/rescale/rescale_raw_levels.csv rescale'
 			os.system(cmd) 
 		else:
 			#For standard pipeline
-			cmd = 'python lib/xr_get_levels.py '+check_pod5_dir+' '+ check_bam_dir + ' '+ bed_dir + ' '  +xfasta_dir+' '+working_dir+'/rescale/rescale_raw_levels.csv rescale'
+			cmd = 'python lib/xr_get_levels.py '+check_pod5_dir+' '+ check_bam_dir + ' '  +xfasta_dir+' '+working_dir+'/rescale/rescale_raw_levels.csv rescale'
 			os.system(cmd) 
 		
 		#Covert raw level file to kmer extract csv
@@ -330,24 +325,26 @@ elif args.subparsers == 'preprocess':
 		cmd = 'python lib/xr_kmer_rescale.py '+working_dir+'/rescale/rescale_raw_kmer_model.csv '+working_dir+'/rescale/rescale_kmer_comparison.pdf'
 		os.system(cmd) 
 
+
+
 	#After rescaling paramters are calculated, continue with pipeline
 	if force_extract_position == True: 
 		#For fixed position extract
 		print("Xenomorph Status - [Warning] Overriding XNA kmer extraction position. Forced positional extract is set to true (not typical).")
 		print("Xenomorph Status - [Warning] Change this setting in lib/xr_params.py")
 		print("Xenomorph Status - [Preprocess] Performing level extraction surrounding the specified position location.")
-		cmd = 'python lib/xr_get_levels_pos.py '+check_pod5_dir+' '+ check_bam_dir + ' '+ bed_dir + ' '  +xfasta_dir+' '+level_output_fn
+		cmd = 'python lib/xr_get_levels_pos.py '+check_pod5_dir+' '+ check_bam_dir + ' '  +xfasta_dir+' '+level_output_fn
 		os.system(cmd) 
 
 	else: 
 		#For standard pipeline
 		print("Xenomorph Status - [Preprocess] Performing level extraction surrounding XNA locations.")
-		cmd = 'python lib/xr_get_levels.py '+check_pod5_dir+' '+ check_bam_dir + ' '+ bed_dir + ' '  +xfasta_dir+' '+level_output_fn
+		cmd = 'python lib/xr_get_levels.py '+check_pod5_dir+' '+ check_bam_dir + ' '  +xfasta_dir+' '+level_output_fn
 		os.system(cmd) 
 
 	if os.path.exists(xfasta[0:xfasta.find('.fa')]+'_rc.fa')==True:
 		print("Xenomorph Status - [Preprocess] Performing level extraction on surrounding XNA locations with reverse set.")
-		cmd = 'python lib/xr_get_levels.py '+check_pod5_dir+' '+ check_bam_dir +' '+ bed_dir + ' ' +xfasta_rc_dir+' '+level_output_fn
+		cmd = 'python lib/xr_get_levels.py '+check_pod5_dir+' '+ check_bam_dir +' ' +xfasta_rc_dir+' '+level_output_fn
 		os.system(cmd) 
 	print("Xenomorph Status - [Preprocess] Saving output level file to "+os.path.normpath(level_output_fn))
 	print("Xenomorph Status - [Preprocess Complete] Use 'xenomorph.py morph' for alternative hypothesis testing on XNA positions.")

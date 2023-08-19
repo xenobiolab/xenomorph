@@ -2,6 +2,7 @@
 ########################################################################
 """
 xr_params.py 
+Adding remora segmentation support to Xenomorph.
 
 Title: Unpublished work
 
@@ -14,7 +15,6 @@ Updated: 8/16/23
 
 import numpy as np
 from remora import io, refine_signal_map, util
-
 
 #############################REMORA PARAMETERS####################
 
@@ -40,7 +40,7 @@ regenerate_bam = False
 regenerate_chunks = False
 
 #generate a .bai file for your bam file -- you need to do this the first time you run analysis
-gen_bai = False
+gen_bai = True
 
 #Override XNA position detection and specify position. Required for ATGC-only signal extraction or if reference file does not specify XNA position. 
 force_extract_position = False
@@ -99,48 +99,4 @@ sig_map_refiner = refine_signal_map.SigMapRefiner(
     do_fix_guage= True
 )
 ################################################################
-
-
-######################XFASTA GENERATION######################
-
-#Fasta2x - write sequences to xfasta even if they do no contain XNAs. Default = False 
-write_no_xna_seq = True
-
-#Fasta2x - Write gaps in place of XNAs in fasta reference file for null testing
-write_gaps = False
-
-
-############################################################
-##Model Training and Basecalling Parameters
-
-#Modified base in Fasta sequence you wish to train model or use model to basecall
-mod_base = 'J'
-mod_rev_base = 'F'
-
-#Most similar substituted canonical base you will be comparing against 
-#can_base = 'G'
-#can_rev_base = 'C'
-
-
-#Extent of Kmer content (-,+) to store for model training
-kmer_context ='4 4' 
-
-#Extent of chunk context (centered around modified base) 
-chunk_context = '50 50' 
-
-#Proportion of reads to use for validation 
-val_proportion = 0.01
-
-############################################################
-#Guppy Base caller configuration
-
-#Path to guppy basecaller
-basecaller_path ='~/ont-guppy/bin/guppy_basecaller' 
-
-#GPU enabled 
-device_type = 'cuda:all' 
-
-#Config file 
-guppy_config_file = 'dna_r9.4.1_450bps_hac.cfg' 
-
 

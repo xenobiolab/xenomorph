@@ -75,14 +75,11 @@ pod5_path = os.path.normpath(sys.argv[1])+'/'
 ##Bam file is generated from basecalling raw data with a reference alignment and --move_out 
 bam_path = sys.argv[2]
 
-##Bed file contains location of XNAs in the raw reference sequence
-bed_path = sys.argv[3]
-
 ##Path to the reference sequence in fasta format (XNAs converted back to standard DNA for fasta handling) 
-fasta_path = sys.argv[4]
+fasta_path = sys.argv[3]
 
 ##Output folder location 
-output_folder = sys.argv[5]
+output_folder = sys.argv[4]
 
 #Import fasta file and bed file 
 ##Fasta file contains the reference sequences 
@@ -142,8 +139,8 @@ else:
 
 
 #Perform global rescaling estimate on ATGC portions of read
-if len(sys.argv)==7: 
-    if sys.argv[6]=='rescale':
+if len(sys.argv)==6: 
+    if sys.argv[5]=='rescale':
         print('Xenomorph Status - [Preprocess] Extracting kmers for calculating global scaling paramters')
         #Reinitialize slope at 1 (no scaling) for rescale calculation
         rescale = 1
