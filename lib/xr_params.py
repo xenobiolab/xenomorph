@@ -34,7 +34,7 @@ skip_qscore_extract  = True
 basecall_pod = False
 
 #Re-generate BAM files for reference-based basecalling.
-regenerate_bam = False
+regenerate_bam = True
 
 #Re-generate training or basecalling chunks.
 regenerate_chunks = False
@@ -49,12 +49,23 @@ force_extract_position = False
 extract_pos = 67
 
 #Preprocess a maximum number of reads (default = 0 == all reads) 
-max_num_reads = 1000
+max_num_reads = 100
+
+
+
+######################REMORA SIGNAL REFINER######################
+#Set up SigMapRefiner
+sig_map_refiner = refine_signal_map.SigMapRefiner(
+    kmer_model_filename=level_table,
+    scale_iters= 20,
+    do_rough_rescale = True, 
+    do_fix_guage= True
+)
 
 
 ######################LEVEL RESCALING######################
 
-#If true, use manual rescale. If false, automatically calculate rescaling parameters. 
+#If true, use manual rescale. If false, automatically calculate rescaling and reshift parameters. 
 manual_rescale_override = True
 
 #Manually set kmer rescale slope
@@ -90,13 +101,5 @@ rescale_xmer_padding = 35
 #Show rescale plot 
 rescale_save_plot = True
 
-######################REMORA SIGNAL REFINER######################
-#Set up SigMapRefiner
-sig_map_refiner = refine_signal_map.SigMapRefiner(
-    kmer_model_filename=level_table,
-    scale_iters= 20,
-    do_rough_rescale = True, 
-    do_fix_guage= True
-)
-################################################################
+
 

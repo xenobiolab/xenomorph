@@ -370,14 +370,10 @@ read_level_summary=read_level_summary[read_level_summary['read_xna'].isin(decode
 #Pick a random set of reads
 if max_reads >0 and max_reads <len(read_level_summary): 
     read_level_summary = read_level_summary.sample(n = max_reads)
-##############################################
-#Generate kmer data sampling from real dataset
-##############################################
-
+    
 
 #Get XNA position based on nmer_model mask
 xbase_pos = nmer_model.find('x') 
-
 
 base_call = [] 
 llikelihood_ratio = [] 

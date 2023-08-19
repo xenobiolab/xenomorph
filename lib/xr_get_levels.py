@@ -2,83 +2,29 @@
 ########################################################################
 """
 xr_get_levels.py 
+Remora based segmentation signal extraction for Xenomorph. Uses positional
+information extracted from xfasta file to determine location of XNA.  
 
 Title: Unpublished work
 
 By: H. Kawabe, N. Kaplan, J. A. Marchand
 
-Updated: 7/2/23 
-
-*****Change log 230702*****
-#Removed redundant BAM processing code 
-#Fixed bug in read count assignment and changed var to num_reads instead of num_file 
-#Added optional qscore extraction to properly fall back if needed
-#Annotated sig map refiner 
-#Added code comments
-#Removed j variable as a counter, calculate pass/fail from output dataframes instead
-#Added read_map_start and read_map_end info to the level output file 
-#Modularized to handle more than one XNA per sequence
-#Added setting to calculate mean or trimmean when extracting signal levels (now set in xr_params)
-#Remove hardcoding for xmer boundary. Now set with xm_params.py (xmer_boundary) 
-#Changed "heptamer lvl" variable to "xna_region" so it is generalized to any bounding region set by xna_boundary variable
-#Removed hard coding of XNA region extraction, XNA signal extraction. Now generalized and set with xm_params 
-#Replaced "can_df" with "bed_df" since it is a more descriptive variable name. 
-#Fixed hardcoding of XNA relative position, now uses fasta header from Xenomorph. 
-#Bed dataframe is no longer used since its only purpose was XNA position, which is now given to us from sequence header. 
-#Removed sequence length hard coding by looking up length of the alignment for each read (rather than assuming a fixed length)
-#Removed pre-indexing to calculate qscores. Qscores are now calculated by extracted from io_read objects
-#Removed pre indexing for map score calculations. Will use match quality scores that are already calculated. 
-#Added dwell time output
-#Added standard deivation of signal output
-#Removed option to change between mean and trimmean (now always trimmean)
-#Added headers to make morph and stats compatible
-#Fixed primary/secondary alignment problem 
-
-####To do
-# update ATGC model on the longer run
-# Run global validations on new sets for both XNA and non-XNA 
-
-
-
-
-####Remaining ideas
-# "N" Correction gives you the same answer for S and P, meaning it is correcting to something. Maybe the average over all signals
-# One solution is maybe uploading our own kmer models and see if it can recognize it (with some deep code editing)
-# Other is seeing if we can do the tombo-like refinement. 
-# Right now, it does segmentation but the segmentation has too much bias for the correction
-# The second refinement is good, but can we make it do less? 
-# It is very possible that this works, but because we are not using the thiel estimator this is just a worse version than tombo refinement. 
-
-wdir = '/home/marchandlab/xenomorph/xenomorph-xemora/xx-test/230702_PZ_libv2_full'
-fast5 = '/home/marchandlab/DataAnalysis/Marchand/230125_PZ_libv2_AB/20230125_1810_MN41475_ANL798_9c8050d8/fast5
-ref = '/home/marchandlab/xenomorph/xenomorph-xemora/ref/ref_libv2_PZ_CxDx.fa'
-
+Updated: 8/19/23 
 """
 
 #######################################################################
 
-
-
-#import everything
+#Import packages and parameter files
 import re
 import os
 import sys
 import subprocess
-
-from alive_progress import alive_bar; import time
 import pod5
 import pysam
 import numpy as np
 import pandas as pd
-from tqdm import tqdm
-import seaborn as sns
-import matplotlib.pyplot as plt
-from scipy.stats import ttest_ind
-
+from alive_progress import alive_bar; import time
 from remora import io, refine_signal_map, util
-from time import sleep
-from tqdm import tqdm
-from csv import writer
 from Bio import SeqIO
 from Bio.Seq import Seq
 from xm_tools import *
@@ -90,7 +36,6 @@ from xr_params import *
 #Print status
 print('Xenomorph Status - [Preprocess] Initializing level extraction')
 
-#Handle input arguments 
 ##Pod5 file input is handled by coverting raw fast5 to pod5 using pod5 tools
 pod5_path = sys.argv[1]+'/'.replace('//','/')
 
@@ -111,6 +56,13 @@ fasta_file = pysam.FastaFile(fasta_path)
 column_names = ["Read_ID","reference_sequence", "read_xna_strand", "read_signal_match_score", "read_q-score","read_reference_locus" ,"read_start", "read_end", "read_xna_position","read_xna", "read_xna_sequence", "read_levels", "read_sd", "read_dwell"]
 output_summary = pd.DataFrame(columns = column_names)
 
+#Check if reverse complement flag is present, if so - use rc 
+if len(sys.argv)==6: 
+    if sys.argv[5] == 'rc':
+        output_summary = pd.read_csv(output_folder)
+        force_strand = '-'
+        
+        
 
 #Index fasta reference for future lookup
 fasta_ref_dict = SeqIO.index(fasta_path, "fasta")
@@ -122,16 +74,10 @@ pod5_fh = pod5.Reader(pod5_path)
 #Segmentation failed count
 segmentation_failed = 0
 
-
-####BAM file operations 
-#Index bam file using setting in gen_bai from lib/xr_params.py. Required if input bam file is unindexed. 
-
-
+#Index bam file using setting in gen_bai from lib/xr_params.py. Required if input bam file is unindexed.
 if gen_bai==True:
     cmd = 'samtools index ' + bam_path
     os.system(cmd)
-
-#Import bam data using pysam and get header information 
 
 #Generate file path for a primary alignment bam output file 
 primary_bam_path = bam_path.replace('.bam','_primary.bam')
@@ -182,162 +128,166 @@ if len(sys.argv)==6:
         #Maximum number of reads to process
         num_reads = rescale_max_num_reads
 
+
 print('Xenomorph Status - [Preprocess] Rescaling using the following parameters: m = '+str(rescale)+'   b = '+str(reshift))
-    
-if 1>0: 
-    #Set up progress bar
-    with alive_bar(int(num_reads), force_tty=True) as bar: 
-        for i in range(0,int(num_reads)):
 
-            #Increment progress bar meter
-            bar()
+#Set up progress bar
+with alive_bar(int(num_reads), force_tty=True) as bar: 
+    for i in range(0,int(num_reads)):
 
-            #Begin read procress
-            try:
-            #if 1>0:
-                #Iterate through bam read alignments
-                bam_read = next(bam_fh)
+        #Increment progress bar meter
+        bar()
 
-                #Fetch pod5 data for corresponding bam read 
-                pod5_read = next(pod5_fh.reads(selection=[bam_read.query_name]))
+        #Begin read procress
+        try:
+            #Iterate through bam read alignments
+            bam_read = next(bam_fh)
 
-                #Load raw data and alignment into io object
-                io_read = io.Read.from_pod5_and_alignment(pod5_read, bam_read)
+            #Fetch pod5 data for corresponding bam read 
+            pod5_read = next(pod5_fh.reads(selection=[bam_read.query_name]))
 
-                #Get header of reference sequence that read mapped to
-                reference_sequence_header = io_read.ref_reg.ctg
+            #Load raw data and alignment into io object
+            io_read = io.Read.from_pod5_and_alignment(pod5_read, bam_read)
 
-                #Get reference sequence taht read mapped to
-                reference_sequence = fasta_ref_dict[reference_sequence_header].seq
+            #Get header of reference sequence that read mapped to
+            reference_sequence_header = io_read.ref_reg.ctg
 
-                #Get length of reference sequence/alignment
-                len_sequence = len(reference_sequence)
+            #Get reference sequence taht read mapped to
+            reference_sequence = fasta_ref_dict[reference_sequence_header].seq
 
-                #Set reference region to focus on alignment. Currently hardcoded to be entirety of alignment length 
-                ref_reg = io.RefRegion(ctg=io_read.ref_reg.ctg, strand=io_read.ref_reg.strand, start=0, end=len_sequence)
+            #Get length of reference sequence/alignment
+            len_sequence = len(reference_sequence)
 
-                #Refine raw signal scaling around the focus region using sig_map_aligner 
-                io_read.set_refine_signal_mapping(sig_map_refiner, ref_mapping=True)
+            #Set reference region to focus on alignment. Currently hardcoded to be entirety of alignment length 
+            ref_reg = io.RefRegion(ctg=io_read.ref_reg.ctg, strand=io_read.ref_reg.strand, start=0, end=len_sequence)
 
-                #Get name of raw read 
-                read_ID = io_read.read_id
+            #Refine raw signal scaling around the focus region using sig_map_aligner 
+            io_read.set_refine_signal_mapping(sig_map_refiner, ref_mapping=True)
 
-                #Get identity of strand: (+) or (-) 
-                strand = io_read.ref_reg.strand
+            #Get name of raw read 
+            read_ID = io_read.read_id
 
-                #Get read map start position
-                read_map_start = int(io_read.ref_reg.start)
+            #Get identity of strand: (+) or (-) 
+            strand = io_read.ref_reg.strand
 
-                #Get read map end position
-                read_map_end = int(io_read.ref_reg.end)
+            #Get read map start position
+            read_map_start = int(io_read.ref_reg.start)
 
-                #Get match quality of the full read alignment 
-                match_quality=io_read.full_align["map_quality"]
+            #Get read map end position
+            read_map_end = int(io_read.ref_reg.end)
 
-                #Get qscore from read phred score
-                read_qs = phred_to_qscore(io_read.full_align["qual"])
+            #Get match quality of the full read alignment 
+            match_quality=io_read.full_align["map_quality"]
 
-                #Get XNA positions from reference read header
-                xna_base_pos = fetch_xna_pos(reference_sequence_header)
+            #Get qscore from read phred score
+            read_qs = phred_to_qscore(io_read.full_align["qual"])
 
-                #For every xna in reference sequence, extract levels
-                for x in xna_base_pos:
+            #Get XNA positions from reference read header
+            xna_base_pos = fetch_xna_pos(reference_sequence_header)
 
-                    #Get identity of XNA base
-                    xna_base=x[0]
+            #For every xna in reference sequence, extract levels
+            for x in xna_base_pos:
 
-                    #Get position of XNA 
-                    xna_pos=int(x[1])
+                #Get identity of XNA base
+                xna_base=x[0]
 
-                    #Extract read levels if read passes quality filters set in xr_params.py 
-                    if int(match_quality) >= min_match_score:
-                        if strand == '+':
+                #Get position of XNA 
+                xna_pos=int(x[1])
+                
+                #Check if RC is allowed for XNA 
+                rc_allowed = xna_base_rc(xna_base, xna_segmentation_model_sets) 
+                
+                #Extract read levels if read passes quality filters set in xr_params.py 
+                if int(match_quality) >= min_match_score:
+                    if strand == '+':
 
-                            #Extract signal level and perform arithmetic computation (mean or trimmean/ signal_type (norm, pa, DAC) set in xr_params)
-                            read_dms = io_read.compute_per_base_metric("dwell_trimmean_trimsd", ref_anchored=True, signal_type = signal_type,region=ref_reg, sig_map_refiner = sig_map_refiner)
+                        #Extract signal level and perform arithmetic computation (mean or trimmean/ signal_type (norm, pa, DAC) set in xr_params)
+                        read_dms = io_read.compute_per_base_metric("dwell_trimmean_trimsd", ref_anchored=True, signal_type = signal_type,region=ref_reg, sig_map_refiner = sig_map_refiner)
 
-                            #Get signal means for whole read
-                            read_means = read_dms["trimmean"]*rescale+reshift
+                        #Get signal means for whole read
+                        read_means = read_dms["trimmean"]*rescale+reshift
 
-                            #Extract sub-region defined by xmer_padding for filtering (set in xm_params ; xmer_padding). This is used for segmentation check.
-                            read_region = read_dms["trimmean"][xna_pos-xmer_padding:xna_pos+1+xmer_padding]
+                        #Extract sub-region defined by xmer_padding for filtering (set in xm_params ; xmer_padding). This is used for segmentation check.
+                        read_region = read_dms["trimmean"][xna_pos-xmer_padding:xna_pos+1+xmer_padding]
 
-                            #Extract signal bounding region of interest for level output file (defualt = +/- 3. set in xm_params; xmer_boundary)
-                            xna_region_mean = read_means[xna_pos-xmer_boundary:xna_pos+1+xmer_boundary]
+                        #Extract signal bounding region of interest for level output file (defualt = +/- 3. set in xm_params; xmer_boundary)
+                        xna_region_mean = read_means[xna_pos-xmer_boundary:xna_pos+1+xmer_boundary]
 
-                            #Get signal means for whole read
-                            xna_region_sd = read_dms["trimsd"][xna_pos-xmer_boundary:xna_pos+1+xmer_boundary]
+                        #Get signal means for whole read
+                        xna_region_sd = read_dms["trimsd"][xna_pos-xmer_boundary:xna_pos+1+xmer_boundary]
 
-                            #Get signal means for whole read
-                            xna_region_dwell = read_dms["dwell"][xna_pos-xmer_boundary:xna_pos+1+xmer_boundary]
+                        #Get signal means for whole read
+                        xna_region_dwell = read_dms["dwell"][xna_pos-xmer_boundary:xna_pos+1+xmer_boundary]
 
-                            #Extract sequence bounding region of interest for level output file (defualt = +/- 3. set in xm_params; xmer_boundary)
-                            read_xna_seq = reference_sequence[xna_pos-xmer_boundary:xna_pos] + xna_base + reference_sequence[xna_pos+1:xna_pos+xmer_boundary+1]
+                        #Extract sequence bounding region of interest for level output file (defualt = +/- 3. set in xm_params; xmer_boundary)
+                        read_xna_seq = reference_sequence[xna_pos-xmer_boundary:xna_pos] + xna_base + reference_sequence[xna_pos+1:xna_pos+xmer_boundary+1]
 
-                            #Reference locus 
-                            read_ref_locus = read_xna_seq
+                        #Reference locus 
+                        read_ref_locus = read_xna_seq
 
-                        elif strand == '-':
-                            #Reference locus (before taking reverse complement, and before taking rc of the xna base)
-                            read_ref_locus = reference_sequence[xna_pos-xmer_boundary:xna_pos] + xna_base + reference_sequence[xna_pos+1:xna_pos+xmer_boundary+1]
+                    elif strand == '-' and rc_allowed != False:
+                        #Reference locus (before taking reverse complement, and before taking rc of the xna base)
+                        read_ref_locus = reference_sequence[xna_pos-xmer_boundary:xna_pos] + xna_base + reference_sequence[xna_pos+1:xna_pos+xmer_boundary+1]
 
-                            #If alignment matched (-) strand, use r.c. of XNA base 
-                            xna_base = xna_base_rc(xna_base, xna_base_pairs) 
+                        #If alignment matched (-) strand, use r.c. of XNA base 
+                        xna_base = xna_base_rc(xna_base, xna_base_pairs) 
 
-                            #If alignment matched (-) strand, use r.c. of reference sequence
-                            reference_sequence_rc = reference_sequence.reverse_complement()
+                        #If alignment matched (-) strand, use r.c. of reference sequence
+                        reference_sequence_rc = reference_sequence.reverse_complement()
 
-                            #Extract signal level and perform arithmetic computation (mean or trimmean, signal_type (norm, pa, DAC) set in xr_params)
-                            read_dms = io_read.compute_per_base_metric("dwell_trimmean_trimsd", ref_anchored=True, signal_type = signal_type, region=ref_reg, sig_map_refiner = sig_map_refiner)
+                        #Extract signal level and perform arithmetic computation (mean or trimmean, signal_type (norm, pa, DAC) set in xr_params)
+                        read_dms = io_read.compute_per_base_metric("dwell_trimmean_trimsd", ref_anchored=True, signal_type = signal_type, region=ref_reg, sig_map_refiner = sig_map_refiner)
 
-                            #Get signal means for whole read
-                            read_means = read_dms["trimmean"]*rescale+reshift
+                        #Get signal means for whole read
+                        read_means = read_dms["trimmean"]*rescale+reshift
 
-                            #Extract sub-region defined by xmer_padding for filtering (set in xm_params ; xmer_padding). This is used for segmentation check.
-                            read_region = read_means[len_sequence-xna_pos-xmer_padding-1:len_sequence-xna_pos+xmer_padding]
+                        #Extract sub-region defined by xmer_padding for filtering (set in xm_params ; xmer_padding). This is used for segmentation check.
+                        read_region = read_means[len_sequence-xna_pos-xmer_padding-1:len_sequence-xna_pos+xmer_padding]
 
-                            #Extract signal bounding region of interest for level output file (defualt = +/- 3. set in xm_params; xmer_boundary)
-                            xna_region_mean = read_means[len_sequence-xna_pos-xmer_boundary-1:len_sequence-xna_pos+xmer_boundary]
+                        #Extract signal bounding region of interest for level output file (defualt = +/- 3. set in xm_params; xmer_boundary)
+                        xna_region_mean = read_means[len_sequence-xna_pos-xmer_boundary-1:len_sequence-xna_pos+xmer_boundary]
 
-                            #Get signal means for whole read
-                            xna_region_sd = read_dms["trimsd"][len_sequence-xna_pos-xmer_boundary-1:len_sequence-xna_pos+xmer_boundary]
+                        #Get signal means for whole read
+                        xna_region_sd = read_dms["trimsd"][len_sequence-xna_pos-xmer_boundary-1:len_sequence-xna_pos+xmer_boundary]
 
-                            #Get signal means for whole read
-                            xna_region_dwell = read_dms["dwell"][len_sequence-xna_pos-xmer_boundary-1:len_sequence-xna_pos+xmer_boundary]
+                        #Get signal means for whole read
+                        xna_region_dwell = read_dms["dwell"][len_sequence-xna_pos-xmer_boundary-1:len_sequence-xna_pos+xmer_boundary]
 
-                            #Extract sequence bounding region of interest for level output file (defualt = +/- 3. set in xm_params; xmer_boundary)
-                            read_xna_seq = reference_sequence_rc[len_sequence-xna_pos-xmer_boundary-1:len_sequence-xna_pos-1]+xna_base+reference_sequence_rc[len_sequence-xna_pos:len_sequence-xna_pos+xmer_boundary]
+                        #Extract sequence bounding region of interest for level output file (defualt = +/- 3. set in xm_params; xmer_boundary)
+                        read_xna_seq = reference_sequence_rc[len_sequence-xna_pos-xmer_boundary-1:len_sequence-xna_pos-1]+xna_base+reference_sequence_rc[len_sequence-xna_pos:len_sequence-xna_pos+xmer_boundary]
 
-                    #Use signals extracted from read region to check if segmentation passed around region of interest
-                    if np.isnan(sum(read_region))==False: 
-
-
-                        #Store output dataframe for level file generation
-                        read_out = {'Read_ID':read_ID, "reference_sequence": reference_sequence_header, 
-                        "read_xna_strand": strand, "read_reference_locus": read_ref_locus, "read_start": read_map_start, 
-                        "read_end":read_map_end, "read_levels": xna_region_mean, "read_sd": xna_region_sd, "read_dwell": 
-                        xna_region_dwell, "read_q-score": read_qs, "read_signal_match_score": match_quality,"read_xna_position": 
-                        xna_pos, "read_xna": xna_base, "read_xna_sequence": read_xna_seq}
-                        output_summary.loc[len(output_summary)] = read_out
-
-                    #If there are missing values around segmentation region, skip processing read
                     else: 
-                        segmentation_failed+=1 
+                        continue 
+                        
+
+                #Use signals extracted from read region to check if segmentation passed around region of interest
+                if np.isnan(sum(read_region))==False: 
+
+                    #Store output dataframe for level file generation
+                    read_out = {'Read_ID':read_ID, "reference_sequence": reference_sequence_header, 
+                    "read_xna_strand": strand, "read_reference_locus": read_ref_locus, "read_start": read_map_start, 
+                    "read_end":read_map_end, "read_levels": xna_region_mean, "read_sd": xna_region_sd, "read_dwell": 
+                    xna_region_dwell, "read_q-score": read_qs, "read_signal_match_score": match_quality,"read_xna_position": 
+                    xna_pos, "read_xna": xna_base, "read_xna_sequence": read_xna_seq}
+                    output_summary.loc[len(output_summary)] = read_out
+
+                #If there are missing values around segmentation region, skip processing read
+                else: 
+                    segmentation_failed+=1 
+
+        except:
+            pass
 
 
-            except:
-                pass
+#Generate reporting summary 
+passed_reads = len(output_summary)
+failed_reads = int(num_reads)-passed_reads
+print("Xenomorph Status - [Preprocess] Analyzed " + str(num_reads) + " reads")
+print("Xenomorph Status - [Preprocess] Number of reads passed alignmnet: "+str(passed_reads))
+print("Xenomorph Status - [Preprocess] Number of reads failed to segment: "+str(segmentation_failed))
+print("Xenomorph Status - [Preprocess] Number of reads failed for unknown reason or skipped: "+str(failed_reads-segmentation_failed))
 
 
-    #Generate reporting summary 
-    passed_reads = len(output_summary)
-    failed_reads = int(num_reads)-passed_reads
-    print("Xenomorph Status - [Preprocess] Analyzed " + str(num_reads) + " reads")
-    print("Xenomorph Status - [Preprocess] Number of reads passed alignmnet: "+str(passed_reads))
-    print("Xenomorph Status - [Preprocess] Number of reads failed to segment: "+str(segmentation_failed))
-    print("Xenomorph Status - [Preprocess] Number of reads failed for unknown reason: "+str(failed_reads-segmentation_failed))
-
-
-    #Save output to csv file
-    output_summary.to_csv(output_folder, encoding='utf-8',index=False)
+#Save output to csv file
+output_summary.to_csv(output_folder, encoding='utf-8',index=False)
 

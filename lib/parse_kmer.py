@@ -14,7 +14,7 @@ Title: Synthesis and Sequencing of 12-Letter Supernumerary DNA
 By: H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, J. M. Craig, 
 J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand
 
-Updated: 2/14/23
+Updated: 8/18/23
 """
 ########################################################################
 ########################################################################
@@ -162,14 +162,6 @@ with alive_bar(len(kmer_level), force_tty=True) as bar:
 	    skout.append(kde_std)
 
 
-
-
-	
-	
-
-
-
-
 kmer_output['KXmer']=kxout
 kmer_output['Coverage']=coout
 kmer_output['Mean level']=lmout
@@ -182,13 +174,4 @@ kmer_output['KDE Mean level']=mkout
 kmer_output['KDE Std level']=skout
 kmer_output['KDE Coverage']=nkout
 kmer_output.to_csv(output_file) 
-
-
-
-
-	
-
-
-
-
 

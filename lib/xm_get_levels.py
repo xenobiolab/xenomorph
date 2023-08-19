@@ -38,10 +38,9 @@ from alive_progress import alive_bar
 
 
 #User inputs 
-fast5_basedir = [sys.argv[1].replace('//','/')]
-reference_fasta = sys.argv[2].replace('//','/')
-output_folder = sys.argv[3].replace('//','/')
-
+fast5_basedir = [os.path.normpath(sys.argv[1])]
+reference_fasta = s.path.normpath(sys.argv[2])
+output_folder = s.path.normpath(sys.argv[3])
 
 
 #Create new output file 

@@ -67,6 +67,9 @@ xmer_padding = 15
 
 ######################RESQUIGGLE PARAMS#######################
 
+#Segmentation mode - either use Tombo (v1.0) or Remora (as of v1.5). Refer to documentation for more information about which is more appropriate for your use.
+segmentation_mode = 'Remora'
+
 #Default: 4.2 4.2 300 1500 20.0 40 750 2500 250
 signal_align_params = '4.2 4.2 300 1500 20.0 40 750 2500 250'
 
@@ -94,23 +97,33 @@ concensus_stat_filter = 20
 ############################################################
 
 ###PREPROCESSING 
+
+
+###BASECALLING 
 #Guppy Base caller - Note: Needs to be manually configured. 
 basecaller_path ='~/ont-guppy/bin/guppy_basecaller' 
 
-#The following parameters are not changed. HAC basecalling is fixed. 
-flowcell_type = 'FLO-FLG001' #FLO-FLG001 #FLO-MIN106
-kit_type = 'SQK-LSK110' 
+#Mininum qscore set on guppy basecalling for pass/fail (default = 9) 
+guppy_min_qscore = 9 
+
+#GPU device (default = cuda:all)
 device_type = 'cuda:all' 
+
+#Guppy config file (default = dna_r9.4.1_450bps_hac.cfg)
 guppy_config_file = 'dna_r9.4.1_450bps_hac.cfg' 
 
+#Guppy align type flag: full, coarse, or auto (default = full)
+guppy_align_type = 'full'
+
 #Use reference file in basecalling alignment
-use_reference_to_basecall=False
-rebasecall= False
-regenerate_bam = False
+use_reference_in_basecall=False
+
+#Use basecalled reads from 'pass', 'fail', or 'both' basecall files for segmentation (default = pass)
+read_assign = 'pass'
 
 
-#Assign Fastq from 'pass', 'fail', or 'both' basecall files 
-read_assign = 'both'
+
+
 
 ####MORPH PARAMETERS 
 #Nmer model to use (nnnxnnn, nxnn, nnxnn etc) 
@@ -140,11 +153,14 @@ likelihood_ratio = 'Outlier-Robust'
 #Threshold for rejecting or accepting LLR call in global_morph (default = 0)
 likelihood_threshold = 0
 
-#Max reads for morph
+#Max reads to basecall using morph command (default = 0 == all reads)
 max_reads = 50000
 
 #Max reads for null morph
 max_reads_null = 0
+
+
+
 
 #####Outlier robust parameters#####
 #Changes position and magnitude of max/min of outlier-robust function (default = 4) 
