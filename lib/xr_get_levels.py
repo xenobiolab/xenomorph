@@ -56,13 +56,10 @@ fasta_file = pysam.FastaFile(fasta_path)
 column_names = ["Read_ID","reference_sequence", "read_xna_strand", "read_signal_match_score", "read_q-score","read_reference_locus" ,"read_start", "read_end", "read_xna_position","read_xna", "read_xna_sequence", "read_levels", "read_sd", "read_dwell"]
 output_summary = pd.DataFrame(columns = column_names)
 
-#Check if reverse complement flag is present, if so - use rc 
+#Check if reverse complement flag is present, if so use rc 
 if len(sys.argv)==6: 
     if sys.argv[5] == 'rc':
         output_summary = pd.read_csv(output_folder)
-        force_strand = '-'
-        
-        
 
 #Index fasta reference for future lookup
 fasta_ref_dict = SeqIO.index(fasta_path, "fasta")
