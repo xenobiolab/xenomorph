@@ -2,7 +2,8 @@
 ########################################################################
 """
 xr_params.py 
-Adding remora segmentation support to Xenomorph.
+Param file for remora segmentation support to Xenomorph. For all other
+parameters required for Xenomorph, see lib/xm_params.py
 
 Title: Unpublished work
 
@@ -16,7 +17,8 @@ Updated: 8/16/23
 import numpy as np
 from remora import io, refine_signal_map, util
 
-############################# REMORA - PARAMETERS####################
+############## PREPROCESSING PARAMETERS ##############
+####### PREPROCESSING - REMORA SEGMENTATION
 
 #Kmer level table file path 
 level_table = '/home/marchandlab/Dev/xenomorph-xemora/kmers/4mer_9.4.1.csv'
@@ -51,7 +53,7 @@ extract_pos = 67
 #Preprocess a maximum number of reads (default = 0 == all reads) 
 max_num_reads = 5000
 
-###################### REMORA - SIGNAL REFINER ######################
+####### PREPROCESSING - REMORA SIGNAL REFINER
 #Set up SigMapRefiner
 sig_map_refiner = refine_signal_map.SigMapRefiner(
     kmer_model_filename=level_table,
@@ -61,8 +63,7 @@ sig_map_refiner = refine_signal_map.SigMapRefiner(
 )
 
 
-###################### REMORA - LEVEL RESCALING ######################
-
+####### PREPROCESSING - REMORA RESCALING
 #If true, use manual rescale. If false, automatically calculate rescaling and reshift parameters. 
 manual_rescale_override = True
 

@@ -292,130 +292,123 @@ def gen_alt_all(sequence, kmer_levels, kmer_model, all_bases, xbase_pos, kmer_le
         llhr = np.min(lrr)
 
     return most_likely_base, llhr
-    
-############################
-#Load kmer measurements
-############################
 
 
 
-##Load Kmer model distribution file
-kmer_model_input_file = sys.argv[1]
-kmer_model_input = pd.read_csv(kmer_model_input_file, sep=',')
 
 
-##Load read levels raw 
-read_level_summary = sys.argv[2]
-read_level_summary= pd.read_csv(read_level_summary, sep=',')
 
-##Filter out reads that do not pass quality settings in xm_params
-print('Xenomorph Status - [Morph] Filtering reads with q score > '+str(qscore_filter))
-print('Xenomorph Status - [Morph] Filtering reads with signal score < '+str(signal_filter))
-#read_level_summary=read_level_summary[read_level_summary['read_q-score']>qscore_filter]
-read_level_summary=read_level_summary[read_level_summary['read_signal_match_score']<signal_filter]
+if __name__ == '__main__': 
+	############################
+	#Load kmer measurements
+	############################
 
-
-#Output file name to save 
-out_fn = sys.argv[3]
+	##Load Kmer model distribution file
+	kmer_model_input_file = sys.argv[1]
+	kmer_model_input = pd.read_csv(kmer_model_input_file, sep=',')
 
 
-#Load all possible bases from model file 
-all_bases = list(set(''.join(kmer_model_input['KXmer'].to_list())))
+	##Load read levels raw 
+	read_level_summary = sys.argv[2]
+	read_level_summary= pd.read_csv(read_level_summary, sep=',')
 
-#Load possible XNA bases
-all_xna = list(set(read_level_summary['read_xna']))
-
-#Max reads
-if max_reads >0: 
-    print('Xenomorph Status - [Morph] Performing morph with a maximum of '+str(max_reads)+' reads.')
-
-##############################################
-#Configure kmer model and kmer simulation model
-##############################################
-
-#Model configuration
-
-sig = kmer_model_input['Std level']
-
-if isinstance(sigma, str):
-    if sigma == 'Global-Median':
-        sig = np.median(sig)
-    if sigma == 'Global-Mean':
-        sig = np.mean(sig)
-else:
-    sig = sigma
-    
-kmer_model_input['Std level'] = sig
-
-kmer_model=kmer_model_input[['KXmer',mu,'Std level']]
-
-kmer_model.rename(columns = {mu:'mu', 'Std level':'sigma'}, inplace = True)
-
-kmer_list = kmer_model['KXmer']
-
-#Check which bases are loaded into model set
-model_bases_loaded = list(set(''.join(kmer_list)))
-
-#Filter out level file sequences that contain bases model cannot decode 
-decodeable_bases= list(set(model_bases_loaded) & set(all_xna))
-read_level_summary=read_level_summary[read_level_summary['read_xna'].isin(decodeable_bases)]
+	##Filter out reads that do not pass quality settings in xm_params
+	print('Xenomorph Status - [Morph] Filtering reads with q score > '+str(qscore_filter))
+	print('Xenomorph Status - [Morph] Filtering reads with signal score < '+str(signal_filter))
+	#read_level_summary=read_level_summary[read_level_summary['read_q-score']>qscore_filter]
+	read_level_summary=read_level_summary[read_level_summary['read_signal_match_score']<signal_filter]
 
 
-#Pick a random set of reads
-if max_reads >0 and max_reads <len(read_level_summary): 
-    read_level_summary = read_level_summary.sample(n = max_reads)
-    
-
-#Get XNA position based on nmer_model mask
-xbase_pos = nmer_model.find('x') 
-
-base_call = [] 
-llikelihood_ratio = [] 
-read_level_summary['log_likelihood_ratio']='-'
-read_level_summary['xeno_basecall']='-'
-
-with alive_bar(len(read_level_summary), force_tty=True) as bar: 
-    for i in range(0,len(read_level_summary)): 
+	#Output file name to save 
+	out_fn = sys.argv[3]
 
 
-        #Setup sequence 
-        sequence=read_level_summary.iloc[i]['read_xna_sequence']
+	#Load all possible bases from model file 
+	all_bases = list(set(''.join(kmer_model_input['KXmer'].to_list())))
 
-        #Get read levels
-        read_levels=read_level_summary.iloc[i]['read_levels']
+	#Load possible XNA bases
+	all_xna = list(set(read_level_summary['read_xna']))
+
+	#Max reads
+	if max_reads >0: 
+		print('Xenomorph Status - [Morph] Performing morph with a maximum of '+str(max_reads)+' reads.')
+
+	##############################################
+	#Configure kmer model and kmer simulation model
+	##############################################
+
+	#Model configuration
+
+	sig = kmer_model_input['Std level']
+
+	if isinstance(sigma, str):
+		if sigma == 'Global-Median':
+		    sig = np.median(sig)
+		if sigma == 'Global-Mean':
+		    sig = np.mean(sig)
+	else:
+		sig = sigma
+		
+	kmer_model_input['Std level'] = sig
+
+	kmer_model=kmer_model_input[['KXmer',mu,'Std level']]
+
+	kmer_model.rename(columns = {mu:'mu', 'Std level':'sigma'}, inplace = True)
+
+	kmer_list = kmer_model['KXmer']
+
+	#Check which bases are loaded into model set
+	model_bases_loaded = list(set(''.join(kmer_list)))
+
+	#Filter out level file sequences that contain bases model cannot decode 
+	decodeable_bases= list(set(model_bases_loaded) & set(all_xna))
+	read_level_summary=read_level_summary[read_level_summary['read_xna'].isin(decodeable_bases)]
 
 
-        #break up sequence into kmer 
-        kmer=[]; levels =[] 
-        for k in range(0,len(kmer_mask)): 
-            kmer = kmer+seq2kmer(sequence,len(kmer_mask[k]))
-            levels = levels + readlevel2kmerlevel(read_levels, kmer_mask[k])
+	#Pick a random set of reads
+	if max_reads >0 and max_reads <len(read_level_summary): 
+		read_level_summary = read_level_summary.sample(n = max_reads)
+		
+
+	#Get XNA position based on nmer_model mask
+	xbase_pos = nmer_model.find('x') 
+
+	base_call = [] 
+	llikelihood_ratio = [] 
+	read_level_summary['log_likelihood_ratio']='-'
+	read_level_summary['xeno_basecall']='-'
+
+	with alive_bar(len(read_level_summary), force_tty=True) as bar: 
+		for i in range(0,len(read_level_summary)): 
+
+		    #Setup sequence 
+		    sequence=read_level_summary.iloc[i]['read_xna_sequence']
+
+		    #Get read levels
+		    read_levels=read_level_summary.iloc[i]['read_levels']
 
 
-        if len(list(set(sequence)-set(model_bases_loaded)))==0:
-            #Calculate log liklihoods
-            lpp = gen_alt_all(sequence,levels, kmer_model, all_bases,xbase_pos, len(kmer_mask[0]))
-
-            read_level_summary['xeno_basecall'].iloc[i]=lpp[0]
-            read_level_summary['log_likelihood_ratio'].iloc[i]=lpp[1]
-
-            #Morph feature to be updated
-            #base_call.append(lpp[0])
-            #llikelihood_ratio.append(lpp[1]) 
-        #else:
-            #base_call.append('-')
-            #llikelihood_ratio.append('-') 
-        bar()
+		    #break up sequence into kmer 
+		    kmer=[]; levels =[] 
+		    for k in range(0,len(kmer_mask)): 
+		        kmer = kmer+seq2kmer(sequence,len(kmer_mask[k]))
+		        levels = levels + readlevel2kmerlevel(read_levels, kmer_mask[k])
 
 
-#read_level_summary['xeno_basecall']=base_call
-#read_level_summary['log_likelihood_ratio']=llikelihood_ratio
-read_level_summary['model_sigma']=str(sigma)
-read_level_summary['model_mean']=str(mu)
-read_level_summary['model_file']=kmer_model_input_file
+		    if len(list(set(sequence)-set(model_bases_loaded)))==0:
+		        #Calculate log liklihoods
+		        lpp = gen_alt_all(sequence,levels, kmer_model, all_bases,xbase_pos, len(kmer_mask[0]))
 
-#Save output 
-read_level_summary.to_csv(out_fn)
+		        read_level_summary['xeno_basecall'].iloc[i]=lpp[0]
+		        read_level_summary['log_likelihood_ratio'].iloc[i]=lpp[1]
+		    bar()
+
+	read_level_summary['model_sigma']=str(sigma)
+	read_level_summary['model_mean']=str(mu)
+	read_level_summary['model_file']=kmer_model_input_file
+
+	#Save output 
+	read_level_summary.to_csv(out_fn)
 
 
 

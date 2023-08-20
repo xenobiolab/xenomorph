@@ -69,15 +69,15 @@ guppy_align_type = 'full'
 #Use reference file in basecalling alignment (default = true)
 use_reference_in_basecall=True
 
-#Use basecalled reads from 'pass', 'fail', or 'both' basecall files for segmentation (default = pass)
-read_assign = 'pass'
+#Use basecalled reads from 'pass', 'fail', or 'both' basecall files for segmentation (default = both)
+read_assign = 'both'
 
 
 
 
 ####### PREPROCESSING - TOMBO SEGMENTATION
-#Segmentation mode - either use Tombo (v1.0) or Remora (as of v1.5). Refer to documentation for more information about which is more appropriate for your use.
-segmentation_mode = 'Remora'
+#Segmentation mode - either use Tombo (from Xenomorph v1.0) or Remora (Implemented of v1.5). Refer to documentation for more information about which is more appropriate for your use.
+segmentation_mode = 'remora'
 
 #Default: 4.2 4.2 300 1500 20.0 40 750 2500 250
 signal_align_params = '4.2 4.2 300 1500 20.0 40 750 2500 250'

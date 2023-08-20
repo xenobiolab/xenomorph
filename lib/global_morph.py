@@ -275,8 +275,6 @@ def gen_alt_all(sequence, kmer_levels, kmer_model, all_bases, xbase_pos, kmer_le
         ppl_bc = list(compress(all_bases, lpp == np.amax(lpp, axis=0)))[0]
         x_sub = sequence[xbase_pos]
         x_lpp=lpp[all_bases.index(x_sub)]
-
-
         lpp.remove(x_lpp)
         a_lpp=np.max(lpp)
         llhr = x_lpp - a_lpp
@@ -295,223 +293,208 @@ def gen_alt_all(sequence, kmer_levels, kmer_model, all_bases, xbase_pos, kmer_le
         llhr = np.min(lrr)
 
     return most_likely_base, llhr
-    
 
 
-        
- 
-############################
-#Load kmer measurements
-############################
 
 
 
-##Load Kmer model distribution file
-kmer_model_input_file = sys.argv[1]
-kmer_model_input = pd.read_csv(kmer_model_input_file, sep=',')
+if __name__ == '__main__': 
+	############################
+	#Load kmer measurements
+	############################
+	##Load Kmer model distribution file
+	kmer_model_input_file = sys.argv[1]
+	kmer_model_input = pd.read_csv(kmer_model_input_file, sep=',')
 
 
-##Load read levels raw 
-read_level_summary = sys.argv[2]
-read_level_summary= pd.read_csv(read_level_summary, sep=',')
+	##Load read levels raw 
+	read_level_summary = sys.argv[2]
+	read_level_summary= pd.read_csv(read_level_summary, sep=',')
 
-##Filter out reads that do not pass quality settings in xm_params
-print('Xenomorph Status - [Stats] Filtering reads with q score > '+str(qscore_filter))
-print('Xenomorph Status - [Stats] Filtering reads with signal score < '+str(signal_filter))
-read_level_summary=read_level_summary[read_level_summary['read_q-score']>qscore_filter]
-read_level_summary=read_level_summary[read_level_summary['read_signal_match_score']<signal_filter]
+	##Filter out reads that do not pass quality settings in xm_params
+	print('Xenomorph Status - [Global Morph] Filtering reads with q score > '+str(qscore_filter))
+	print('Xenomorph Status - [Global Morph] Filtering reads with signal score < '+str(signal_filter))
+	read_level_summary=read_level_summary[read_level_summary['read_q-score']>qscore_filter]
+	read_level_summary=read_level_summary[read_level_summary['read_signal_match_score']<signal_filter]
 
 
-#Output file name to save 
-out_fn = sys.argv[3]
+	#Output file name to save 
+	out_fn = sys.argv[3]
 
 
-#Load all possible bases from model file 
-all_bases = list(set(''.join(kmer_model_input['KXmer'].to_list())))
+	#Load all possible bases from model file 
+	all_bases = list(set(''.join(kmer_model_input['KXmer'].to_list())))
 
 
 
-###################################
+	############################
+	#Configure model parameters
+	############################
+	sig = kmer_model_input['Std level']
 
-##############################################
+	if isinstance(sigma, str):
+		if sigma == 'Global-Median':
+		    sig = np.median(sig)
+		if sigma == 'Global-Mean':
+		    sig = np.mean(sig)
+	else:
+		sig = sigma
+		
+	kmer_model_input['Std level'] = sig
 
-#Model configuration
+	kmer_model=kmer_model_input[['KXmer',mu,'Std level']]
 
-sig = kmer_model_input['Std level']
+	kmer_model.rename(columns = {mu:'mu', 'Std level':'sigma'}, inplace = True)
 
-if isinstance(sigma, str):
-    if sigma == 'Global-Median':
-        sig = np.median(sig)
-    if sigma == 'Global-Mean':
-        sig = np.mean(sig)
-else:
-    sig = sigma
-    
-kmer_model_input['Std level'] = sig
+	kmer_list = kmer_model['KXmer']
 
-kmer_model=kmer_model_input[['KXmer',mu,'Std level']]
+	#Check which bases are loaded into model set
+	model_bases_loaded = list(set(''.join(kmer_list)))
 
-kmer_model.rename(columns = {mu:'mu', 'Std level':'sigma'}, inplace = True)
+	#Filter out level file sequences that contain bases model cannot decode 
+	all_xna = list(set(read_level_summary['read_xna']))
+	decodeable_bases= list(set(model_bases_loaded) & set(all_xna))
+	read_level_summary=read_level_summary[read_level_summary['read_xna'].isin(decodeable_bases)]
 
-kmer_list = kmer_model['KXmer']
 
-#Check which bases are loaded into model set
-model_bases_loaded = list(set(''.join(kmer_list)))
+	#Generate every possible nnn-mer
+	xbase_pos = nmer_model.find('x') 
 
-#Filter out level file sequences that contain bases model cannot decode 
-all_xna = list(set(read_level_summary['read_xna']))
-decodeable_bases= list(set(model_bases_loaded) & set(all_xna))
-read_level_summary=read_level_summary[read_level_summary['read_xna'].isin(decodeable_bases)]
+	#Note - Generate this warning specifying method of kmer mask being used
+	print('Xenomorph Status - [Global Morph] Using default kmer mask nxnn')
 
+	ref_seqs = list(set(read_level_summary['reference_sequence']))
 
-##############################################
-#Generate kmer data sampling from real dataset
-##############################################
+	#Setup output dataframe
+	output_column_names=['reference_sequence','n_reads','mean_q-score','mean_signal_match_score','reference_locus','strand','xna_sequence','xna', 'basecall', 'llhr','xna_is_concensus', 'model_sigma', 'model_mean', 'model_file']
+	output_summary = pd.DataFrame(columns = output_column_names)
 
+	#numbers to calculate consensus count
+	consensus_count=0
+	total_count= {}
+	global_count = {}
 
-#Generate every possible nnn-mer
-xbase_pos = nmer_model.find('x') 
 
-#Note - Generate this warning specifying method of kmer mask being used
-print('Xenomorph Status - [Global Morph] Using default kmer mask nxnn')
 
+	ref_seqs.sort()
+	with alive_bar(len(ref_seqs), force_tty=True) as bar: 
+		for i in range(0,len(ref_seqs)): 
 
-ref_seqs = list(set(read_level_summary['reference_sequence']))
+		    #Set of reads matching reference
+		    ref_i = read_level_summary[read_level_summary['reference_sequence']==ref_seqs[i]]
 
+		    #Reference sequence 
+		    ref_i_id = ref_seqs[i] 
 
-#Setup output dataframe
-output_column_names=['reference_sequence','n_reads','mean_q-score','mean_signal_match_score','reference_locus','strand','xna_sequence','xna', 'basecall', 'llhr','xna_is_concensus', 'model_sigma', 'model_mean', 'model_file']
-output_summary = pd.DataFrame(columns = output_column_names)
+		    #Strands sequenced (+,-)
+		    ref_s = list(set(ref_i['read_xna_strand']))
 
-#numbers to calculate consensus count
-consensus_count=0
-total_count= {}
-global_count = {}
+		    for j in range(0,len(ref_s)): 
 
+		        #Strand
+		        ref_strand=ref_s[j]
 
+		        #Reads for strand 
+		        ref_i_s = ref_i[ref_i['read_xna_strand']==ref_strand]
 
-ref_seqs.sort()
-with alive_bar(len(ref_seqs), force_tty=True) as bar: 
-    for i in range(0,len(ref_seqs)): 
+		        #Number of reads averaged for measurement
+		        ref_i_n = len(ref_i_s)
 
-        #Set of reads matching reference
-        ref_i = read_level_summary[read_level_summary['reference_sequence']==ref_seqs[i]]
+		        #Read reference sequence (= to locus if (+) strand, reverse complement of locus for (-) strand)
+		        sequence = ref_i_s.iloc[0]['read_xna_sequence']
 
-        #Reference sequence 
-        ref_i_id = ref_seqs[i] 
 
-        #Strands sequenced (+,-)
-        ref_s = list(set(ref_i['read_xna_strand']))
+		        #Check that model can decode sequence 
+		        if len(list(set(sequence)-set(model_bases_loaded)))==0:
 
-        for j in range(0,len(ref_s)): 
+		            #Extract read-kmer levels and take mean 
+		            ref_i_kmer_levels =[]
+		            for k in range(0,len(ref_i_s)):
+		                ref_i_levels = ref_i_s.iloc[k]['read_levels']
+		                ref_i_kmer_level_s = readlevel2kmerlevel(ref_i_levels,kmer_mask[0])
+		                ref_i_kmer_levels.append([float(i) for i in ref_i_kmer_level_s])
 
-            #Strand
-            ref_strand=ref_s[j]
 
-            #Reads for strand 
-            ref_i_s = ref_i[ref_i['read_xna_strand']==ref_strand]
+		            #Levels (averaged) 
+		            if 'mean' in (mu_global).lower(): 
+		                levels = np.mean(ref_i_kmer_levels, axis = 0)
+		            if 'median' in (mu_global).lower(): 
+		                levels = np.median(ref_i_kmer_levels, axis = 0)
 
-            #Number of reads averaged for measurement
-            ref_i_n = len(ref_i_s)
+		    
+		            #Corresponding kmers 
+		            kmer = seq2kmer(sequence,len(kmer_mask[0]))
 
-            #Read reference sequence (= to locus if (+) strand, reverse complement of locus for (-) strand)
-            sequence = ref_i_s.iloc[0]['read_xna_sequence']
+		            #Calculate log liklihoods
+		            lpp = gen_alt_all(sequence,levels, kmer_model, all_bases,xbase_pos, len(kmer_mask[0]))
 
+		            #Basecall made
+		            ref_i_bc = lpp[0]
 
-            #Check that model can decode sequence 
-            if len(list(set(sequence)-set(model_bases_loaded)))==0:
+		            #Basecall made
+		            ref_i_llhr = lpp[1]
 
-                #Extract read-kmer levels and take mean 
-                ref_i_kmer_levels =[]
-                for k in range(0,len(ref_i_s)):
-                    ref_i_levels = ref_i_s.iloc[k]['read_levels']
-                    ref_i_kmer_level_s = readlevel2kmerlevel(ref_i_levels,kmer_mask[0])
-                    ref_i_kmer_levels.append([float(i) for i in ref_i_kmer_level_s])
+		            #XNA prior
+		            ref_i_x = sequence[xbase_pos]
 
+		            #Read reference locus
+		            ref_i_loc = ref_i_s.iloc[0]['read_reference_locus']
 
-                #Levels (averaged) 
-                if 'mean' in (mu_global).lower(): 
-                    levels = np.mean(ref_i_kmer_levels, axis = 0)
-                if 'median' in (mu_global).lower(): 
-                    levels = np.median(ref_i_kmer_levels, axis = 0)
+		            #Sequence 
+		            ref_i_seq = sequence
 
-        
-                #Corresponding kmers 
-                kmer = seq2kmer(sequence,len(kmer_mask[0]))
+		            #Check if XNA is one of the conensus base calls
+		            ref_i_x_is_concensus = ref_i_bc == sequence[xbase_pos]
 
-                #Calculate log liklihoods
-                lpp = gen_alt_all(sequence,levels, kmer_model, all_bases,xbase_pos, len(kmer_mask[0]))
+		            #Average q-score
+		            ref_i_q = np.mean(ref_i_s['read_q-score'].to_list())
 
-                #Basecall made
-                ref_i_bc = lpp[0]
+		            #Average signal score
+		            ref_i_sc = np.mean(ref_i_s['read_signal_match_score'].to_list())
 
-                #Basecall made
-                ref_i_llhr = lpp[1]
+		            #model sigma used 
+		            ref_i_sig = sig
 
-                #XNA prior
-                ref_i_x = sequence[xbase_pos]
+		            #model mean used
+		            ref_i_mean = mu
 
-                #Read reference locus
-                ref_i_loc = ref_i_s.iloc[0]['read_reference_locus']
+		            #model used
+		            ref_i_model = kmer_model_input_file 
 
-                #Sequence 
-                ref_i_seq = sequence
+		            ref_out = [ref_i_id, ref_i_n, ref_i_q, ref_i_sc,ref_i_loc, ref_strand, ref_i_seq, ref_i_x, ref_i_bc, ref_i_llhr, ref_i_x_is_concensus, ref_i_sig, ref_i_mean, ref_i_model]
 
-                #Check if XNA is one of the conensus base calls
-                ref_i_x_is_concensus = ref_i_bc == sequence[xbase_pos]
+		            output_summary.loc[len(output_summary)]=ref_out
 
-                #Average q-score
-                ref_i_q = np.mean(ref_i_s['read_q-score'].to_list())
+		            #calculate consensus number 
+		            if ref_i_n >=concensus_stat_filter: 
 
-                #Average signal score
-                ref_i_sc = np.mean(ref_i_s['read_signal_match_score'].to_list())
+		                if ref_i_x not in global_count:
+		                    global_count[ref_i_x]=0
+		                    
+		                try: 
+		                    total_count[ref_i_x] = total_count[ref_i_x]+1
+		                except: 
+		                    total_count[ref_i_x] = 1
+		                consensus_count +=1
 
-                #model sigma used 
-                ref_i_sig = sig
+		                if ref_i_x_is_concensus ==True:
+		                    try: 
+		                        global_count[ref_i_x] = global_count[ref_i_x]+1
+		                    except: 
+		                        global_count[ref_i_x] = 1
+		                    consensus_count +=1
 
-                #model mean used
-                ref_i_mean = mu
+		        
+		    bar()
 
-                #model used
-                ref_i_model = kmer_model_input_file 
 
-                ref_out = [ref_i_id, ref_i_n, ref_i_q, ref_i_sc,ref_i_loc, ref_strand, ref_i_seq, ref_i_x, ref_i_bc, ref_i_llhr, ref_i_x_is_concensus, ref_i_sig, ref_i_mean, ref_i_model]
+	#Save global morph results
+	output_summary.to_csv(out_fn)
 
-                output_summary.loc[len(output_summary)]=ref_out
+	#Print output summary of global morph result
+	for xna_key in global_count: 
+		print("Xenomorph Status - [Global Morph - Summary] - Global consensus for ["+xna_key+"] is (for n >"+str(concensus_stat_filter)+"): " + str(global_count[xna_key]) + "/" + str(total_count[xna_key])+' ('+str((global_count[xna_key]/total_count[xna_key])*100)+')')
 
-                #calculate consensus number 
-                if ref_i_n >=concensus_stat_filter: 
-
-                    if ref_i_x not in global_count:
-                        global_count[ref_i_x]=0
-                        
-                    try: 
-                        total_count[ref_i_x] = total_count[ref_i_x]+1
-                    except: 
-                        total_count[ref_i_x] = 1
-                    consensus_count +=1
-
-                    if ref_i_x_is_concensus ==True:
-                        try: 
-                            global_count[ref_i_x] = global_count[ref_i_x]+1
-                        except: 
-                            global_count[ref_i_x] = 1
-                        consensus_count +=1
-                #print(sequence[xbase_pos]+' : '+lpp[0])
-
-            
-        bar()
-
-
-
-
-output_summary.to_csv(out_fn)
-
-for xna_key in global_count: 
-    #print("########################################################")
-    #print("Xenomorph Status - [Global Morph] - Summary for ["+xna_key+"] global morph")
-    print("Xenomorph Status - [Global Morph - Summary] - Global consensus for "+xna_key+"is (for n >"+str(concensus_stat_filter)+"): " + str(global_count[xna_key]) + "/" + str(total_count[xna_key])+' ('+str((global_count[xna_key]/total_count[xna_key])*100)+')')
-    #print("########################################################")
 
 
 

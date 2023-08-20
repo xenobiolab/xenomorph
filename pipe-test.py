@@ -50,12 +50,19 @@ fast5 = '/home/marchandlab/DataAnalysis/Marchand/221215_blunt_libv2/20221215_171
 ref = '/home/marchandlab/Dev/xombo/reference_sequences/ref_full_ABxAB.fa'
 out_file_prefix = '/ATGC_Model_Testing_Rescale'#Output file parameters
 
-### PZ Dataset 2 -- Model testing
+
+
+### PZ Dataset 2 -- Xenomorph testing on 10k reads- Tombo
+wdir = '/home/marchandlab/Dev/xenomorph-xemora/xx-test/PZ_Model_Testing_Tombo'
+fast5 = '/home/marchandlab/DataAnalysis/Marchand/221124_PZ_libv2_10k/fast5'
+ref = '/home/marchandlab/Dev/xombo/reference_sequences/ref_libv2_PZ_CxDx.fa'
+out_file_prefix = '/PZ_Model_Testing'#Output file parameters
+
+### PZ Dataset 2 -- Model testing (Remora testing)
 wdir = '/home/marchandlab/Dev/xenomorph-xemora/xx-test/PZ_Model_Testing'
 fast5 = '/home/marchandlab/DataAnalysis/Marchand/221124_PZ_libv2_200k/20221124_1855_MN37138_AMY698_27041bd8/fast5'
 ref = '/home/marchandlab/Dev/xombo/reference_sequences/ref_libv2_PZ_CxDx.fa'
 out_file_prefix = '/PZ_Model_Testing'#Output file parameters
-
 
 ################################################
 #Level generation
@@ -81,13 +88,10 @@ out_bcpr = out_file_prefix+'_FLG001_bc.csv'
 out_bcglobal = out_file_prefix+'_FLG001_bc_global.csv'
 
 
-
-
 #1. Preprocess file using xemora preprocessto get a level file 
 if run_preprocess == True:
     cmd = 'python xenomorph.py preprocess -w '+wdir+' -f '+fast5+' -r '+ref+' -o '+out_pre
     os.system(cmd)
-
 
 #1.5 Generate a null dataset if required
 if run_null_gen == True: 
@@ -103,7 +107,6 @@ if run_morph == True:
     cmd = 'python xenomorph.py morph -l '+wdir+out_pre+' -m '+model+' -o '+wdir+out_bcpr
     os.system(cmd) 
 
-
 #3. Stats on a morph run 
 if run_stats == True:
     cmd = 'python lib/xm_stats.py  '+wdir+out_bcpr+' '+wdir+'/stats_log.csv'
@@ -112,10 +115,7 @@ if run_stats == True:
 #4 Global morph (sigal averaged )
 if run_global_morph == True:
     cmd = 'python xenomorph.py morph -l '+wdir+out_pre+' -m '+model+' -g -o '+wdir+out_bcglobal
-    #print(cmd)
     os.system(cmd) 
-
-
 
 #5 Model generation commands - Two steps
 if run_model_gen== True:
@@ -123,11 +123,8 @@ if run_model_gen== True:
     cmd = 'python lib/xm_extract_levels.py '+wdir+out_pre
     os.system(cmd) 
 
-    #Take statistics on each kmer set to generate a model file
-    if run_rescale == False: 
-        cmd = 'python lib/parse_kmer.py '+wdir+out_pre.replace('_levels.csv','_kmers.csv')+' '+wdir+out_pre.replace('_levels.csv','_summary.csv')
-    else: 
-        cmd = 'python lib/parse_kmer.py '+wdir+out_pre.replace('_levels.csv','_kmers.csv')+' '+wdir+out_pre.replace('_levels.csv','_summary.csv')+' ATGC'
+    #Take statistics on each kmer set to generate a model file. Mean, median, and a KDE mean estimate are generated. 
+    cmd = 'python lib/parse_kmer.py '+wdir+out_pre.replace('_levels.csv','_kmers.csv')+' '+wdir+out_pre.replace('_levels.csv','_summary.csv')
     os.system(cmd) 
 
 
