@@ -14,7 +14,7 @@ Title: Synthesis and Sequencing of a 12-letter supernumerary DNA
 By: H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, J. M. Craig, 
 J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand
 
-Updated: 9/20/23
+Updated: 8/20/23
 """
 ########################################################################
 ########################################################################
@@ -50,7 +50,7 @@ __  __  ___  _ __    ___   _ __ ___    ___   _ __  _ __  | |__
                                                   | |           
                                                   |_|           
 
-********** Xenomorph : An XNA sequencing toolkit *********
+********** Xenomorph : An XNA sequencing toolkit (v1.2) *********
 
 Xenomorph is a suite of tools used for nanopore sequencing of alternative basepairs (XNAs). This toolkit incorporates ONT-workflows to preprocess fast5 files and extract signal levels for kmers in a sequence. Models parameterized on XNA basepairs can then be used to test if signal levels match XNA pairs. Xenomorph relies on kmer models that were parameterized using libraries of XNA-containing DNA. The general pipeline consists of two steps: 1) preprocessing fast5 reads and extracting level information and 2) basecalling using a selected kmer model. 
 
@@ -153,7 +153,7 @@ if __name__ == '__main__':
 		
 
 
-############## FASTA TO XFASTA CONVERSION ##############
+############## XFASTA CONVERSION ##############
 if args.subparsers == 'fasta2x' :
 	os.system('python lib/xm_fasta2x_rc.py '+args.fasta_input+' '+args.xfasta_output)
 
@@ -480,8 +480,6 @@ elif args.subparsers == 'preprocess':
 	else: 
 		print("Xenomorph Status - [Error] No segmentation mode specified in xm_params.py. Exiting.")
 		sys.exit()
-
-
 
 
 	#Finish 
