@@ -4,18 +4,24 @@
 xm_params.py
 
 Description: Here you can modify parameters used for processing, extraction,
-alignment, and basecalling. Default values 
+alignment, and basecalling. Additional parameter file is available for 
+remora API usage (lib/xr_params.py). 
 
 Title: Synthesis and Sequencing of 12-Letter Supernumerary DNA
 
 By: H. Kawabe, C. Thomas, A. Laszlo, S. Hoshika, L. Miessner, J. M. Craig, 
 J. Gundlach, Myong-Jung Kim, Myong-Sang Kim, S. A. Benner, J. A. Marchand
 
-Updated: 8/19/23
+Updated: 8/20/23
 """
 ########################################################################
 ########################################################################
 import numpy as np
+
+
+############## SEGMENTATION MODE ##############
+#Segmentation mode - either use Tombo (from Xenomorph v1.0) or Remora (Implemented of v1.5). Refer to documentation for more information about which is more appropriate for your use.
+segmentation_mode = 'tombo'
 
 
 ############## ESTABLISH DNA AND XNA RULES ##############
@@ -74,11 +80,7 @@ read_assign = 'both'
 
 
 
-
 ####### PREPROCESSING - TOMBO SEGMENTATION
-#Segmentation mode - either use Tombo (from Xenomorph v1.0) or Remora (Implemented of v1.5). Refer to documentation for more information about which is more appropriate for your use.
-segmentation_mode = 'remora'
-
 #Default: 4.2 4.2 300 1500 20.0 40 750 2500 250
 signal_align_params = '4.2 4.2 300 1500 20.0 40 750 2500 250'
 
@@ -139,7 +141,7 @@ mu_global = 'Mean'
 sigma = 'Global-Mean'
 
 #Max reads to basecall using morph command (default = 0 == all reads)
-max_reads = 50000
+max_reads = 5000
 
 #Max reads for null morph (beta analysis feature only)
 max_reads_null = 0

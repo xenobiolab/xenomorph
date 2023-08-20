@@ -21,7 +21,7 @@ from remora import io, refine_signal_map, util
 ####### PREPROCESSING - REMORA SEGMENTATION
 
 #Kmer level table file path 
-level_table = '/home/marchandlab/Dev/xenomorph-xemora/kmers/4mer_9.4.1.csv'
+level_table = 'models/libv2_remora/4mer_9.4.1.csv'
 
 #Signal extraction type (norm, dac, pa; default = 'norm')
 signal_type = 'norm'
