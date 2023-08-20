@@ -6,7 +6,7 @@
          >  < |  __/| | | || (_) || | | | | || (_) || |   | |_) || | | |
         /_/\_\ \___||_| |_| \___/ |_| |_| |_| \___/ |_|   | .__/ |_| |_|
                                                           | |           
-        v1.0                                              |_|           
+        v1.2 (beta)                                       |_|           
                                                                         
 
 
@@ -17,21 +17,27 @@ Xenomorph is a suite of tools used for nanopore sequencing of alternative 'xeno'
 
 This public repository is maintained by the XenoBiology Research Group at the University of Washington, Department of Chemical Engineering. 
 
+***Update: Xenomorph v1.2 beta release (8/20/23)***
+Xenomorph v1.2 is now in beta and now offers signal alignment and extraction with Remora API rather than using Tombo API. This setting is now configurable in lib/xm_params.py. As a general note for performance, both Tombo and Remora perform similarly in concensus metrics (per-read concensus or per-sequence concensus). Tombo segmentation outperforms Remora segmentation for per-read recall metrics, but Remora segmentation is significantly faster. 
+
 ## Sample nanopore sequences with XNA basepairs 
 This toolkit was created to work with a series of non-standard nucleotides that can form the basis of an expanded genetic alphabet (up to 12 letters). In addition to the standard base pairs (A:T, G:C), the XNA models described in this work allow for single xenonucleotide detection of specific forms of B:S, P:Z, X:K, and J:V. A sample multi-FAST5 file of raw nanopore read data containing PZ insertion can be found in /example_reads/PZ_sample_reads.fast5. Reference file containing all possible sequences in this file, including no-PZ insertion ("Gap") is found in example_reads/PZ_esample_reference.fa. Nanopore XNA sequences used in generation of this work containing BSPZXKJV insertions can be downloaded from the Sequence Reads Archive (SRA Bioproject: PRJNA932328). More information can be found with the associate publication.
 
 ## Dependencies
-Xenomorph requires ONT tools (ont-fast5-api, tombo, guppy), minimap2 (mappy), and various python packages. A full list of dependencies can be found in the xenomorph-env.yml document. To use conda for installing dependencies, simply load xenomorph-env.yml into a new environment. Xenomorph was built and tested on Ubuntu 18.04 and 20.04 with an Nvidia GTX 3060 GPU. 
+Xenomorph (v1.0 - Tombo segmentation) requires ONT tools (ont-fast5-api, tombo, guppy), minimap2 (mappy), and various python packages. A full list of dependencies can be found in the xenomorph-env.yml document. To use conda for installing dependencies, simply load xenomorph-env.yml into a new environment. Xenomorph was built and tested on Ubuntu 18.04, 20.04, and 22.04 with an Nvidia GTX 3060 GPU. 
 
         conda env create -f xenomorph-env.yml
 
 To enter xenomorph conda environment, then use: 
 
         conda activate xenomorph-env
+        
+***Update: Xenomorph v1.2 release***
+Xenomorph (v1.2) supports all legacy code without modification. If Remora segmentation are selected, additional packages will be needed including the Remora python package (remora-ont).  Xenomorph v1.2 has been tested on Ubuntu 20.04, and 22.04 with an Nvidia GTX 3060 GPU. 
 
 
 ## Xenomorph command groups 
-	preprocess	[Preprocess] FAST5 reads with reference FASTA containing XNAs for 'morph' or 'de-novo'
+	preprocess	[Preprocess] FAST5 reads with reference FASTA containing XNAs for 'morph' XNA detection'
 	morph		[Basecall] Use kmer levels identified with preprocess to basecall XNA position based on alternative hypothesis testing (per read)
 	extract		[Utility] Extracts raw signal in region associated with XNA bases. 
 	stats		[Utility] Calculate global concensus basecalls from per-read output file and generate summary output
