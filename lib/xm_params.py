@@ -35,7 +35,7 @@ standard_bases = np.concatenate(list(list(i) for i in standard_base_pairs))
 xna_base_pairs = ['BS','PZ','JV','XK','QW', 'ER', 'NN']
 
 #Seperate to segment data as non-complementary pairs 
-xna_segmentation_model_sets = ['B','S','P','Z','JV','X','K','N']
+xna_segmentation_model_sets = ['B','S','PZ','JV','X','K','N']
 
 #Most similar canonical pair for each XNA
 confounding_pairs =  ['BA','SA','PG','ZC','JC','VG','XA','KG','NN'] # Verified optimal pairs
