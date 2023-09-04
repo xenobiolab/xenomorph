@@ -112,7 +112,7 @@ xmer_padding = 15
 qscore_filter = 9#(default = 9) 
 
 #Signal filter
-signal_filter = 100 #1.5#(default =1.1 for Tombo; default = 100 for remora)
+signal_filter = 1.5 #1.5#(default =1.1 for Tombo; default = 100 for remora)
 
 #Minimum number of reads required for calculating a concensus value (both per-read and global)
 concensus_stat_filter = 20
@@ -135,13 +135,13 @@ kmer_sizes = [len(kmer_mask)]
 mu = 'Median level'
 
 #Set global mu (per-sequence) as either: 'mean or median". Used for concensus recall calculations at the sequence level. 
-mu_global = 'Mean'
+mu_global = 'Median'
 
 #Set sigma as 'Global-Median', 'Global-Mean' (recommended),'Kmer' (for kmer-specific), or as float for fixed
 sigma = 'Global-Mean'
 
 #Max reads to basecall using morph command (default = 0 == all reads)
-max_reads = 5000
+max_reads = 20000
 
 #Max reads for null morph (beta analysis feature only)
 max_reads_null = 0

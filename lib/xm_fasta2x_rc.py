@@ -125,24 +125,23 @@ f.close()
 
 if require_rc_fasta == True: 
     fr = open(output_fasta.replace('.fa','_rc')+'.fa', "w")
+    x_pos_to_rc =[]
     with open(output_fasta, "r") as fo:
         for line in fo: 
             #Skip sequences where GAP is in the header - Used as a null reference sequence. 
             if line[0]=='>' and 'GAP' not in line.upper() and 'XPOS' in line:
                 header = line
                 x_pos_base = fetch_xna_pos(header)
-                x_pos_to_rc =[]
+                x_pos_to_rc=[]
                 for x in x_pos_base: 
                     x_base = x[0]
                     x_pos = x[1]
-
 
                     if xna_base_rc(x_base,xna_segmentation_model_sets)==False: 
                         xpr = [x_base, x_pos.replace(']','')]
                         x_pos_to_rc.append(xpr) 
 
             if line[0]!='>' and len(x_pos_to_rc)>0:
-
                 #Setup header
                 header_rc = header[0:header.find('+XPOS[')]+'+RC+XPOS['
                 #Get sequence

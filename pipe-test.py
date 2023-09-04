@@ -64,9 +64,17 @@ fast5 = '/home/marchandlab/DataAnalysis/Marchand/221124_PZ_libv2_200k/20221124_1
 ref = '/home/marchandlab/Dev/xombo/reference_sequences/ref_libv2_PZ_CxDx.fa'
 out_file_prefix = '/PZ_Model_Testing'#Output file parameters
 
+### PZa Dataset Testing new model that Hinako made
+wdir = '/home/marchandlab/Dev/xenomorph-xemora/xx-test/PZa_Model_Testing'
+fast5 = '/home/marchandlab/DataAnalysis/Kawabe/230822_PZa_libv4_FLG001/20230822_1101_MN41475_APU320_58f6c3e2/fast5'
+ref = '/home/marchandlab/Dev/xombo/reference_sequences/ref_libv2_PZ_CxDx.fa'
+out_file_prefix = '/PZa_Model_Testing'#Output file parameters
+
+
+
 ################################################
 #Level generation
-run_preprocess = True
+run_preprocess = False
 run_null_gen = False
 
 #Basecalling
@@ -79,7 +87,7 @@ run_global_morph = True
 run_model_gen = False
 
 #Morph model
-model = 'ATGCPZ'
+model = 'ATGCZ'
 ################################################
 
 #0 Set up File prefixes 
@@ -90,7 +98,7 @@ out_bcglobal = out_file_prefix+'_FLG001_bc_global.csv'
 
 #1. Preprocess file using xemora preprocessto get a level file 
 if run_preprocess == True:
-    cmd = 'python xenomorph.py preprocess -w '+wdir+' -f '+fast5+' -r '+ref+' -o '+out_pre
+    cmd = 'python xenomorph.py preprocess -w '+wdir+' -x -b -f '+fast5+' -r '+ref+' -o '+out_pre
     os.system(cmd)
 
 #1.5 Generate a null dataset if required

@@ -323,7 +323,11 @@ elif args.subparsers == 'preprocess':
 			print("Xenomorph Status - [Preprocess] Found "+str(CHECK_FAST5_SINGLE_N)+' single fast5 files in directory')
 		else: 
 			print("Xenomorph Status - [Error] Single fast5 files not found. Check paths to ensure multi-to-single fast5 conversion is working properly.")
-			os.rmdir(os.path.normpath(fast5_sing_dir))
+			try: 
+				os.rm(os.path.normpath(fast5_sing_dir))
+			except: 
+				print("Xenomorph Status - [Error] Encountered error trying to remove empty directory.")
+				sys.exit()
 			sys.exit()
 
 		#Rebasecall - required for resquiggling and assignment

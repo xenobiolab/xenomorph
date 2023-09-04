@@ -1,11 +1,12 @@
 full_name,abbreviation,letter_code,description,active,group,path
-ATGC_minion,ATGC,ATGC,Canonical bases ATGC,True,1,models/libv2/ATGC_libv2_FLG001.csv
-B_libv2,B_A,B,Hachimoji base B,True,2,models/libv2/B_libv2_FLG001.csv
-Sn_libv2,Sn_A,S,Hachimoji base Sn,False,2,models/libv2/Sn_libv2_FLG001.csv
-Sc_libv2,Sc_A,S,Hachimoji base Sc,True,2,models/libv2/Sc_libv2_FLG001.csv
-P_libv2,P_G,P,Hachimoji base P,True,3,models/libv2/P_libv2_FLG001.csv
-Z_libv2,Z_C,Z,Hachimoji base Z,True,3,models/libv2/Z_libv2_FLG001.csv
-X_libv2,X_A,X,Juunimoji base X,True,4,models/libv2/X_libv2_FLG001.csv
-K_libv2,K_G,K,Juunimoji base K,True,4,models/libv2/K_libv2_FLG001.csv
-J_libv2,J_C,J,Juunimoji base J,True,5,models/libv2/J_libv2_FLG001.csv
-V_libv2,V_G,V,Juunimoji base V,True,5,models/libv2/V_libv2_FLG001.csv
+ATGC_minion,ATGC,ATGC,Canonical bases ATGC,True,1,models/libv2/ATGC_r9.4.1.csv
+B_libv2,B_A,B,Hachimoji base B,True,2,models/libv2/B_r9.4.1.csv
+Sn_libv2,Sn_A,S,Hachimoji base Sn,False,2,models/libv2/Sn_r9.4.1.csv
+Sc_libv2,Sc_A,S,Hachimoji base Sc,True,2,models/libv2/Sc_r9.4.1.csv
+P_libv2,P_G,P,Hachimoji base P,True,3,models/libv2/P_r9.4.1.csv
+Zn_libv2,Zn_A,Z,Hachimoji base Zn,False,3,models/libv2/Zn_r9.4.1.csv
+X_libv2,X_A,X,Juunimoji base X,True,4,models/libv2/Xt_r9.4.1.csv
+K_libv2,K_G,K,Juunimoji base K,True,4,models/libv2/Kn_r9.4.1.csv
+J_libv2,J_C,J,Juunimoji base J,True,5,models/libv2/J_r9.4.1.csv
+V_libv2,V_G,V,Juunimoji base V,True,5,models/libv2/V_r9.4.1.csv
+Za_libv2,Za_C,Z,2nd Gen Hachimoji base Za,True,3,models/libv2/Za_r9.4.1.csv
