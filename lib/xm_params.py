@@ -21,7 +21,7 @@ import numpy as np
 
 ############## SEGMENTATION MODE ##############
 #Segmentation mode - either use Tombo (from Xenomorph v1.0) or Remora (Implemented of v1.5). Refer to documentation for more information about which is more appropriate for your use.
-segmentation_mode = 'tombo'
+segmentation_mode = 'remora'
 
 
 ############## ESTABLISH DNA AND XNA RULES ##############
@@ -66,8 +66,8 @@ guppy_min_qscore = 9
 #GPU device (default = cuda:all)
 device_type = 'cuda:all' 
 
-#Guppy config file (default = dna_r9.4.1_450bps_hac.cfg)
-guppy_config_file = 'dna_r9.4.1_450bps_hac.cfg' 
+#Guppy config file (default = dna_r9.4.1_450bps_hac.cfg, dna_r10.4.1_e8.2_400bps_sup.cfg
+guppy_config_file = 'dna_r10.4.1_e8.2_400bps_sup.cfg' 
 
 #Guppy align type flag: full, coarse, or auto (default = full)
 guppy_align_type = 'full'
@@ -112,7 +112,7 @@ xmer_padding = 15
 qscore_filter = 9#(default = 9) 
 
 #Signal filter
-signal_filter = 1.5 #1.5#(default =1.1 for Tombo; default = 100 for remora)
+signal_filter = 100 #1.5#(default =1.1 for Tombo; default = 100 for remora)
 
 #Minimum number of reads required for calculating a concensus value (both per-read and global)
 concensus_stat_filter = 20
@@ -141,7 +141,7 @@ mu_global = 'Median'
 sigma = 'Global-Mean'
 
 #Max reads to basecall using morph command (default = 0 == all reads)
-max_reads = 20000
+max_reads = 5000
 
 #Max reads for null morph (beta analysis feature only)
 max_reads_null = 0

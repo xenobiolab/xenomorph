@@ -134,13 +134,13 @@ def get_fast5_subdir(fast5_dir):
         fast5_files = list(Path(path).rglob("*.fast5" ))
         if len(fast5_files)>0:
             fast5_subdir = os.path.dirname(fast5_files[0])
-            print('Xenomorph - [Status] Found '+str(len(fast5_files))+' fast5 files in '+fast5_dir)
+            print('Xenomorph Status - [Preprocess] Found '+str(len(fast5_files))+' fast5 files in '+fast5_dir)
             return fast5_subdir
         else: 
-            print('Xenomorph - [Status] Could not find Fast5 files in specified directory. Check .fast5 exist.')
+            print('Xenomorph Status - [Preprocess]Could not find Fast5 files in specified directory. Check .fast5 exist.')
             return False
     else: 
-        print('Xenomorph - [Status] Could not find Fast5 directory. Check path')
+        print('Xenomorph Status - [Preprocess] Could not find Fast5 directory. Check path')
         return False
 
 
@@ -149,7 +149,7 @@ def check_make_dir(directory):
     directory = os.path.expanduser(directory)
     if not os.path.isdir(directory):
         os.makedirs(directory)
-        print('Xenomorph - [Status] Required directory not found. Creating directory: '+directory)
+        print('Xenomorph Status - [Preprocess] Required directory not found. Creating directory: '+directory)
     return directory
 
 

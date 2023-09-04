@@ -52,7 +52,6 @@ try:
         ' --device '+device_type +' --align_type '+guppy_align_type+' --bam_out --index --moves_out -a '+reference_file)
 
     #Execute guppy to basecall
-    print(cmd)
     os.system(cmd) 
     
 except: 

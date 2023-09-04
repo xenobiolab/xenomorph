@@ -20,8 +20,8 @@ from remora import io, refine_signal_map, util
 ############## PREPROCESSING PARAMETERS ##############
 ####### PREPROCESSING - REMORA SEGMENTATION
 
-#Kmer level table file path 
-level_table = 'models/libv2_remora/4mer_9.4.1.csv'
+#Kmer level table file path (4mer_9.4.1.csv, 9mer_10.4.1.csv) 
+level_table = 'models/remora/9mer_10.4.1.csv'
 
 #Signal extraction type (norm, dac, pa; default = 'norm')
 signal_type = 'norm'
@@ -33,13 +33,13 @@ min_match_score=0
 skip_qscore_extract  = True
 
 #Re-basecall pod5 file. Required if new reference files are being used. 
-basecall_pod = False
+basecall_pod = True
 
 #Re-generate BAM files for reference-based basecalling.
-regenerate_bam = False
+regenerate_bam = True
 
 #Re-generate training or basecalling chunks.
-regenerate_chunks = False
+#regenerate_chunks = False
 
 #generate a .bai file for your bam file -- you need to do this the first time you run analysis
 gen_bai = True
@@ -51,7 +51,7 @@ force_extract_position = False
 extract_pos = 67
 
 #Preprocess a maximum number of reads (default = 0 == all reads) 
-max_num_reads = 5000
+max_num_reads = 0
 
 ####### PREPROCESSING - REMORA SIGNAL REFINER
 #Set up SigMapRefiner

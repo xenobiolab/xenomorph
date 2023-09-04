@@ -51,7 +51,6 @@ ref = '/home/marchandlab/Dev/xombo/reference_sequences/ref_full_ABxAB.fa'
 out_file_prefix = '/ATGC_Model_Testing_Rescale'#Output file parameters
 
 
-
 ### PZ Dataset 2 -- Xenomorph testing on 10k reads- Tombo
 wdir = '/home/marchandlab/Dev/xenomorph-xemora/xx-test/PZ_Model_Testing_Tombo'
 fast5 = '/home/marchandlab/DataAnalysis/Marchand/221124_PZ_libv2_10k/fast5'
@@ -70,35 +69,59 @@ fast5 = '/home/marchandlab/DataAnalysis/Kawabe/230822_PZa_libv4_FLG001/20230822_
 ref = '/home/marchandlab/Dev/xombo/reference_sequences/ref_libv2_PZ_CxDx.fa'
 out_file_prefix = '/PZa_Model_Testing'#Output file parameters
 
+###  r10.4.1 PZn model build  (Done) 
+wdir = '/home/marchandlab/Dev/xenomorph-xemora/xx-test/PZn_r10.4.1_Model_Building'
+fast5 = '/home/marchandlab/DataAnalysis/Kawabe/230725_PZ_lib_v4_r10/20230725_1220_MN37138_APH167_a204cb54/fast5'
+ref = '/home/marchandlab/DataAnalysis/Kawabe/ref/ref_libv2_PZ_CxDx-.fa'
+out_file_prefix = '/PZn_Model_Building'#Output file parameters
+
+###  r10.4.1 XK model build (done)
+wdir = '/home/marchandlab/Dev/xenomorph-xemora/xx-test/XK_r10.4.1_Model_Building'
+fast5 = '/home/marchandlab/DataAnalysis/Kawabe/230801_XK_libv4/20230801_1658_MN41475_APH278_da76761b/fast5'
+ref = '/home/marchandlab/DataAnalysis/Kawabe/ref/ref_libv2_XK_CxDx-.fa'
+out_file_prefix = '/XK_Model_Building'#Output file parameters
+
+###  r10.4.1 JV model build  (Needed)
+wdir = '/home/marchandlab/Dev/xenomorph-xemora/xx-test/JV_r10.4.1_Model_Building'
+fast5 = '/home/marchandlab/DataAnalysis/Kawabe/230801_JV_libv4/20230801_1636_MN37138_APG963_e8c6c162/fast5'
+ref = '/home/marchandlab/DataAnalysis/Kawabe/ref/ref_libv2_JV_CxDx-.fa'
+out_file_prefix = '/JV_Model_Building'#Output file parameters
+
+###  r10.4.1 PZa model build (Needed) 
+wdir = '/home/marchandlab/Dev/xenomorph-xemora/xx-test/PZa_r10.4.1_Model_Building'
+fast5 = '/home/marchandlab/DataAnalysis/Kawabe/230821_PZa_libv4_FLG114/20230821_2012_MN37138_APP955_7fa44073/fast5'
+ref = '/home/marchandlab/DataAnalysis/Kawabe/ref/ref_libv2_PZ_CxDx-.fa'
+out_file_prefix = '/PZa_Model_Building'#Output file parameters
 
 
 ################################################
 #Level generation
-run_preprocess = False
+run_preprocess = True
 run_null_gen = False
 
 #Basecalling
 run_null_level = False
-run_morph = True
-run_stats = True
-run_global_morph = True
+run_morph = False
+run_stats = False
+run_global_morph = False
 
 #Generate model from a level file
-run_model_gen = False
+run_model_gen = True
 
 #Morph model
-model = 'ATGCZ'
+model = 'ATGCXK'
+flowcell = 'FLG114'
 ################################################
 
 #0 Set up File prefixes 
-out_pre = out_file_prefix+'_FLG001'+'_levels.csv'
-out_bcpr = out_file_prefix+'_FLG001_bc.csv'
-out_bcglobal = out_file_prefix+'_FLG001_bc_global.csv'
+out_pre = out_file_prefix+'_'+flowcell+'_levels.csv'
+out_bcpr = out_file_prefix+'_'+flowcell+'_bc.csv'
+out_bcglobal = out_file_prefix+'_'+flowcell+'_bc_global.csv'
 
 
 #1. Preprocess file using xemora preprocessto get a level file 
 if run_preprocess == True:
-    cmd = 'python xenomorph.py preprocess -w '+wdir+' -x -b -f '+fast5+' -r '+ref+' -o '+out_pre
+    cmd = 'python xenomorph.py preprocess -w '+wdir+' -f '+fast5+' -r '+ref+' -o '+out_pre
     os.system(cmd)
 
 #1.5 Generate a null dataset if required

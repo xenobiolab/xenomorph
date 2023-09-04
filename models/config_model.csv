@@ -10,3 +10,5 @@ K_libv2,K_G,K,Juunimoji base K,True,4,models/libv2/Kn_r9.4.1.csv
 J_libv2,J_C,J,Juunimoji base J,True,5,models/libv2/J_r9.4.1.csv
 V_libv2,V_G,V,Juunimoji base V,True,5,models/libv2/V_r9.4.1.csv
 Za_libv2,Za_C,Z,2nd Gen Hachimoji base Za,True,3,models/libv2/Za_r9.4.1.csv
+P_libv2,P_G,P,Hachimoji base P,FALSE,3,models/10.4.1/P_r10.4.1.csv
+Zn_libv2,Zn_A,Z,Hachimoji base Zn,FALSE,3,models/10.4.1/Zn_r10.4.1.csv
