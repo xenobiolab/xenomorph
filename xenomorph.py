@@ -160,8 +160,9 @@ if __name__ == '__main__':
 			print("Xenomorph Status - [Error] To continue with Xenomorph using Remora segmentation, please install Remora (>v2.0, ONT) python package.")
 			print("Xenomorph Status - [Error] Exiting...")
 			sys.exit()
-			
-		
+
+	#If these initial checks pass, print out an initialization message
+	print("Xenomorph Status - [Initializing] Xenomorph configured to for "+segmentation_mode+" segmentation using r"+flowcell_version+" flowcell models.")
 
 
 ############## XFASTA CONVERSION ##############

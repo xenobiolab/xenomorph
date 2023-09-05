@@ -19,13 +19,14 @@ Updated: 8/20/23
 import numpy as np
 
 
-############## FLOWCELL VERSION ##############
+############## SEGMENATION AND FLOWCELL VERSION ##############
+#Segmentation mode - either use Tombo (from Xenomorph v1.0) or Remora (Implemented of v1.5). Refer to documentation for more information about which is more appropriate for your use.
+segmentation_mode = 'remora'
+
 #Version of flowcell used. Decides basecaller config (if guppy_config_file not specified) and kmer models to use. Options: 9.4.1 or 10.4.1 
 flowcell_version = '9.4.1'
 
-############## SEGMENTATION MODE ##############
-#Segmentation mode - either use Tombo (from Xenomorph v1.0) or Remora (Implemented of v1.5). Refer to documentation for more information about which is more appropriate for your use.
-segmentation_mode = 'remora'
+
 
 ############## ESTABLISH DNA AND XNA RULES ##############
 #Standard basepairs written in 'purine pyrimidine' order
@@ -45,6 +46,8 @@ confounding_pairs =  ['BA','SA','PG','ZC','JC','VG','XA','KG','NN'] # Verified o
 
 #Alternative basepairs written in 'purine pyrimidine' order
 xna_bases = np.concatenate(list(list(i) for i in xna_base_pairs))
+
+
 
 
 ############## PREPROCESSING PARAMETERS ##############

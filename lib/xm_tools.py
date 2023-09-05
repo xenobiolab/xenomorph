@@ -10,7 +10,7 @@ Title: Synthesis and Sequencing of a 12-letter supernumerary DNA
 By: H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, J. M. Craig, 
 J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand
 
-Updated: 2/14/23
+Updated: 9/4/23
 """
 ########################################################################
 ########################################################################
