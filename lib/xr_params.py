@@ -14,8 +14,11 @@ Updated: 9/4/23
 
 #######################################################################
 
+import sys
 import numpy as np
+from lib.xm_params import flowcell_version
 from remora import io, refine_signal_map, util
+
 
 ############## PREPROCESSING PARAMETERS ##############
 ####### PREPROCESSING - REMORA SEGMENTATION
@@ -55,9 +58,11 @@ max_num_reads = 0
 if level_table == '' or level_table =='auto': 
 	if flowcell_version == '9.4.1': 
 		level_table = 'models/remora/4mer_9.4.1.csv'
-	if flowcell_version == '10.4.1': 
+	elif flowcell_version == '10.4.1': 
 		level_table = 'models/remora/9mer_10.4.1.csv'
-
+	else: 
+		print('Xenomorph Status - [Error] Invalid flowcell version set. Only 9.4.1 and 10.4.1 models are supported')
+		sys.exit()
 
 #Set up SigMapRefiner
 sig_map_refiner = refine_signal_map.SigMapRefiner(

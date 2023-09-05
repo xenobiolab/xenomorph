@@ -193,7 +193,7 @@ if args.subparsers == 'morph':
 		print('Xenomorph Status - [Morph] Compiling model from input model base abbreviations.')
 
 		#Parse model, get paths of each model file component
-		mf = parse_model_files(args.m,True)
+		mf = parse_model_files(args.m,True, flowcell_version)
 
 		#Compile model from file paths into a master kmer model
 		km = compile_model(mf, args.m) 

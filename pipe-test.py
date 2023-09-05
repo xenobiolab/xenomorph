@@ -94,23 +94,29 @@ ref = '/home/marchandlab/DataAnalysis/Kawabe/ref/ref_libv2_PZ_CxDx-.fa'
 out_file_prefix = '/PZa_Model_Building'#Output file parameters
 
 
+### PZa Dataset Testing new model that Hinako made
+wdir = '/home/marchandlab/Dev/xenomorph-xemora/xx-test/PZa_Model_Testing'
+fast5 = '/home/marchandlab/DataAnalysis/Kawabe/230822_PZa_libv4_FLG001/20230822_1101_MN41475_APU320_58f6c3e2/fast5'
+ref = '/home/marchandlab/Dev/xombo/reference_sequences/ref_libv2_PZ_CxDx.fa'
+out_file_prefix = '/PZa_Model_Testing'#Output file parameters
+
 ################################################
 #Level generation
-run_preprocess = True
+run_preprocess = False
 run_null_gen = False
 
 #Basecalling
 run_null_level = False
-run_morph = False
+run_morph = True
 run_stats = False
 run_global_morph = False
 
 #Generate model from a level file
-run_model_gen = True
+run_model_gen = False
 
 #Morph model
-model = 'ATGCXK'
-flowcell = 'FLG114'
+model = 'ATGCPZ'
+flowcell = 'FLG001'
 ################################################
 
 #0 Set up File prefixes 

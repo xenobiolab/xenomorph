@@ -24,7 +24,7 @@ import numpy as np
 segmentation_mode = 'remora'
 
 #Version of flowcell used. Decides basecaller config (if guppy_config_file not specified) and kmer models to use. Options: 9.4.1 or 10.4.1 
-flowcell_version = '9.4.1'
+flowcell_version = '9.4.2'
 
 
 
@@ -147,7 +147,7 @@ mu_global = 'Median'
 sigma = 'Global-Mean'
 
 #Max reads to basecall using morph command (default = 0 == all reads)
-max_reads = 5000
+max_reads = 100
 
 #Max reads for null morph (beta analysis feature only)
 max_reads_null = 0
