@@ -4,5 +4,7 @@ kmers/
 lib/parse_kmer.py
 lib/xr_xfasta2bed.py
 models/libv2/Za_9.4.1.csv
+models/9.4.1/Za_9.4.1.csv
 models/10.4.1/
+models/libv2
 lib/kmer_convert.py

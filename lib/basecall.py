@@ -35,6 +35,14 @@ if not CHECK_FOLDER:
     print("Xenomorph Status - [Preprocess] Creating fastq output directory : "+output_folder)
 
 
+#Set guppy_config_file if empty or auto
+if guppy_config_file == '' or guppy_config_file =='auto': 
+	if flowcell_version == '9.4.1': 
+		guppy_config_file = 'dna_r9.4.1_450bps_hac.cfg'
+	if flowcell_version == '10.4.1': 
+		guppy_config_file = 'dna_r10.4.1_e8.2_400bps_sup.cfg' 
+
+
 # Run guppy basecall with parameters set in xm_params.py
 try: 
     if segmentation_mode.lower() == 'tombo': 

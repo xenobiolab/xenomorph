@@ -136,7 +136,18 @@ if __name__ == '__main__':
 			print("Xenomorph Status - [Error] Exiting...")
 			sys.exit()
 
+	#Flowcell version and segmentation model check
+	if segmentation_mode.lower() == 'tombo' and flowcell_version != '9.4.1': 
+		print("Xenomorph Status - [Error] Tombo segmentation is only available for 9.4.1 flowcell")
+		print("Xenomorph Status - [Error] Exiting...")
+		sys.exit()
 
+	#Flowcell version and segmentation model check
+	if flowcell_version != '9.4.1' and flowcell_version != '10.4.1': 
+		print("Xenomorph Status - [Error] Xenomorph models are only available for 9.4.1 and 10.4.1 flowcells. Invalid flowcell type specified.")
+		print("Xenomorph Status - [Error] Exiting...")
+		sys.exit()
+		
 	#Remora-only imports and proper package installation check
 	if segmentation_mode.lower() == 'remora':
 		from lib.xr_tools import *

@@ -91,7 +91,11 @@ def parse_model_files(model_code, active_status):
     active_model = model_config[model_config['active']==active_status]
     model_files=[]
     for i in range(0,len(model_code)): 
-        model_files.append(active_model[active_model['letter_code'].str.contains(model_code[i])]['path'].values[0])
+        try: 
+            model_files.append(active_model[active_model['letter_code'].str.contains(model_code[i])]['path '+flowcell_version].values[0])
+        except: 
+        ....print('Xenomorph Status - [Warning] Unsupported flowcell version detected. Model defaulting to 10.4.1')
+            model_files.append(active_model[active_model['letter_code'].str.contains(model_code[i])]['path 10.4.1'].values[0])
     return model_files
 
 

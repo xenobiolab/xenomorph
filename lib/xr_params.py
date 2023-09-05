@@ -9,7 +9,7 @@ Title: Unpublished work
 
 By: H. Kawabe, N. Kaplan, J. A. Marchand
 
-Updated: 8/16/23 
+Updated: 9/4/23 
 """
 
 #######################################################################
@@ -20,8 +20,8 @@ from remora import io, refine_signal_map, util
 ############## PREPROCESSING PARAMETERS ##############
 ####### PREPROCESSING - REMORA SEGMENTATION
 
-#Kmer level table file path (4mer_9.4.1.csv, 9mer_10.4.1.csv) 
-level_table = 'models/remora/9mer_10.4.1.csv'
+#Kmer level table file path (default = auto, set based on flowcell version: 4mer_9.4.1.csv or 9mer_10.4.1.csv) 
+level_table = 'auto'
 
 #Signal extraction type (norm, dac, pa; default = 'norm')
 signal_type = 'norm'
@@ -38,22 +38,27 @@ basecall_pod = True
 #Re-generate BAM files for reference-based basecalling.
 regenerate_bam = True
 
-#Re-generate training or basecalling chunks.
-#regenerate_chunks = False
-
 #generate a .bai file for your bam file -- you need to do this the first time you run analysis
 gen_bai = True
 
 #Override XNA position detection and specify position. Required for ATGC-only signal extraction or if reference file does not specify XNA position. 
 force_extract_position = False
 
-#If force_extract_position is true, specify position in reference. 
+#If force_extract_position is true, specify position in reference. Advanced use only. 
 extract_pos = 67
 
 #Preprocess a maximum number of reads (default = 0 == all reads) 
 max_num_reads = 0
 
 ####### PREPROCESSING - REMORA SIGNAL REFINER
+#Set level table based on flowcell type
+if level_table == '' or level_table =='auto': 
+	if flowcell_version == '9.4.1': 
+		level_table = 'models/remora/4mer_9.4.1.csv'
+	if flowcell_version == '10.4.1': 
+		level_table = 'models/remora/9mer_10.4.1.csv'
+
+
 #Set up SigMapRefiner
 sig_map_refiner = refine_signal_map.SigMapRefiner(
     kmer_model_filename=level_table,

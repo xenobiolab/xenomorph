@@ -19,10 +19,13 @@ Updated: 8/20/23
 import numpy as np
 
 
+############## FLOWCELL VERSION ##############
+#Version of flowcell used. Decides basecaller config (if guppy_config_file not specified) and kmer models to use. Options: 9.4.1 or 10.4.1 
+flowcell_version = '9.4.1'
+
 ############## SEGMENTATION MODE ##############
 #Segmentation mode - either use Tombo (from Xenomorph v1.0) or Remora (Implemented of v1.5). Refer to documentation for more information about which is more appropriate for your use.
 segmentation_mode = 'remora'
-
 
 ############## ESTABLISH DNA AND XNA RULES ##############
 #Standard basepairs written in 'purine pyrimidine' order
@@ -66,8 +69,8 @@ guppy_min_qscore = 9
 #GPU device (default = cuda:all)
 device_type = 'cuda:all' 
 
-#Guppy config file (default = dna_r9.4.1_450bps_hac.cfg, dna_r10.4.1_e8.2_400bps_sup.cfg
-guppy_config_file = 'dna_r10.4.1_e8.2_400bps_sup.cfg' 
+#Guppy config file (default = auto, uses flowcell_version to pick: dna_r9.4.1_450bps_hac.cfg or dna_r10.4.1_e8.2_400bps_sup.cfg)
+guppy_config_file = 'auto' 
 
 #Guppy align type flag: full, coarse, or auto (default = full)
 guppy_align_type = 'full'
