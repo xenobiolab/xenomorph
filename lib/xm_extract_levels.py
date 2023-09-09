@@ -14,20 +14,10 @@ Title: Synthesis and Sequencing of 12-Letter Supernumerary DNA
 By: H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, J. M. Craig, 
 J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand
 
-Updated: 8/7/23
+Updated: 9/7/23
 """
 ########################################################################
 ########################################################################
-
-
-
-
-##############################
-##Xenomorph - An XNA toolkit  ###
-##############################
-##xm_extract_levels [input_level_file] 
-##uses the level file from preprocess to generate raw kmer file 
-##these raw kmers can then be plotted or used to build a model 
 
 
 
@@ -42,85 +32,85 @@ from string import ascii_lowercase
 from alive_progress import alive_bar
 from xm_params import * 
 
-#Inputs 
-def seq2kmer(seq, k):
-    kmers = []
-    for i in range(0,len(seq)-k+1):
-        kmers.append(seq[i:i+k].upper())
-    return kmers
+if __name__ == '__main__': 
+	def seq2kmer(seq, k):
+		kmers = []
+		for i in range(0,len(seq)-k+1):
+		    kmers.append(seq[i:i+k].upper())
+		return kmers
 
-def readlevel2kmerlevel(read_level, kmer_mask): 
-    z_pos = kmer_mask.find('x')
-    read_level = read_level.replace('\n',' ').replace("'",'').replace(']','').replace('[','').split(' ')
-    read_level = [i for i in read_level if i]
-    read_level_kmers = read_level[z_pos:len(read_level)-len(kmer_mask[z_pos:-1])]
-    return read_level_kmers
-
-
-#Input level file from preprocess
-level_input_file = sys.argv[1]
-output_file = level_input_file.replace('levels.csv','')+'kmers.csv'
+	def readlevel2kmerlevel(read_level, kmer_mask): 
+		z_pos = kmer_mask.find('x')
+		read_level = read_level.replace('\n',' ').replace("'",'').replace(']','').replace('[','').split(' ')
+		read_level = [i for i in read_level if i]
+		read_level_kmers = read_level[z_pos:len(read_level)-len(kmer_mask[z_pos:-1])]
+		return read_level_kmers
 
 
-#Open level file as pandas dataframe
-level_file = pd.read_csv(level_input_file) 
-
-#Generate pandas dataframe with every possible kmer [kmer, data] 
-kmer_b=[] 
-kmer_size =4 
-bases =list(set(''.join(level_file['read_xna_sequence'].to_list())))
-kmers = list(set([''.join(i) for i in itertools.product(bases, repeat = kmer_size)]))
-kmers.sort()
-
-#Generate output dataframe and configure 
-np.set_printoptions(threshold=sys.maxsize)
-pd.set_option('display.float_format', lambda x: '%.4f' % x)
-bskmer_level = pd.DataFrame({'kmer_xy' : kmers})
-bskmer_level['mean_level']=''
-bskmer_level['mean_level']=bskmer_level['mean_level'].astype(object)
-
-print('Xenomorph Status - [Model building] Note: read filtering options are enabled')
-#Loop through all files 
-with alive_bar(len(level_file), force_tty=True) as bar: 
-    for i in range(0,len(level_file)): 
-        bar()
-        seq =level_file.iloc[i]['read_xna_sequence']
-        level = level_file.iloc[i]['read_levels']
-        qscore = level_file.iloc[i]['read_q-score']
-        #sscore = level_file.iloc[i]['read_signal_match_score']
-        sscore = 0.5
-    
-        if qscore > qscore_filter and sscore < signal_filter: 
-
-            kmer_seq = seq2kmer(seq,4)
-            levels = readlevel2kmerlevel(level, kmer_mask[0])
+	#Input level file from preprocess
+	level_input_file = sys.argv[1]
+	output_file = level_input_file.replace('levels.csv','')+'kmers.csv'
 
 
-            for j in range(0,len(kmer_seq)):
-                sel_kmer = kmer_seq[j]
-                levo = bskmer_level.loc[bskmer_level['kmer_xy']==sel_kmer, 'mean_level'].values[0]
+	#Open level file as pandas dataframe
+	level_file = pd.read_csv(level_input_file) 
 
-                lev = np.array(levels[j])
+	#Generate pandas dataframe with every possible kmer [kmer, data] 
+	kmer_b=[] 
+	kmer_size =4 
+	bases =list(set(''.join(level_file['read_xna_sequence'].to_list())))
+	kmers = list(set([''.join(i) for i in itertools.product(bases, repeat = kmer_size)]))
+	kmers.sort()
+
+	#Generate output dataframe and configure 
+	np.set_printoptions(threshold=sys.maxsize)
+	pd.set_option('display.float_format', lambda x: '%.4f' % x)
+	bskmer_level = pd.DataFrame({'kmer_xy' : kmers})
+	bskmer_level['mean_level']=''
+	bskmer_level['mean_level']=bskmer_level['mean_level'].astype(object)
+
+	print('Xenomorph Status - [Model building] Note: read filtering options are enabled')
+	#Loop through all files 
+	with alive_bar(len(level_file), force_tty=True) as bar: 
+		for i in range(0,len(level_file)): 
+		    bar()
+		    seq =level_file.iloc[i]['read_xna_sequence']
+		    level = level_file.iloc[i]['read_levels']
+		    qscore = level_file.iloc[i]['read_q-score']
+		    #sscore = level_file.iloc[i]['read_signal_match_score']
+		    sscore = 0.5
+		
+		    if qscore > qscore_filter and sscore < signal_filter: 
+
+		        kmer_seq = seq2kmer(seq,4)
+		        levels = readlevel2kmerlevel(level, kmer_mask[0])
 
 
-                if len(str(levo))>0:
-                    lev = np.array(lev)
-                    levo = np.array(levo)
-                    lev = np.append(lev,levo)
+		        for j in range(0,len(kmer_seq)):
+		            sel_kmer = kmer_seq[j]
+		            levo = bskmer_level.loc[bskmer_level['kmer_xy']==sel_kmer, 'mean_level'].values[0]
 
-                else:
-                    lev=np.array(str(lev))
-
-                bskmer_level.at[bskmer_level[bskmer_level['kmer_xy']==sel_kmer].index[0], 'mean_level'] = lev
+		            lev = np.array(levels[j])
 
 
+		            if len(str(levo))>0:
+		                lev = np.array(lev)
+		                levo = np.array(levo)
+		                lev = np.append(lev,levo)
 
-#Save open save to drop na rows 
-bskmer_level.to_csv(output_file)
-bskmer_level=pd.read_csv(output_file)
-bskmer_level['mean_level'].replace('', np.nan, inplace=True)
-bskmer_level.dropna(subset=['mean_level'], inplace=True)
-bskmer_level.to_csv(output_file)
+		            else:
+		                lev=np.array(str(lev))
+
+		            bskmer_level.at[bskmer_level[bskmer_level['kmer_xy']==sel_kmer].index[0], 'mean_level'] = lev
+
+
+
+	#Save open save to drop na rows 
+	bskmer_level.to_csv(output_file)
+	bskmer_level=pd.read_csv(output_file)
+	bskmer_level['mean_level'].replace('', np.nan, inplace=True)
+	bskmer_level.dropna(subset=['mean_level'], inplace=True)
+	bskmer_level.to_csv(output_file)
 
 
 

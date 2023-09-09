@@ -62,7 +62,6 @@ if __name__ == '__main__':
 	##Load basecall output file 
 	#input_per_read_bc = 'xenomorph_testing/BS_GC_temp.csv'
 	input_per_read_bc = sys.argv[1]
-	stats_out = sys.argv[2]
 	output_basecalls = pd.read_csv(input_per_read_bc, sep=',')
 
 
@@ -191,7 +190,7 @@ if __name__ == '__main__':
 		            if ref_i_x_is_concensus ==True:
 		                consensus_count +=1
 
-	outfn = input_per_read_bc.replace('.csv','_global_summary')+'.csv'
+	outfn = input_per_read_bc.replace('.csv','_per-read_concensus')+'.csv'
 	print('Xenomorph Status - [Stats] Saving global summary of stats to '+outfn)
 	output_summary.to_csv(outfn, index=False)
 

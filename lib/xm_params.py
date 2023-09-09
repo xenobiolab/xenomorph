@@ -21,10 +21,10 @@ import numpy as np
 
 ############## SEGMENATION AND FLOWCELL VERSION ##############
 #Segmentation mode - either use Tombo (from Xenomorph v1.0) or Remora (Implemented of v1.5). Refer to documentation for more information about which is more appropriate for your use.
-segmentation_mode = 'tombo'
+segmentation_mode = 'remora'
 
 #Version of flowcell used. Decides basecaller config (if guppy_config_file not specified) and kmer models to use. Options: 9.4.1 or 10.4.1 
-flowcell_version = '10.4.1'
+flowcell_version = '9.4.1'
 
 
 
@@ -84,6 +84,11 @@ use_reference_in_basecall=True
 #Use basecalled reads from 'pass', 'fail', or 'both' basecall files for segmentation (default = both)
 read_assign = 'both'
 
+#Re-generate BAM files for reference-based basecalling (remora only)
+regenerate_bam = True
+
+#generate a .bai file for your bam file -- you need to do this the first time you run analysis
+gen_bai = True
 
 
 ####### PREPROCESSING - TOMBO SEGMENTATION
@@ -95,6 +100,19 @@ segmentation_params = '5 3 1 5' #5 3 1 5
 
 #Currently manually set
 skip_sequence_rescaling = False 
+
+
+####### PREPROCESSING - REMORA SIGNAL REFINER
+#Remora kmer level table file path (default = auto, set based on flowcell version: 4mer_9.4.1.csv or 9mer_10.4.1.csv) 
+sigmap_level_table = 'auto'
+
+sigmap_scale_iters = 20 
+
+sigmap_do_rough_rescale = True
+
+sigmap_do_fix_guage = True
+
+
 
 
 ####### PREPROCESSING - LEVEL EXTRACTION
@@ -172,5 +190,31 @@ Sp = 0.3
 #Bases for performing alternative hypothesis: Options: all [ATGCXY], standard [ATGCX], pyrpur [AGX/TCY], confounding[GX/CY]
 alt_base_type = 'confounding'
 
+
+
+
+############## REMORA SIG MAP REFINER AUTO-CONFIGURE ##############
+#Set up sigmap_refiner 
+if segmentation_mode == 'remora': 
+	try: 
+		from remora import refine_signal_map
+		if sigmap_level_table == '' or sigmap_level_table =='auto': 
+			if flowcell_version == '9.4.1': 
+				sigmap_level_table = 'models/remora/4mer_9.4.1.csv'
+			elif flowcell_version == '10.4.1': 
+				sigmap_level_table = 'models/remora/9mer_10.4.1.csv'
+			else: 
+				print('Xenomorph Status - [Error] Invalid flowcell version set. Only 9.4.1 and 10.4.1 models are supported')
+				sys.exit()
+				
+		#Set up SigMapRefiner
+		sig_map_refiner = refine_signal_map.SigMapRefiner(
+			kmer_model_filename=sigmap_level_table,
+			scale_iters= sigmap_scale_iters,
+			do_rough_rescale = sigmap_do_rough_rescale, 
+			do_fix_guage= sigmap_do_fix_guage
+		)
+	except:
+		print('Xenomorph Status - [Error] Failed to configure remora sigmap_refiner. Ensure valid parameters and paths are set in xm_params.py.')
 
 

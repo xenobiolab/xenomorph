@@ -124,45 +124,6 @@ if args.subparsers==None:
 	sys.exit(0)
 
 
-#Perform a quick check on proper installation of main packages
-if __name__ == '__main__':
-	#Tombo only imports and proper package installation check
-	if segmentation_mode.lower() == 'tombo':
-		try:
-			from tombo import tombo_helper, tombo_stats, resquiggle
-		except: 
-			print("Xenomorph Status - [Error] Tombo package not found.")
-			print("Xenomorph Status - [Error] To continue with Xenomorph using Tombo segmentation, please install Tombo python package.")
-			print("Xenomorph Status - [Error] Exiting...")
-			sys.exit()
-
-	#Flowcell version and segmentation model check
-	if segmentation_mode.lower() == 'tombo' and flowcell_version != '9.4.1': 
-		print("Xenomorph Status - [Error] Tombo segmentation option is currently only available for 9.4.1 flowcell version.")
-		print("Xenomorph Status - [Error] Exiting...")
-		sys.exit()
-
-	#Flowcell version and segmentation model check
-	if flowcell_version != '9.4.1' and flowcell_version != '10.4.1': 
-		print("Xenomorph Status - [Error] Xenomorph models are only available for 9.4.1 and 10.4.1 flowcell version. Invalid flowcell type specified.")
-		print("Xenomorph Status - [Error] Exiting...")
-		sys.exit()
-		
-	#Remora-only imports and proper package installation check
-	if segmentation_mode.lower() == 'remora':
-		from lib.xr_tools import *
-		from lib.xr_params import *
-		
-		try:
-			import remora
-		except: 
-			print("Xenomorph Status - [Error] Remora package not found.")
-			print("Xenomorph Status - [Error] To continue with Xenomorph using Remora segmentation, please install Remora (>v2.0, ONT) python package.")
-			print("Xenomorph Status - [Error] Exiting...")
-			sys.exit()
-
-	#If these initial checks pass, print out an initialization message
-	print("Xenomorph Status - [Initializing] Xenomorph configured to for "+segmentation_mode+" segmentation using r"+flowcell_version+" flowcell models.")
 
 
 ############## XFASTA CONVERSION ##############
@@ -174,7 +135,7 @@ if args.subparsers == 'fasta2x' :
 if args.subparsers == 'morph': 
 
 	if os.path.exists(args.l)==False:
-		print("Xenomorph Status - [Error] Level-extracted input file not found. Check path or run 'xenomorph preprocess' to generate")
+		print("Xenomorph Status - [Error] Morph failed to find level-extracted input file not found. Check path or run 'xenomorph preprocess' to generate")
 		sys.exit()
 
 
@@ -264,6 +225,50 @@ elif args.subparsers == 'extract':
 
 ############## PREPROCESS ##############
 elif args.subparsers == 'preprocess': 
+
+
+	#Perform a quick check on proper installation of main packages
+	if __name__ == '__main__':
+		#Tombo only imports and proper package installation check
+		if segmentation_mode.lower() == 'tombo':
+			try:
+				from tombo import tombo_helper, tombo_stats, resquiggle
+			except: 
+				print("Xenomorph Status - [Error] Tombo package not found.")
+				print("Xenomorph Status - [Error] To continue with Xenomorph using Tombo segmentation, please install Tombo python package.")
+				print("Xenomorph Status - [Error] Exiting...")
+				sys.exit()
+
+		#Flowcell version and segmentation model check
+		if segmentation_mode.lower() == 'tombo' and flowcell_version != '9.4.1': 
+			print("Xenomorph Status - [Error] Tombo segmentation option is currently only available for 9.4.1 flowcell version.")
+			print("Xenomorph Status - [Error] Exiting...")
+			sys.exit()
+
+		#Flowcell version and segmentation model check
+		if flowcell_version != '9.4.1' and flowcell_version != '10.4.1': 
+			print("Xenomorph Status - [Error] Xenomorph models are only available for 9.4.1 and 10.4.1 flowcell version. Invalid flowcell type specified.")
+			print("Xenomorph Status - [Error] Exiting...")
+			sys.exit()
+			
+		#Remora-only imports and proper package installation check
+		if segmentation_mode.lower() == 'remora':
+			#from lib.xr_tools import *
+			#from lib.xr_params import *
+			
+			try:
+				import remora
+			except: 
+				print("Xenomorph Status - [Error] Remora package not found.")
+				print("Xenomorph Status - [Error] To continue with Xenomorph using Remora segmentation, please install Remora (>v2.0, ONT) python package.")
+				print("Xenomorph Status - [Error] Exiting...")
+				sys.exit()
+				
+				
+
+		#If these initial checks pass, print out an initialization message
+		print("Xenomorph Status - [Initializing] Xenomorph configured to for "+segmentation_mode+" segmentation using r"+flowcell_version+" flowcell models.")
+
 
 	#Set working directory path 
 	working_dir = os.path.normpath(args.w)
@@ -355,7 +360,7 @@ elif args.subparsers == 'preprocess':
 			#Assign reads
 			print("Xenomorph Status - [Preprocess] Using tombo preprocess to assign fastq basecalls to fast5 files.")
 			cmd = 'python xombo.py preprocess '+fast5_sing_dir+' '+fastq_dir
-			os.system(cmd) 
+			os.system(cmd)
 		else: 
 			print("Xenomorph Status - [Preprocess] No basecall flag (-b) entered. Proceeding with resquiggle.")
 
@@ -412,6 +417,12 @@ elif args.subparsers == 'preprocess':
 			cod5_to_fast5(get_fast5_subdir(args.f), os.path.join(pod5_dir + '/'+os.path.basename(args.f))+'.pod5')
 		else: 
 			print('Xenomorph Status - [Preprocess] POD5 file for modified base found. Skipping POD5 coversion')
+
+		#Force basecall pod5 file if flag enabled
+		if args.b == True: 
+			basecall_pod = True
+		else:
+			basecall_pod = False
 
 		#Check if pod5 directory exists, if not, create it
 		for i in range(0,len(fn_rc_ext)): 
@@ -521,12 +532,15 @@ elif args.subparsers == 'models':
 
 ############## STATS ##############
 elif args.subparsers == 'stats': 
-	try: 
-		cmd = 'python lib/xm_stats.py '+args.i
-		os.system(cmd)
-	except: 
-		print("Xenomorph Status - [Error] Stats failed. Ensure file path to basecalled output.csv is correct, or run xenomorph morph to generate new basecall file.")
 
+	if os.path.exists(args.i)==True:
+		try: 
+			cmd = 'python lib/xm_stats.py '+args.i
+			os.system(cmd)
+		except: 
+			print("Xenomorph Status - [Error] Stats failed. Ensure file path to basecalled output.csv is correct, or run xenomorph morph to generate new basecall file.")
+	else: 
+		print("Xenomorph Status - [Error] Stats failed. Per-read basecall input file not found.")
 
 
 

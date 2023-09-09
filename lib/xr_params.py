@@ -16,15 +16,9 @@ Updated: 9/4/23
 
 import sys
 import numpy as np
-from lib.xm_params import flowcell_version
-from remora import io, refine_signal_map, util
-
 
 ############## PREPROCESSING PARAMETERS ##############
-####### PREPROCESSING - REMORA SEGMENTATION
-
-#Kmer level table file path (default = auto, set based on flowcell version: 4mer_9.4.1.csv or 9mer_10.4.1.csv) 
-level_table = 'auto'
+####### PREPROCESSING - REMORA SEGMENTATION (Advanced)
 
 #Signal extraction type (norm, dac, pa; default = 'norm')
 signal_type = 'norm'
@@ -35,15 +29,6 @@ min_match_score=0
 #Skip indexing bam file for getting quality scores and mapping scores. Will default to QS 15, Map score of 10
 skip_qscore_extract  = True
 
-#Re-basecall pod5 file. Required if new reference files are being used. 
-basecall_pod = True
-
-#Re-generate BAM files for reference-based basecalling.
-regenerate_bam = True
-
-#generate a .bai file for your bam file -- you need to do this the first time you run analysis
-gen_bai = True
-
 #Override XNA position detection and specify position. Required for ATGC-only signal extraction or if reference file does not specify XNA position. 
 force_extract_position = False
 
@@ -53,27 +38,10 @@ extract_pos = 67
 #Preprocess a maximum number of reads (default = 0 == all reads) 
 max_num_reads = 0
 
-####### PREPROCESSING - REMORA SIGNAL REFINER
-#Set level table based on flowcell type
-if level_table == '' or level_table =='auto': 
-	if flowcell_version == '9.4.1': 
-		level_table = 'models/remora/4mer_9.4.1.csv'
-	elif flowcell_version == '10.4.1': 
-		level_table = 'models/remora/9mer_10.4.1.csv'
-	else: 
-		print('Xenomorph Status - [Error] Invalid flowcell version set. Only 9.4.1 and 10.4.1 models are supported')
-		sys.exit()
-
-#Set up SigMapRefiner
-sig_map_refiner = refine_signal_map.SigMapRefiner(
-    kmer_model_filename=level_table,
-    scale_iters= 20,
-    do_rough_rescale = True, 
-    do_fix_guage= True
-)
 
 
-####### PREPROCESSING - REMORA RESCALING
+
+####### PREPROCESSING - REMORA RESCALING (Advanced)
 #If true, use manual rescale. If false, automatically calculate rescaling and reshift parameters. 
 manual_rescale_override = True
 
@@ -109,6 +77,3 @@ rescale_xmer_padding = 35
 
 #Show rescale plot 
 rescale_save_plot = True
-
-
-
