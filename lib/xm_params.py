@@ -165,7 +165,7 @@ mu_global = 'Median'
 sigma = 'Global-Mean'
 
 #Max reads to basecall using morph command (default = 0 == all reads)
-max_reads = 100
+max_reads = 0
 
 #Max reads for null morph (beta analysis feature only)
 max_reads_null = 0
