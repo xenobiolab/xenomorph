@@ -50,7 +50,7 @@ parser_preprocess = subparsers.add_parser('preprocess', help='[-w working_dir] [
 parser_preprocess.add_argument('-f',metavar ='[fast5_dir]', type=str,required = True, help='Input directory containing multi-fast5 folders.')
 parser_preprocess.add_argument('-w',metavar = '[working_dir]', type=str,required = True, help='Working directory for storing analysis pipeline temp files and outputs.')
 parser_preprocess.add_argument('-r',metavar = '[reference_fasta]', type=str, required = True, help='Fasta (.fa, .fasta) file of sequence or sequences with XNAs (e.g. BSPZKXJV) in sequence.')
-parser_preprocess.add_argument('-t',metavar = '[tombo_index_id]', type=str, required = True, help='Store resquiggle results with the following ID (default 000)')
+parser_preprocess.add_argument('-t',metavar = '[tombo_index_id]', type=str, required = False, help='Store resquiggle results with the following ID (default 000)')
 parser_preprocess.add_argument('-o',metavar = '[output_file]', type=str, required = False, help='Specify path of output file (.csv) for level extraction (optional; default = working_dir/level_output_summary.csv)')
 parser_preprocess.add_argument('-b',action = 'store_true', help='Use guppy to add basecall reads to file (optional).')
 parser_preprocess.add_argument('-x',action = 'store_true', help='Overwrite all temp analysis files and force re-analysis (optional).')
@@ -238,6 +238,8 @@ elif args.subparsers == 'preprocess':
 		print("Xenomorph Status - [Preprocess] xfasta reverse complement created for handling special bases.")
 		xfasta_rc = xfasta[0:xfasta.find('.fa')]+'_rc.fa'
 
+
+
 		###Multi to single and merge single folders
 	fast5_sing_dir=os.path.normpath(working_dir)+'/'+os.path.basename(args.f)+'_single'
 	CHECK_FAST5_SINGLE = os.path.isdir(fast5_sing_dir)
@@ -288,7 +290,7 @@ elif args.subparsers == 'preprocess':
 	tombo_index= os.path.normpath(args.w)+'/.'+os.path.basename(fast5_sing_dir)+'.RawGenomeCorrected_000'+index_group+'.tombo.index'
 	if not os.path.exists(tombo_index) or args.x:
 		print("Xenomorph Status - [Preprocess] Using tombo to resquiggle fast5 reads using xfasta reference.")
-		cmd = 'python xombo.py resquiggle '+fast5_sing_dir+' '+os.path.normpath(xfasta)+' -g '+index_group
+		cmd = 'python xombo.py resquiggle '+fast5_sing_dir+' '+os.path.normpath(xfasta)+' -g "'+index_group+'"'
 		os.system(cmd) 
 		if os.path.exists(xfasta[0:xfasta.find('.fa')]+'_rc.fa')==True:
 			print("Xenomorph Status - [Preprocess] Using tombo to resquiggle fast5 reads using rc-xfasta reference.")
