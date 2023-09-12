@@ -45,13 +45,13 @@ max_num_reads = 0
 #If true, use manual rescale. If false, automatically calculate rescaling and reshift parameters. 
 manual_rescale_override = True
 
-#Manually set kmer rescale slope
+#Manually set kmer rescale slope (this is pa to norm scaling factor)
 manual_rescale = 1.4826
 
 #Manually set kmer shift
 manual_reshift = 0
 
-#Global rescale is automatically updated after auto-scaling is performed
+#Global rescale is automatically updated after auto-scaling is performed 
 global_rescale = 1.4541330366934333
 
 #Global reshift is automatically updated after auto-scaling is performed
