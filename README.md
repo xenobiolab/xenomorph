@@ -32,8 +32,15 @@ To enter xenomorph conda environment, then use:
 
         conda activate xenomorph-env
         
+        
 ***Update: Xenomorph v1.2 release***
-Xenomorph (v1.2) supports all legacy code without modification. If Remora segmentation are selected, additional packages will be needed including the Remora python package (remora-ont).  Xenomorph v1.2 has been tested on Ubuntu 20.04, and 22.04 with an Nvidia GTX 3060 GPU. 
+Xenomorph (v1.2) supports all legacy code with appropriate conda environment. If Remora segmentation are selected, additional packages will be needed including the Remora python package (remora-ont). If using remora segmentation options, create and activate the xenomorph-re.yml environment. To switch back to tombo segmentation, you will need to return to the xenomorph-env conda environment. Xenomorph v1.2 has been tested on Ubuntu 20.04, and 22.04 with an Nvidia GTX 3060 GPU. 
+
+        conda env create -f xenomorph-re.yml
+
+To enter xenomorph-remora conda environment, then use: 
+
+        conda activate xenomorph-re
 
 
 ## Xenomorph command groups 
