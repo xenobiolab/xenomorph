@@ -115,23 +115,30 @@ ref = '/home/marchandlab/DataAnalysis/Kawabe/ref/ref_libv2_BS_CxDx-.fa'
 out_file_prefix = '/BSn_10.4.1_Model_Building'#Output file parameters
 
 
+###  r10.4.1 PZn model build  (Done) 
+wdir = '/home/marchandlab/Dev/xenomorph-xemora/xx-test/PZn_r10.4.1_Model_Building'
+fast5 = '/home/marchandlab/DataAnalysis/Kawabe/230725_PZ_lib_v4_r10/20230725_1220_MN37138_APH167_a204cb54/fast5'
+ref = '/home/marchandlab/DataAnalysis/Kawabe/ref/ref_libv2_PZ_CxDx-.fa'
+out_file_prefix = '/PZn_Model_Building'#Output file parameters
+
+
 ################################################
 #Level generation
-run_preprocess = True
+run_preprocess = False
 run_null_gen = False
 
 #Basecalling
 run_null_level = False
-run_morph = False
-run_stats = False
-run_global_morph = False
+run_morph = True
+run_stats = True
+run_global_morph = True
 
 #Generate model from a level file
-run_model_gen = True
+run_model_gen = False
 
 #Morph model
 model = 'ATGCPZ'
-flowcell = 'FLG001'
+flowcell = 'FLG114'
 ################################################
 
 #0 Set up File prefixes 

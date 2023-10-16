@@ -36,7 +36,7 @@ force_extract_position = False
 extract_pos = 67
 
 #Preprocess a maximum number of reads (default = 0 == all reads) 
-max_num_reads = 0
+max_num_reads = 100000
 
 
 

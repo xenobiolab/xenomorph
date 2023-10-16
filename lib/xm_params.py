@@ -156,16 +156,16 @@ kmer_weights = [1, 1, 1 ,1]
 kmer_sizes = [len(kmer_mask)] 
 
 #Set mu (per-read) as either: 'KDE Mean level', 'Median level',or 'Mean level'. Basecalling performance can vary depending on accuracy of measurement. 
-mu = 'Median level'
+mu = 'Mean level'
 
 #Set global mu (per-sequence) as either: 'mean or median". Used for concensus recall calculations at the sequence level. 
-mu_global = 'Median'
+mu_global = 'Mean'
 
 #Set sigma as 'Global-Median', 'Global-Mean' (recommended),'Kmer' (for kmer-specific), or as float for fixed
 sigma = 'Global-Mean'
 
 #Max reads to basecall using morph command (default = 0 == all reads)
-max_reads = 0
+max_reads = 100000
 
 #Max reads for null morph (beta analysis feature only)
 max_reads_null = 0

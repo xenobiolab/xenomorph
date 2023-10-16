@@ -1,0 +1,65 @@
+name: nanopore-re
+channels:
+  - conda-forge
+  - bioconda
+  - anaconda
+  - defaults
+dependencies:
+  - _libgcc_mutex=0.1=conda_forge
+  - _openmp_mutex=4.5=2_gnu
+  - about-time=4.2.1=pyhd8ed1ab_0
+  - alive-progress=3.1.4=pyhd8ed1ab_0
+  - biopython=1.78=py38h7f8727e_0
+  - libblas=*=*openblas
+  - htslib=1.17=h81da01d_2
+  - intel-openmp=2021.4.0=h06a4308_3561
+  - ld_impl_linux-64=2.40=h41732ed_0
+  - libcurl=8.1.1=h251f7ec_2
+  - libdeflate=1.18=h0b41bf4_0
+  - libedit=3.1.20221030=h5eee18b_0
+  - libev=4.33=h516909a_1
+  - libffi=3.4.2=h7f98852_5
+  - libgcc-ng=13.1.0=he5830b7_0
+  - libgomp=13.1.0=he5830b7_0
+  - libnghttp2=1.52.0=h2d74bed_1
+  - libnsl=2.0.0=h7f98852_0
+  - libsqlite=3.42.0=h2797004_0
+  - libssh2=1.11.0=h0841786_0
+  - libstdcxx-ng=11.2.0=h1234567_1
+  - libuuid=2.38.1=h0b41bf4_0
+  - libzlib=1.2.13=hd590300_5
+  - numpy == 1.21.0
+  - ncurses=6.4=hcb278e6_0
+  - openssl=3.1.2=hd590300_0
+  - pip=23.2.1=pyhd8ed1ab_0
+  - samtools=1.17=hd87286a_1
+  - python=3.8.17=he550d4f_0_cpython
+  - pip:
+      - cython==3.0.0
+      - filelock==3.12.2
+      - fonttools==4.42.0
+      - h5py==3.8.0
+      - lib-pod5==0.2.4
+      - matplotlib==3.7.2
+      - more-itertools==10.1.0
+      - networkx==3.1
+      - nvidia-cublas-cu11==11.10.3.66
+      - nvidia-cuda-cupti-cu11==11.7.101
+      - nvidia-cuda-nvrtc-cu11==11.7.99
+      - nvidia-cuda-runtime-cu11==11.7.99
+      - nvidia-cudnn-cu11==8.5.0.96
+      - nvidia-cufft-cu11==10.9.0.58
+      - nvidia-curand-cu11==10.2.10.91
+      - nvidia-cusolver-cu11==11.4.0.1
+      - nvidia-cusparse-cu11==11.7.4.91
+      - nvidia-nccl-cu11==2.14.3
+      - nvidia-nvtx-cu11==11.7.91
+      - ont-remora==2.1.3
+      - ont-fast5-api==4.1.1
+      - torch==2.0.1
+      - pandas==2.0.3
+      - pod5==0.2.4
+      - scikit-learn==1.3.0
+      - scipy==1.10.1
+      - seaborn==0.12.2
+prefix: /home/marchandlab/miniconda3/envs/xenomorph-re
