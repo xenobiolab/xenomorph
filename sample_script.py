@@ -33,15 +33,6 @@ if run_preprocess == True:
     cmd = 'python xenomorph.py preprocess -w '+wdir+' -f '+fast5+' -r '+ref+' -o '+out_pre
     os.system(cmd)
 
-#1.5 Generate a null dataset if required
-if run_null_gen == True: 
-    cmd = 'python lib/xr_gen_null.py '+ wdir+out_pre
-    os.system(cmd) 
-
-#1.5 Swap level file name for the null version. This will make downstream null
-if run_null_level ==True: 
-    out_pre = out_pre.replace('levels.csv','null_levels.csv')
-
 #2. Testing whether we can run morph command following level extraction
 if run_morph == True:
     cmd = 'python xenomorph.py morph -l '+wdir+out_pre+' -m '+model+' -o '+wdir+out_bcpr

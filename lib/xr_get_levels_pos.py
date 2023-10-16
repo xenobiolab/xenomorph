@@ -196,6 +196,7 @@ if __name__ == '__main__':
 		        #Check if RC is allowed for XNA 
 		        rc_allowed = xna_base_rc(xna_base, xna_segmentation_model_sets) 
 
+            
 		        #Extract read levels if read passes quality filters set in xr_params.py 
 		        if int(match_quality) >= min_match_score:
 		            if strand == '+':
