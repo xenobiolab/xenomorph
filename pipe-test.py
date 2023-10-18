@@ -129,7 +129,7 @@ run_null_gen = False
 
 #Basecalling
 run_null_level = False
-run_morph = True
+run_morph = False
 run_stats = True
 run_global_morph = True
 

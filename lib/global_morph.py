@@ -493,7 +493,7 @@ if __name__ == '__main__':
 
 	#Print output summary of global morph result
 	for xna_key in global_count: 
-		print("Xenomorph Status - [Global Morph - Summary] - Global consensus for ["+xna_key+"] is (for n >"+str(concensus_stat_filter)+"): " + str(global_count[xna_key]) + "/" + str(total_count[xna_key])+' ('+str((global_count[xna_key]/total_count[xna_key])*100)+')')
+		print("Xenomorph Status - [Stats - Summary] Per-sequence consensus (n > "+str(concensus_stat_filter)+") of ["+xna_key+"] = "+str(round((global_count[xna_key]/total_count[xna_key])*100,1))+ "%     "+str(global_count[xna_key]) + "/" + str(total_count[xna_key]))
 
 
 

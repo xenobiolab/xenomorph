@@ -7,13 +7,16 @@ Description: Calculates per-read, concensus, and global stats of a basecalled
 level file (output from xenomorph.py morph command). Read quality filter and
 concensus filters can be changed in xm_params.py. 
 
+Update: 
+-Split basecalling for each read
+
 
 Title: Synthesis and Sequencing of a 12-letter supernumerary DNA
 
 By: H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, J. M. Craig, 
 J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand
 
-Updated: 2/14/23
+Updated: 10/17/23
 """
 ########################################################################
 ########################################################################
@@ -60,7 +63,6 @@ if __name__ == '__main__':
 
 
 	##Load basecall output file 
-	#input_per_read_bc = 'xenomorph_testing/BS_GC_temp.csv'
 	input_per_read_bc = sys.argv[1]
 	output_basecalls = pd.read_csv(input_per_read_bc, sep=',')
 
@@ -113,6 +115,11 @@ if __name__ == '__main__':
 	consensus_count=0
 	total_count=0
 
+	#numbers to calculate consensus count
+	consensus_count=0
+	total_count= {}
+	global_count = {}
+	
 	for i in range(0,len(ref_seqs)): 
 		ref_ii = output_basecalls[output_basecalls['reference_sequence']==ref_seqs[i]]
 
@@ -184,20 +191,34 @@ if __name__ == '__main__':
 
 		        output_summary.loc[len(output_summary)]=ref_out
 
-		        #calculate consensus number 
+		                
 		        if ref_i_n >=concensus_stat_filter: 
-		            total_count +=1       
+
+		            if ref_i_x not in global_count:
+		                global_count[ref_i_x]=0
+		                
+		            try: 
+		                total_count[ref_i_x] = total_count[ref_i_x]+1
+		            except: 
+		                total_count[ref_i_x] = 1
+		            consensus_count +=1
+
 		            if ref_i_x_is_concensus ==True:
+		                try: 
+		                    global_count[ref_i_x] = global_count[ref_i_x]+1
+		                except: 
+		                    global_count[ref_i_x] = 1
 		                consensus_count +=1
 
 	outfn = input_per_read_bc.replace('.csv','_per-read_concensus')+'.csv'
-	print('Xenomorph Status - [Stats] Saving global summary of stats to '+outfn)
 	output_summary.to_csv(outfn, index=False)
 
-	try: 
-		print("Xenomorph Status - [Stats - Summary] Per-read concensus recall across all reads is (for n >"+str(concensus_stat_filter)+"): " + str(consensus_count) + "/" + str(total_count)+' ('+str((consensus_count/total_count)*100)+')')
-	except: 
-		print("Xenomorph Status - [Warning] No sequence reads above concensus threshold.")
+	#Print output summary of global morph result
+	for xna_key in global_count: 
+		print("Xenomorph Status - [Stats - Summary] Per-read consensus (n > "+str(concensus_stat_filter)+") of ["+xna_key+"] = "+str(round((global_count[xna_key]/total_count[xna_key])*100,1))+ "%     "+str(global_count[xna_key]) + "/" + str(total_count[xna_key]))
+
+
+	print('Xenomorph Status - [Stats] Saving global summary of stats to '+outfn)
 
 
 
