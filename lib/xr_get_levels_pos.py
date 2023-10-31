@@ -6,9 +6,11 @@ Remora based segmentation signal extraction for Xenomorph.
 Uses a fixed position within a read (specified in xr_params.py) for extracting
 XNA signals. 
 
-Title: Unpublished work
+Cite us: 
 
-By: H. Kawabe, N. Kaplan, J. A. Marchand
+H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, N. Kaplan, J. M. Craig, 
+J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand. "Enzymatic Synthesis and Nanopore Sequencing of 12-Letter Supernumerary DNA" 
+Nature Communications. 14. (2023). DOI: 10.1038/s41467-023-42406-z 
 
 Updated: 8/19/23 
 """

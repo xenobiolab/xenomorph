@@ -9,10 +9,11 @@ to r.9.4.1 DNA HAC. Path to guppy needs to be specified in xm_params.py.
 Basecalling is required for initial fast5-sequence assignment prior to 
 signal-to-sequence alignment according to the Tombo/Remora pipeline. 
 
-Title: Synthesis and Sequencing of 12-Letter Supernumerary DNA
+Cite us: 
+H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, N. Kaplan, J. M. Craig, 
+J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand. "Enzymatic Synthesis and Nanopore Sequencing of a 12-Letter Supernumerary DNA" 
+Nature Communications. 14. (2023). DOI: 10.1038/s41467-023-42406-z 
 
-By: H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, J. M. Craig, 
-J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand
 
 Updated: 8/19/23
 """

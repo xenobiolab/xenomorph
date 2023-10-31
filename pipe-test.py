@@ -122,14 +122,21 @@ ref = '/home/marchandlab/DataAnalysis/Kawabe/ref/ref_libv2_PZ_CxDx-.fa'
 out_file_prefix = '/PZn_Model_Building'#Output file parameters
 
 
+
+### ATGC 10.4.1 model building 
+wdir = '/home/marchandlab/Dev/xenomorph-xemora/xx-test/ATGC_10.4.1_Model_Building'
+fast5 = '/home/marchandlab/DataAnalysis/Kawabe/231006_blunt_libv4_r10/20231005_1245_MN37138_AQL738_2675cb8f/fast5'
+ref = '/home/marchandlab/DataAnalysis/Kawabe/ref/ref_full_CDxCD.fa'
+out_file_prefix = '/ATGC_Null_Benchmarking'#Output file parameters
+
 ################################################
 #Level generation
-run_preprocess = False
-run_null_gen = False
+run_preprocess = True
+run_null_gen = True
 
 #Basecalling
-run_null_level = False
-run_morph = False
+run_null_level = True
+run_morph = True
 run_stats = True
 run_global_morph = True
 

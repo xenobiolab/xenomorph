@@ -9,10 +9,11 @@ signals, segmented and non-normalized signals. Uses tombo pipeline for
 extraction and alignment of signal events. Requires specifying region to 
 extract data from. Requires user inputs. 
 
-Title: Synthesis and Sequencing of 12-Letter Supernumerary DNA
+Cite us: 
 
-By: H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, J. M. Craig, 
-J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand
+H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, N. Kaplan, J. M. Craig, 
+J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand. "Enzymatic Synthesis and Nanopore Sequencing of 12-Letter Supernumerary DNA" 
+Nature Communications. 14. (2023). DOI: 10.1038/s41467-023-42406-z 
 
 Updated: 2/14/23
 """

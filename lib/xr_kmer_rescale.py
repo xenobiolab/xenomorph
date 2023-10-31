@@ -6,7 +6,11 @@ Function: Calculates new scaling parameters using the Thiel-Sen estimator or oth
 Rescaling is required for signal normalization performed using remora API to compare extracted levels to kmer models. 
 Title: Unpublished work
 
-By: H. Kawabe, N. Kaplan, J. A. Marchand
+Cite us: 
+
+H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, N. Kaplan, J. M. Craig, 
+J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand. "Enzymatic Synthesis and Nanopore Sequencing of 12-Letter Supernumerary DNA" 
+Nature Communications. 14. (2023). DOI: 10.1038/s41467-023-42406-z 
 
 Updated: 8/17/23
 

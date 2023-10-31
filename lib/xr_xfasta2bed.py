@@ -3,8 +3,7 @@
 """
 xr_xfasta2bed.py 
 
-Title: Unpublished work
-
+From: Unpublished work
 By: H. Kawabe, N. Kaplan, J. A. Marchand
 
 Updated: 3/2/23

@@ -5,13 +5,14 @@ xr_gen_null.py
 
 Used to generate null call files from ATGC level files 
 
-Title: Unpublished work
 
-By: H. Kawabe, N. Kaplan, J. A. Marchand
+Cite us: 
 
-Updated: 7/2/23 
+H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, N. Kaplan, J. M. Craig, 
+J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand. "Enzymatic Synthesis and Nanopore Sequencing of 12-Letter Supernumerary DNA" 
+Nature Communications. 14. (2023). DOI: 10.1038/s41467-023-42406-z 
 
-*****Change log 230702*****
+Updated: 7/2/23
 
 """
 

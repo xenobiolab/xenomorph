@@ -93,10 +93,10 @@ Many tools used to read and manipulate nucleic acid sequences are not built to h
 
         Standard FASTA format with XNA in sequence
                 >header_for_a_read
-                ATGGCAACAGGATGABAAGGACGTA
+                ATGGCAACAGGATGAPAAGGACGTA
 
-        xFASTA format with XNA information stored in header. (B replaced with G in sequence)
-                >header_for_a_read+X_POS[B:18]
+        xFASTA format with XNA information stored in header. (P replaced with G in sequence)
+                >header_for_a_read+X_POS[P:18]
                 ATGGCAACAGGATGAGAAGGACGTA
 
 ### Modifying parameters
@@ -179,9 +179,10 @@ Preprocess, morph, and stats use various parameters that can be tuned or modifie
 
 
 ## Cite us or read more about this work 
-    Title: Synthesis and Sequencing of a 12-Letter Supernumerary DNA
+    Link to publication: https://doi.org/10.1038/s41467-023-42406-z 
 
-    By: H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, J. M. Craig, 
-    J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand
+    H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, N. Kaplan, J. M. Craig, 
+    J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand. "Enzymatic Synthesis and Nanopore Sequencing of a 12-Letter Supernumerary DNA" 
+    Nature Communications. 14. (2023). DOI: 10.1038/s41467-023-42406-z 
 
 

@@ -9,10 +9,11 @@ available for what to plot and how to plot it. Plotting options modified
 internally in script below. Randomly picks a read from a dataset to plot. 
 Requires basecalled level file as input (python xenomorph.py morph).
 
-Title: Synthesis and Sequencing of a 12-letter supernumerary DNA
+Cite us: 
 
-By: H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, J. M. Craig, 
-J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand
+H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, N. Kaplan, J. M. Craig, 
+J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand. "Enzymatic Synthesis and Nanopore Sequencing of 12-Letter Supernumerary DNA" 
+Nature Communications. 14. (2023). DOI: 10.1038/s41467-023-42406-z 
 
 Updated: 2/14/23
 """

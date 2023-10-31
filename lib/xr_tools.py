@@ -3,8 +3,8 @@
 """
 xr_tools.py 
 Variety of tools used with remora API
-Title: Unpublished work
 
+From: Unpublished work
 By: H. Kawabe, N. Kaplan, J. A. Marchand
 
 Updated: 4/19/23

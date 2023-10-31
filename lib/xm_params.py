@@ -7,10 +7,11 @@ Description: Here you can modify parameters used for processing, extraction,
 alignment, and basecalling. Additional parameter file is available for 
 remora API usage (lib/xr_params.py). 
 
-Title: Synthesis and Sequencing of 12-Letter Supernumerary DNA
+Cite us: 
 
-By: H. Kawabe, C. Thomas, A. Laszlo, S. Hoshika, L. Miessner, J. M. Craig, 
-J. Gundlach, Myong-Jung Kim, Myong-Sang Kim, S. A. Benner, J. A. Marchand
+H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, N. Kaplan, J. M. Craig, 
+J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand. "Enzymatic Synthesis and Nanopore Sequencing of 12-Letter Supernumerary DNA" 
+Nature Communications. 14. (2023). DOI: 10.1038/s41467-023-42406-z 
 
 Updated: 9/4/23
 """
@@ -168,7 +169,7 @@ sigma = 'Global-Mean'
 max_reads = 100000
 
 #Max reads for null morph (beta analysis feature only)
-max_reads_null = 0
+max_reads_null = 100000
 
 
 ####### LIKELIHOOD RATIO CALCULATIONS

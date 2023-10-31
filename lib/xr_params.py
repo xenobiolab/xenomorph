@@ -5,9 +5,6 @@ xr_params.py
 Param file for remora segmentation support to Xenomorph. For all other
 parameters required for Xenomorph, see lib/xm_params.py
 
-Title: Unpublished work
-
-By: H. Kawabe, N. Kaplan, J. A. Marchand
 
 Updated: 9/4/23 
 """

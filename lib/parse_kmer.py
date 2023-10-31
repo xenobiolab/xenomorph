@@ -9,10 +9,11 @@ level output file generated from xenomorph.py preprocess. The kmer model
 summary generated can be used directly for basecalling purposes. The location
 of the model needs to be specified in models/config_model.csv
 
-Title: Synthesis and Sequencing of 12-Letter Supernumerary DNA
+Cite us: 
 
-By: H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, J. M. Craig, 
-J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand
+H. Kawabe, C. Thomas, S. Hoshika, Myong-Jung Kim, Myong-Sang Kim, L. Miessner, N. Kaplan, J. M. Craig, 
+J. Gundlach, A. Laszlo,  S. A. Benner, J. A. Marchand. "Enzymatic Synthesis and Nanopore Sequencing of a 12-Letter Supernumerary DNA" 
+Nature Communications. 14. (2023). DOI: 10.1038/s41467-023-42406-z 
 
 Updated: 8/18/23
 """

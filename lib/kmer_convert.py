@@ -4,8 +4,6 @@
 kmer_convert.py
 A tool to quickly convert xenomorph model files to remora model format. 
 
-Title: Unpublished work
-
 By: J. A. Marchand
 
 Converts Xenomorph kmer table to ONT kmer table 
