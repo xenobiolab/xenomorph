@@ -204,7 +204,7 @@ elif args.subparsers == 'extract':
 
 elif args.subparsers == 'preprocess': 
 
-	level_summary_file = args.l
+
 	working_dir = os.path.normpath(args.w)
 	#Create a working directory if it does not existW
 	CHECK_FOLDER = os.path.isdir(args.w)
@@ -223,8 +223,8 @@ elif args.subparsers == 'preprocess':
 	    xfasta=os.path.normpath(args.w)+'/xfasta_'+os.path.basename(args.r)
 	    if not os.path.exists(xfasta) or args.x:
 		    print("Xenomorph Status - [Preprocess] Performing fasta to xfasta conversion on input reference fasta. Saving output "+xfasta+'.')
-		    print("Xenomorph Status - [Preprocess] Using fasta2x_rcf.")
-		    cmd =  'python lib/xm_fasta2x_rcf.py '+os.path.normpath(args.r)+' '+xfasta
+		    print("Xenomorph Status - [Preprocess] Using fasta2x_rc.")
+		    cmd =  'python lib/xm_fasta2x_rc.py '+os.path.normpath(args.r)+' '+xfasta
 		    #cmd =  'python lib/xm_fasta2x_rc.py '+os.path.normpath(args.r)+' '+xfasta
 		    os.system(cmd) 
 	    else: 

@@ -1,4 +1,4 @@
-name: nanopore-be
+name: xenomorph-env
 channels:
   - intel
   - nvidia
@@ -90,4 +90,4 @@ dependencies:
       - nvidia-cusparse-cu11==11.7.4.91
       - nvidia-nccl-cu11==2.14.3
       - nvidia-nvtx-cu11==11.7.91
-prefix: /home/marchandlab/miniconda3/envs/nanopore-be
+prefix: /home/marchandlab/miniconda3/envs/xenomorph-env
