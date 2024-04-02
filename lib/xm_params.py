@@ -70,8 +70,14 @@ basecaller_path ='~/ont-guppy/bin/guppy_basecaller'
 #Mininum qscore set on guppy basecalling for pass/fail (default = 9) 
 guppy_min_qscore = 9 
 
-#GPU device (default = cuda:all)
+#GPU device (default = True (bool). if False - use CPU)
+use_gpu = True
+
+#GPU device (default = cuda:all, use_gpu must be True)
 device_type = 'cuda:all' 
+
+#If use_gpu device is false, use CPU threads instead (not recommended. Default '32' )
+cpu_threads = '32'
 
 #Guppy config file (default = auto, uses flowcell_version to pick: dna_r9.4.1_450bps_hac.cfg or dna_r10.4.1_e8.2_400bps_sup.cfg)
 guppy_config_file = 'auto' 
