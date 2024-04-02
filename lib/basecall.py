@@ -46,19 +46,25 @@ if guppy_config_file == '' or guppy_config_file =='auto':
 
 # Run guppy basecall with parameters set in xm_params.py
 try: 
+
+    if use_gpu == True: 
+        device_configuration = ' --device '+device_type 
+    else: 
+        device_configuration = ' --cpu_threads_per_caller '+str(cpu_threads)
+    
     if segmentation_mode.lower() == 'tombo': 
         if use_reference_in_basecall==True: 
             print("Xenomorph Status - [Preprocess] Performing guppy basecalling using reference xfasta file: "+reference_file+".")
-            cmd = basecaller_path+' -i '+input_folder+' -s '+ output_folder + '  --device '+device_type+' -a '+reference_file+' -c '+guppy_config_file+' --min_qscore '+str(guppy_min_qscore)+' --align_type '+guppy_align_type
+            cmd = basecaller_path+' -i '+input_folder+' -s '+ output_folder + device_configuration +' -a '+reference_file+' -c '+guppy_config_file+' --min_qscore '+str(guppy_min_qscore)+' --align_type '+guppy_align_type
             
         else: 
             print("Xenomorph Status - [Preprocess] Performing guppy basecalling without reference alignment.")
-            cmd = basecaller_path+' -i '+input_folder+' -s '+ output_folder + ' --device '+device_type +' -c '+guppy_config_file+' --min_qscore '+str(guppy_min_qscore)
+            cmd = basecaller_path+' -i '+input_folder+' -s '+ output_folder + device_configuration +' -c '+guppy_config_file+' --min_qscore '+str(guppy_min_qscore)
             
     if segmentation_mode.lower() == 'remora': 
         print("Xenomorph Status - [Preprocess] Performing guppy basecalling using reference xfasta file for segmentation: "+reference_file+".")
         cmd=(os.path.expanduser(basecaller_path)+' -i '+input_folder+' -s '+output_folder+' -c '+guppy_config_file+' --min_qscore '+str(guppy_min_qscore)+
-        ' --device '+device_type +' --align_type '+guppy_align_type+' --bam_out --index --moves_out -a '+reference_file)
+        device_configuration+' --align_type '+guppy_align_type+' --bam_out --index --moves_out -a '+reference_file)
 
     #Execute guppy to basecall
     os.system(cmd) 
