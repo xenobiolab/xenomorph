@@ -11,3 +11,4 @@ lib/kmer_convert.py
 sample/results/
 test.py
 sample_script.py
+ref/
